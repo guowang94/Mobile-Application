@@ -337,7 +337,7 @@ public class GraphActivity extends AppCompatActivity implements Const,
                 assets += annualIncome;
 
                 if (i == retirementAge) {
-                    fileContent = fileContent.concat("/" + CONTENT_BALANCE + ":" + String.valueOf(assets));
+                    fileContent = fileContent.concat("//" + CONTENT_BALANCE + ":" + String.valueOf(assets));
                 }
 
             } else {
@@ -348,15 +348,15 @@ public class GraphActivity extends AppCompatActivity implements Const,
             if (assets < 0f) {
                 if (shortfallAge == -1) {
                     shortfallAge = i;
-                    fileContent = fileContent.concat("/" + CONTENT_AGE_OF_SHORTFALL + ":" + String.valueOf(shortfallAge));
+                    fileContent = fileContent.concat("//" + CONTENT_AGE_OF_SHORTFALL + ":" + String.valueOf(shortfallAge));
                 }
             }
 
             if (i == expectancy) {
-                fileContent += "/" + CONTENT_SHORTFALL + ":" + String.valueOf(assets) +
-                        "/" + CONTENT_CPF_ORDINARY_ACCOUNT + ":" + String.valueOf(cpfOrdinaryAccount) +
-                        "/" + CONTENT_CPF_SPECIAL_ACCOUNT + ":" + String.valueOf(cpfSpecialAccount) +
-                        "/" + CONTENT_CPF_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
+                fileContent += "//" + CONTENT_SHORTFALL + ":" + String.valueOf(assets) +
+                        "//" + CONTENT_CPF_ORDINARY_ACCOUNT + ":" + String.valueOf(cpfOrdinaryAccount) +
+                        "//" + CONTENT_CPF_SPECIAL_ACCOUNT + ":" + String.valueOf(cpfSpecialAccount) +
+                        "//" + CONTENT_CPF_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
             }
         }
         return yVals;
@@ -372,7 +372,7 @@ public class GraphActivity extends AppCompatActivity implements Const,
                 Float.valueOf(content.get(CONTENT_VARIABLE_EXPENSES)),
                 Integer.valueOf(content.get(CONTENT_AGE)),
                 Integer.valueOf(content.get(CONTENT_RETIREMENT_AGE)),
-                Integer.valueOf(content.get(CONTENT_EXPECTANCY)));
+                Integer.valueOf(content.get(CONTENT_EXPECTANCY).trim()));
 
         //BarDataSet is similar to series
         BarDataSet set1 = new BarDataSet(yVals1, null);
@@ -456,6 +456,7 @@ public class GraphActivity extends AppCompatActivity implements Const,
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line).append("\n");
             }
+
             return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -470,14 +471,49 @@ public class GraphActivity extends AppCompatActivity implements Const,
      * @return HashMap
      */
     private HashMap<String, String> splitFileContent(String fileContent) {
-        String[] value = fileContent.split("/");
+        String[] value = fileContent.split("//");
         HashMap<String, String> content = new HashMap<>();
 
         for (String val : value) {
-            content.put(val.split(":")[0], val.split(":")[1]);
+            content.put(val.split(":")[0], val.split(":")[1].trim());
         }
-
+        System.out.println(content);
         return content;
     }
 
+    /**
+     * This method will create the more option in the action bar
+     *
+     * @param menu store all the menu items
+     * @return boolean
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.option_menu_list, menu);
+        return true;
+    }
+
+    /**
+     * This method will tap on Option Item
+     *
+     * @param //menuItem store all the menu items
+     * @return boolean
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_settings:
+                Snackbar.make(mFrameLayout, "Settings", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Do nothing
+                    }
+                }).show();
+                break;
+            default:
+                Log.i(TAG, "onOptionsItemSelected: In default");
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
 }

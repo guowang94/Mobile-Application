@@ -207,11 +207,11 @@ public class CPFContributionActivity extends AppCompatActivity implements Const 
      * @return HashMap
      */
     private HashMap<String, String> splitFileContent(String fileContent) {
-        String[] value = fileContent.split("/");
+        String[] value = fileContent.split("//");
         HashMap<String, String> content = new HashMap<>();
 
         for (String val : value) {
-            content.put(val.split(":")[0], val.split(":")[1]);
+            content.put(val.split(":")[0], val.split(":")[1].trim());
         }
 
         return content;
