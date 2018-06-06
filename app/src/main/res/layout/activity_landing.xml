@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background">
+
+
+    <Button
+        android:id="@+id/manage_policy_button"
+        style="@style/landing_screen_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@mipmap/landing_button_cell"
+        android:drawablePadding="8dp"
+        android:drawableStart="@mipmap/ic_landing_screen_manage_plans"
+        android:paddingEnd="32dp"
+        android:paddingStart="32dp"
+        android:text="@string/manage_policy"
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toTopOf="@+id/compute_client_info_button"
+        app:layout_constraintEnd_toEndOf="@+id/compute_client_info_button"
+        app:layout_constraintStart_toStartOf="@+id/compute_client_info_button" />
+
+    <Button
+        android:id="@+id/compute_client_info_button"
+        style="@style/landing_screen_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@mipmap/landing_button_cell"
+        android:drawablePadding="8dp"
+        android:drawableStart="@mipmap/ic_landing_screen_enter_info"
+        android:paddingEnd="32dp"
+        android:paddingStart="32dp"
+        android:text="@string/compute_client_information"
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45" />
+
+</android.support.constraint.ConstraintLayout>

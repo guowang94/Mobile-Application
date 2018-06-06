@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Graph Application</string>
+
+    <!--Fields String-->
+    <!--New Landing Screen-->
+    <string name="manage_policy">Manage Policy</string>
+    <string name="compute_client_information">Compute Client Information</string>
+    
+    <!--Form Screen-->
+    <string name="name">Name</string>
+    <string name="age">Current Age</string>
+    <string name="retirement_age">Expected Retirement Age</string>
+    <string name="expectancy">Expected to Live Age</string>
+    <string name="self_employed">Self-Employed</string>
+    <string name="employed">Employed</string>
+    <string name="singaporean">Singaporean</string>
+    <string name="foreigner_or_pr">Foreigner/PR</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="financial_information">Financial Information</string>
+    
+    <!--Landing Screen-->
+    <string name="get_started">Get Started</string>
+    <string name="gross_monthly_income">Gross Monthly Income</string>
+    <string name="fixed_expenses">Fixed Expenses</string>
+    <string name="variable_expenses">Variable Expenses</string>
+    <string name="job_status">Job Status</string>
+    <string name="current_assets">Current Assets</string>
+    <string name="compute">Compute</string>
+    
+    <!--Summary Detail Screen-->
+    <string name="leftovers_balance">Leftovers Balance</string>
+    <string name="short_fall">ShortFall</string>
+    <string name="cpf_ordinary_account">CPF OA</string>
+    <string name="cpf_special_account">CPF SA</string>
+    <string name="cpf_medisave_account">CPF MA</string>
+    
+    <!--CPF Contribution Screen-->
+    <string name="cpf_contribution">CPF Contributions</string>
+
+    <!--Option Menu-->
+    <string name="action_settings">Settings</string>
+    
+    <!--code string-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>

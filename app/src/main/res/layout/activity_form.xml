@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="vertical"
+    tools:context=".Activity.FormActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/form_layout_border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_layout" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/personal_information"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/name_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:text="wang" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/age_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/name_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/name_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/name_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/age"
+                android:inputType="number"
+                android:text="24" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/current_assets_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/age_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/age_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/age_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/current_assets"
+                android:inputType="numberDecimal"
+                android:text="10000" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/gross_monthly_income_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/current_assets_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/current_assets_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/current_assets_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/gross_monthly_income"
+                android:inputType="numberDecimal"
+                android:text="2800" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/fixed_expenses_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/gross_monthly_income_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/gross_monthly_income_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/gross_monthly_income_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fixed_expenses"
+                android:inputType="numberDecimal"
+                android:text="500" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/variable_expenses_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/fixed_expenses_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/fixed_expenses_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/fixed_expenses_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/variable_expenses"
+                android:inputType="numberDecimal"
+                android:text="850" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/retirement_age_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/variable_expenses_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/variable_expenses_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/variable_expenses_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/retirement_age"
+                android:inputType="number"
+                android:text="55" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/expectancy_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/retirement_age_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/retirement_age_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/retirement_age_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/expectancy"
+                android:inputType="number"
+                android:text="65" />
+        </android.support.design.widget.TextInputLayout>
+
+        <EditText
+            android:id="@+id/selfEmployedEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:text="@string/self_employed"
+            app:layout_constraintEnd_toEndOf="@+id/expectancy_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/expectancy_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/expectancy_input_layout" />
+
+        <Switch
+            android:id="@+id/self_employed_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/selfEmployedEditText"
+            app:layout_constraintEnd_toEndOf="@+id/selfEmployedEditText"
+            app:layout_constraintTop_toTopOf="@+id/selfEmployedEditText"
+            app:layout_constraintVertical_bias="0.26999998" />
+
+        <Button
+            android:id="@+id/compute_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/compute_button"
+            android:text="@string/compute"
+            android:textAppearance="@style/landing_screen_compute"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selfEmployedEditText"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v4.widget.NestedScrollView>

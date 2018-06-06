@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF049EE9</color>
+    <color name="colorPrimaryDark">#0060ac</color>
+    <color name="colorAccent">#137ece</color>
+    <color name="incomeGraph">#55A8FE</color>
+    <color name="assetsGraph">#5055A8FE</color>
+    <color name="cpfOAChart">#FF2C82BE</color>
+    <color name="cpfSAChart">#FF76DDFB</color>
+    <color name="cpfMAChart">#FFDBECF8</color>
+    <color name="drawerBackground">#FF049EE9</color>
+    <color name="actionBar">#1684D7</color>
+    <color name="summaryActionBar">#00FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="form_color">#FF0081E8</color>
+</resources>

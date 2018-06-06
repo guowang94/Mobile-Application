@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="nav_summary_details" type="id" />
+    <item name="nav_events" type="id" />
+    <item name="nav_milestones" type="id" />
+    <item name="nav_plans" type="id" />
+
+</resources>
