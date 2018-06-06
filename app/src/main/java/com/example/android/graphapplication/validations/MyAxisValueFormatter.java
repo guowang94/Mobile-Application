@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Validations;
+package com.example.android.graphapplication.validations;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;

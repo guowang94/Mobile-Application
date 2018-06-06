@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Activity;
+package com.example.android.graphapplication.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +21,8 @@ import android.widget.FrameLayout;
 
 import com.example.android.graphapplication.Const;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.Validations.MyAxisValueFormatter;
-import com.example.android.graphapplication.Validations.MyValueFormatter;
+import com.example.android.graphapplication.validations.MyAxisValueFormatter;
+import com.example.android.graphapplication.validations.MyValueFormatter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;

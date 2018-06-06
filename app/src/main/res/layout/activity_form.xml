@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:scrollbars="vertical"
-    tools:context=".Activity.FormActivity">
+    tools:context=".activity.FormActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout"

@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Activity;
+package com.example.android.graphapplication.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +18,9 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.Const;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.RecycleList.RecyclerTouchListener;
-import com.example.android.graphapplication.RecycleList.UserInfo;
-import com.example.android.graphapplication.RecycleList.UserInfoAdapter;
+import com.example.android.graphapplication.recycleList.RecyclerTouchListener;
+import com.example.android.graphapplication.recycleList.UserInfo;
+import com.example.android.graphapplication.recycleList.UserInfoAdapter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

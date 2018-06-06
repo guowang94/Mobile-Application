@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Activity;
+package com.example.android.graphapplication.activity;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -15,8 +15,8 @@ import android.util.Log;
 
 import com.example.android.graphapplication.Const;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.RecycleList.CPFContribution;
-import com.example.android.graphapplication.RecycleList.CPFContributionAdapter;
+import com.example.android.graphapplication.recycleList.CPFContribution;
+import com.example.android.graphapplication.recycleList.CPFContributionAdapter;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;

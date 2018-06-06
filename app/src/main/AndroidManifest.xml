@@ -7,11 +7,12 @@
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_icon"
+        android:fullBackupContent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Activity.FormActivity"
+            android:name=".activity.FormActivity"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +22,8 @@
         </activity>
 
         <activity
-            android:name=".Activity.GraphActivity"
-            android:parentActivityName=".Activity.FormActivity"
+            android:name=".activity.GraphActivity"
+            android:parentActivityName=".activity.FormActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,8 +32,8 @@
         </activity>
 
         <activity
-            android:name=".Activity.SummaryActivity"
-            android:parentActivityName=".Activity.GraphActivity"
+            android:name=".activity.SummaryActivity"
+            android:parentActivityName=".activity.GraphActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -42,8 +43,8 @@
         </activity>
 
         <activity
-            android:name=".Activity.CPFContributionActivity"
-            android:parentActivityName=".Activity.SummaryActivity"
+            android:name=".activity.CPFContributionActivity"
+            android:parentActivityName=".activity.SummaryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>

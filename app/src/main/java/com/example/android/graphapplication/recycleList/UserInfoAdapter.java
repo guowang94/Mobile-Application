@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.RecycleList;
+package com.example.android.graphapplication.recycleList;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

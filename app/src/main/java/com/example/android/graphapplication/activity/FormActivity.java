@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Activity;
+package com.example.android.graphapplication.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.widget.Button;
 
 import com.example.android.graphapplication.Const;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.Validations.Validation;
+import com.example.android.graphapplication.validations.Validation;
 
 import java.io.FileOutputStream;
 

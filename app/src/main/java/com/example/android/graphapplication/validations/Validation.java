@@ -1,6 +1,4 @@
-package com.example.android.graphapplication.Validations;
-
-import android.util.Log;
+package com.example.android.graphapplication.validations;
 
 import java.util.regex.Pattern;
 
