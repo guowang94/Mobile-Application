@@ -1,22 +1,12 @@
-package com.example.android.graphapplication.RecycleList;
+package com.example.android.graphapplication.recycleList;
 
-public class UserInfo {
+public class CPFContribution {
 
     private String title, value;
-    private int image;
 
-    public UserInfo(String title, String value, int image) {
+    public CPFContribution(String title, String value) {
         this.title = title;
         this.value = value;
-        this.image = image;
-    }
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 
     public String getTitle() {
@@ -37,10 +27,9 @@ public class UserInfo {
 
     @Override
     public String toString() {
-        return "UserInfo{" +
+        return "CPFContribution{" +
                 "title='" + title + '\'' +
                 ", value='" + value + '\'' +
-                ", image=" + image +
                 '}';
     }
 }
