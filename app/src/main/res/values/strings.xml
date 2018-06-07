@@ -25,7 +25,7 @@
     <string name="variable_expenses">Variable Expenses</string>
     <string name="job_status">Job Status</string>
     <string name="current_assets">Current Assets</string>
-    <string name="compute">Compute</string>
+    <string name="graph_forecast">Graph Forecast</string>
     
     <!--Summary Detail Screen-->
     <string name="leftovers_balance">Leftovers Balance</string>
