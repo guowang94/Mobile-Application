@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -31,8 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import static android.support.design.widget.Snackbar.LENGTH_INDEFINITE;
 
 public class SummaryActivity extends AppCompatActivity implements Const {
 
@@ -61,21 +58,6 @@ public class SummaryActivity extends AppCompatActivity implements Const {
 
         initData();
 
-        if (mLeftoversBalance.hasOverlappingRendering()) {
-            mLeftoversBalance.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Snackbar.make(mLinearLayout, CONTENT_BALANCE + ": " + mLeftoversBalance.getText(),
-                            LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Do nothing
-                        }
-                    }).show();
-                }
-            });
-        }
-
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView,
                 new RecyclerTouchListener.ClickListener() {
                     @Override
@@ -95,42 +77,6 @@ public class SummaryActivity extends AppCompatActivity implements Const {
 
         Log.i(TAG, "onCreate: out");
     }
-
-    /**
-     * This method will create the more option in the action bar
-     *
-     * @param menu store all the menu items
-     * @return boolean
-     */
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.option_menu_list, menu);
-        return true;
-    }*/
-
-    /**
-     * This method will tap on Option Item
-     *
-     * @param //menuItem store all the menu items
-     * @return boolean
-     */
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.action_settings:
-                Snackbar.make(mLinearLayout, "Settings", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Do nothing
-                    }
-                }).show();
-                break;
-            default:
-                Log.i(TAG, "onOptionsItemSelected: In default");
-        }
-        return super.onOptionsItemSelected(menuItem);
-    }*/
 
     /**
      * This method will initialise the data for the activity
@@ -182,9 +128,6 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         //Initialise Recycle view data
         userInfoList.add(new UserInfo(CONTENT_NAME, content.get(CONTENT_NAME), R.mipmap.ic_summary_screen_name));
         userInfoList.add(new UserInfo(CONTENT_AGE, content.get(CONTENT_AGE), R.mipmap.ic_summary_screen_age));
-        userInfoList.add(new UserInfo(CONTENT_JOB_STATUS,
-                content.get(CONTENT_JOB_STATUS).trim().equals("true") ? LIST_SELF_EMPLOYED : LIST_WORKING,
-                R.mipmap.ic_summary_screen_job_status));
         userInfoList.add(new UserInfo(CONTENT_MONTHLY_INCOME, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                 .format(Float.valueOf(content.get(CONTENT_GROSS_MONTHLY_INCOME)))), R.mipmap.ic_summary_screen_income));
         userInfoList.add(new UserInfo(CONTENT_RETIREMENT_AGE, content.get(CONTENT_RETIREMENT_AGE), R.mipmap.ic_summary_screen_retirement));
@@ -223,11 +166,11 @@ public class SummaryActivity extends AppCompatActivity implements Const {
      * @return HashMap
      */
     private HashMap<String, String> splitFileContent(String fileContent) {
-        String[] value = fileContent.split("/");
+        String[] value = fileContent.split("//");
         HashMap<String, String> content = new HashMap<>();
 
         for (String val : value) {
-            content.put(val.split(":")[0], val.split(":")[1]);
+            content.put(val.split(":")[0], val.split(":")[1].trim());
         }
 
         return content;

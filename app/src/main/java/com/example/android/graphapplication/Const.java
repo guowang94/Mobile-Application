@@ -14,19 +14,22 @@ public interface Const {
     String CONTENT_AGE_OF_SHORTFALL = "Age Of Shortfall";
     String CONTENT_CPF_DETAILS = "CPF Details";
     String CONTENT_EXPECTANCY = "Expectancy";
-    String CONTENT_JOB_STATUS = "Job Status";
     String CONTENT_BALANCE = "Balance";
     String CONTENT_SHORTFALL = "Shortfall";
     String CONTENT_CPF_ORDINARY_ACCOUNT = "CPF Ordinary Account";
     String CONTENT_CPF_SPECIAL_ACCOUNT = "CPF Special Account";
     String CONTENT_CPF_MEDISAVE_ACCOUNT = "CPF Medisave Account";
+    String CONTENT_EMPLOYMENT_STATUS = "Employment Status";
+    String CONTENT_CITIZENSHIP = "Citizenship";
 
     //File name
     String FILE_USER_INFO = "userInfo";
 
-    //List Field
-    String LIST_SELF_EMPLOYED = "Self-Employed";
-    String LIST_WORKING = "Working";
+    //Segmented Button Value
+    String SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED = "Self-Employed";
+    String SEGMENTED_BUTTON_VALUE_EMPLOYED = "Employed";
+    String SEGMENTED_BUTTON_VALUE_SINGPOREAN = "Singaporean";
+    String SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR = "Foreigner/PR";
 
     //Navigation Fields name
     String NAV_PLANS = "Plans";
@@ -37,6 +40,7 @@ public interface Const {
     //Toolbar title
     String TOOLBAR_TITLE_SUMMARY = "Summary";
     String TOOLBAR_TITLE_ACCUMULATIVE_CPF = "Accumulative CPF";
+    String TOOLBAR_TITLE_ENTER_YOUR_DETAILS = "Enter Your Details";
 
     //Graph Legend
     String GRAPH_LEGEND_ASSETS = "Assets";

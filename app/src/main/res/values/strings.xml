@@ -8,7 +8,7 @@
     
     <!--Form Screen-->
     <string name="name">Name</string>
-    <string name="age">Current Age</string>
+    <string name="age">Age</string>
     <string name="retirement_age">Expected Retirement Age</string>
     <string name="expectancy">Expected to Live Age</string>
     <string name="self_employed">Self-Employed</string>

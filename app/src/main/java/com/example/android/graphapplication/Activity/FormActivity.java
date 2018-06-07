@@ -2,21 +2,23 @@ package com.example.android.graphapplication.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Switch;
 
 import com.example.android.graphapplication.Const;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.Validations.Validation;
 
 import java.io.FileOutputStream;
+
+import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 public class FormActivity extends AppCompatActivity implements Const/*, LabelledSpinner.OnItemChosenListener*/ {
 
@@ -29,8 +31,10 @@ public class FormActivity extends AppCompatActivity implements Const/*, Labelled
     private TextInputLayout mVariableExpensesInput;
     private TextInputLayout mRetirementAgeInput;
     private TextInputLayout mExpectancyInput;
-    private Switch mSelfEmployed;
+    private SegmentedButtonGroup mEmploymentStatusSegmentedButton;
+    private SegmentedButtonGroup mCitizenshipSegmentedButton;
     private Button mComputeButton;
+    private Toolbar mToolBar;
     private ConstraintLayout mLayout;
 
     private Validation validation = new Validation();
@@ -50,8 +54,10 @@ public class FormActivity extends AppCompatActivity implements Const/*, Labelled
         mVariableExpensesInput = findViewById(R.id.variable_expenses_input_layout);
         mRetirementAgeInput = findViewById(R.id.retirement_age_input_layout);
         mExpectancyInput = findViewById(R.id.expectancy_input_layout);
-        mSelfEmployed = findViewById(R.id.self_employed_switch);
+        mEmploymentStatusSegmentedButton = findViewById(R.id.employment_status_segmented_button);
+        mCitizenshipSegmentedButton = findViewById(R.id.citizenship_segmented_button);
         mComputeButton = findViewById(R.id.compute_button);
+        mToolBar = findViewById(R.id.toolbar);
         mLayout = findViewById(R.id.layout);
 
 //        mNameInput.getEditText().setText("");
@@ -62,6 +68,11 @@ public class FormActivity extends AppCompatActivity implements Const/*, Labelled
 //        mVariableExpensesInput.getEditText().setText("");
 //        mRetirementAgeInput.getEditText().setText("");
 //        mExpectancyInput.getEditText().setText("");
+
+        setSupportActionBar(mToolBar);
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(TOOLBAR_TITLE_ENTER_YOUR_DETAILS);
 
         mNameInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -222,16 +233,20 @@ public class FormActivity extends AppCompatActivity implements Const/*, Labelled
                         mVariableExpensesInput.isErrorEnabled() || mGrossMonthlyIncomeInput.isErrorEnabled()) {
                     Snackbar.make(mLayout, ERR_MSG_ENTER_VALID_INPUT, Snackbar.LENGTH_LONG).show();
                 } else {
+                    String employmentStatus = mEmploymentStatusSegmentedButton.getPosition() == 0 ? SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED : SEGMENTED_BUTTON_VALUE_EMPLOYED;
+                    String citizenship = mCitizenshipSegmentedButton.getPosition() == 0 ? SEGMENTED_BUTTON_VALUE_SINGPOREAN : SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR;
+
                     //Saving data in internal storage
                     String fileContent = CONTENT_NAME + ":" + mNameInput.getEditText().getText().toString() +
-                            "/" + CONTENT_AGE + ":" + mAgeInput.getEditText().getText().toString() +
-                            "/" + CONTENT_CURRENT_ASSETS + ":" + mCurrentAssets.getEditText().getText().toString() +
-                            "/" + CONTENT_GROSS_MONTHLY_INCOME + ":" + mGrossMonthlyIncomeInput.getEditText().getText().toString() +
-                            "/" + CONTENT_FIXED_EXPENSES + ":" + mFixedExpensesInput.getEditText().getText().toString() +
-                            "/" + CONTENT_VARIABLE_EXPENSES + ":" + mVariableExpensesInput.getEditText().getText().toString() +
-                            "/" + CONTENT_RETIREMENT_AGE + ":" + mRetirementAgeInput.getEditText().getText().toString() +
-                            "/" + CONTENT_EXPECTANCY + ":" + mExpectancyInput.getEditText().getText().toString() +
-                            "/" + CONTENT_JOB_STATUS + ":" + mSelfEmployed.isChecked();
+                            "//" + CONTENT_AGE + ":" + mAgeInput.getEditText().getText().toString() +
+                            "//" + CONTENT_CURRENT_ASSETS + ":" + mCurrentAssets.getEditText().getText().toString() +
+                            "//" + CONTENT_GROSS_MONTHLY_INCOME + ":" + mGrossMonthlyIncomeInput.getEditText().getText().toString() +
+                            "//" + CONTENT_FIXED_EXPENSES + ":" + mFixedExpensesInput.getEditText().getText().toString() +
+                            "//" + CONTENT_VARIABLE_EXPENSES + ":" + mVariableExpensesInput.getEditText().getText().toString() +
+                            "//" + CONTENT_RETIREMENT_AGE + ":" + mRetirementAgeInput.getEditText().getText().toString() +
+                            "//" + CONTENT_EXPECTANCY + ":" + mExpectancyInput.getEditText().getText().toString() +
+                            "//" + CONTENT_EMPLOYMENT_STATUS + ":" + employmentStatus +
+                            "//" + CONTENT_CITIZENSHIP + ":" + citizenship;
 
                     try {
                         FileOutputStream fileOutputStream = openFileOutput(FILE_USER_INFO, MODE_PRIVATE);
