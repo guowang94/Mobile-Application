@@ -38,7 +38,8 @@
     <string name="cpf_contribution">CPF Contributions</string>
 
     <!--Option Menu-->
-    <string name="action_settings">Settings</string>
+    <string name="action_apply_scenarios">Apply Scenarios</string>
+    <string name="action_export">Export</string>
     
     <!--code string-->
     <string name="navigation_drawer_open">Open navigation drawer</string>

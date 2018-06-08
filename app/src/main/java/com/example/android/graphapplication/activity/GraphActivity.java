@@ -149,12 +149,16 @@ public class GraphActivity extends AppCompatActivity implements Const,
 
                 startActivity(new Intent(GraphActivity.this, SummaryActivity.class));
                 break;
+
             case R.id.nav_events:
                 break;
+
             case R.id.nav_milestones:
                 break;
+
             case R.id.nav_plans:
                 break;
+
             default:
                 Log.i(TAG, "onNavigationItemSelected: in default");
         }
@@ -181,17 +185,17 @@ public class GraphActivity extends AppCompatActivity implements Const,
             Log.i(TAG, "Selected stack index: " + h.getStackIndex());
             Log.i("VAL SELECTED", "Value: " + entry.getYVals()[h.getStackIndex()]);
 
-            if (entry.getYVals().length == 2) {
-                switch (h.getStackIndex()) {
-                    case 0:
-                        type = ", Income: ";
-                        break;
-                    case 1:
-                        type = ", Assets: ";
-                        break;
-                    default:
-                        Log.i(TAG, "Index Value: " + h.getStackIndex() + ", type not available");
-                }
+            switch (h.getStackIndex()) {
+                case 0:
+                    type = ", Income: ";
+                    break;
+
+                case 1:
+                    type = ", Assets: ";
+                    break;
+
+                default:
+                    Log.i(TAG, "Index Value: " + h.getStackIndex() + ", type not available");
             }
 
             Snackbar.make(mFrameLayout, "Age: " + NumberFormat.getIntegerInstance().format(entry.getX()) +
@@ -229,7 +233,7 @@ public class GraphActivity extends AppCompatActivity implements Const,
         ArrayList<BarEntry> yVals = new ArrayList<>();
         float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
         float firstYearExpenses = (fixedExpenses + variableExpenses) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
-        float annualIncome = 0f;
+        float annualIncome;
         float annualExpenses = (fixedExpenses + variableExpenses) * 12;
         float cpfOrdinaryAccount = 0f;
         float cpfSpecialAccount = 0f;
@@ -431,12 +435,15 @@ public class GraphActivity extends AppCompatActivity implements Const,
         Menu menu = mNavigationView.getMenu();
         //To allow the icon to display it's original color
         mNavigationView.setItemIconTintList(null);
-        menu.add(1, R.id.nav_summary_details, 0, NAV_SUMMARY_DETAILS).setIcon(R.mipmap.ic_nav_summary);
-        menu.add(2, R.id.nav_events, 0, NAV_EVENTS).setIcon(R.mipmap.ic_nav_event);
-        menu.add(3, R.id.nav_milestones, 0, NAV_MILESTONES).setIcon(R.mipmap.ic_nav_milestone);
-        menu.add(4, R.id.nav_plans, 0, NAV_PLANS).setIcon(R.mipmap.ic_nav_plans);
+        menu.add(1, R.id.nav_home, 0, NAV_HOME).setIcon(R.mipmap.ic_nav_home);
+        menu.add(2, R.id.nav_summary_details, 0, NAV_SUMMARY_DETAILS).setIcon(R.mipmap.ic_nav_summary);
+        menu.add(3, R.id.nav_events, 0, NAV_EVENTS).setIcon(R.mipmap.ic_nav_event);
+        menu.add(4, R.id.nav_milestones, 0, NAV_MILESTONES).setIcon(R.mipmap.ic_nav_milestone);
+        menu.add(5, R.id.nav_plans, 0, NAV_PLANS).setIcon(R.mipmap.ic_nav_plans);
+        //TODO need to ask annie for the icon for the graph
+        menu.add(6, R.id.nav_graph, 0, NAV_GRAPH);
         //To create a line after the last item
-        menu.add(5, 0, 0, "");
+        menu.add(7, 0, 0, "");
     }
 
     /**
@@ -491,26 +498,37 @@ public class GraphActivity extends AppCompatActivity implements Const,
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.option_menu_list, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     /**
      * This method will tap on Option Item
      *
-     * @param //menuItem store all the menu items
+     * @param menuItem store all the menu items
      * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.action_settings:
-                Snackbar.make(mFrameLayout, "Settings", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+            //TODO need to get the icon for apply scenario and export
+            case R.id.action_apply_scenarios:
+                Snackbar.make(mFrameLayout, "Apply Scenarios", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         // Do nothing
                     }
                 }).show();
                 break;
+
+            case R.id.action_export:
+                Snackbar.make(mFrameLayout, "Export", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Do nothing
+                    }
+                }).show();
+                break;
+
             default:
                 Log.i(TAG, "onOptionsItemSelected: In default");
         }

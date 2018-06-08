@@ -32,10 +32,12 @@ public interface Const {
     String SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR = "Foreigner/PR";
 
     //Navigation Fields name
+    String NAV_HOME = "Home";
     String NAV_PLANS = "Plans";
     String NAV_SUMMARY_DETAILS = "Summary Details";
     String NAV_EVENTS = "Events";
     String NAV_MILESTONES = "Milestones";
+    String NAV_GRAPH = "Graph";
 
     //Toolbar title
     String TOOLBAR_TITLE_SUMMARY = "Summary";

@@ -17,7 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include layout="@layout/toolbar_layout" />
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar_layout" />
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/stack_bar_graph"
@@ -41,9 +43,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/drawerBackground"
+        android:background="@color/white"
         android:fitsSystemWindows="true"
-        app:itemTextColor="@color/white">
+        app:itemTextColor="@color/nav_text_color">
 
         <!--<Button-->
         <!--android:id="@+id/nav_back_button"-->
