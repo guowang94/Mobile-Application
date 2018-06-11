@@ -37,7 +37,8 @@ public class SummaryActivity extends AppCompatActivity implements Const {
     private Toolbar mToolBar;
     private TextView mLeftoversBalance;
     private TextView mShortfall;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mVerticalRecyclerView;
+    private RecyclerView mHorizontalRecyclerView;
     private LinearLayout mLinearLayout;
 
     private UserInfoAdapter mAdapter;
@@ -51,14 +52,15 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
         mToolBar = findViewById(R.id.toolbar);
-        mLeftoversBalance = findViewById(R.id.leftovers_balance);
-        mShortfall = findViewById(R.id.short_fall);
-        mRecyclerView = findViewById(R.id.recycler_view);
+//        mLeftoversBalance = findViewById(R.id.leftovers_balance);
+//        mShortfall = findViewById(R.id.short_fall);
+        mVerticalRecyclerView = findViewById(R.id.vertical_recycler_view);
+        mHorizontalRecyclerView = findViewById(R.id.horizontal_recycler_view);
         mLinearLayout = findViewById(R.id.layout);
 
         initData();
 
-        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView,
+        mVerticalRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mVerticalRecyclerView,
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
@@ -100,30 +102,38 @@ public class SummaryActivity extends AppCompatActivity implements Const {
 
         mAdapter = new UserInfoAdapter(userInfoList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        mRecyclerView.setAdapter(mAdapter);
+        mVerticalRecyclerView.setLayoutManager(mLayoutManager);
+        mVerticalRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mVerticalRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mVerticalRecyclerView.setAdapter(mAdapter);
 
-        if (Float.valueOf(content.get(CONTENT_SHORTFALL)) < 0f) {
-            mLeftoversBalance.setText("$0.00");
-        } else {
-            mLeftoversBalance.setText(String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                    .format(Float.valueOf(content.get(CONTENT_BALANCE)))));
-        }
-
-        if (Float.valueOf(content.get(CONTENT_SHORTFALL)) > 0f) {
-            mShortfall.setText("$0.00");
-        } else {
-            mShortfall.setText(String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                    .format(Float.valueOf(content.get(CONTENT_SHORTFALL)))));
-        }
+//        if (Float.valueOf(content.get(CONTENT_SHORTFALL)) < 0f) {
+//            mLeftoversBalance.setText("$0.00");
+//        } else {
+//            mLeftoversBalance.setText(String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+//                    .format(Float.valueOf(content.get(CONTENT_BALANCE)))));
+//        }
+//
+//        if (Float.valueOf(content.get(CONTENT_SHORTFALL)) > 0f) {
+//            mShortfall.setText("$0.00");
+//        } else {
+//            mShortfall.setText(String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+//                    .format(Float.valueOf(content.get(CONTENT_SHORTFALL)))));
+//        }
 
         if (content.get(CONTENT_AGE_OF_SHORTFALL) == null) {
             shortfallAge = "N/A";
         } else {
             shortfallAge = content.get(CONTENT_AGE_OF_SHORTFALL);
         }
+
+
+        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mHorizontalRecyclerView.setLayoutManager(mLayoutManager2);
+        mHorizontalRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mHorizontalRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.HORIZONTAL));
+        mHorizontalRecyclerView.setAdapter(mAdapter);
+
 
         //Initialise Recycle view data
         userInfoList.add(new UserInfo(CONTENT_NAME, content.get(CONTENT_NAME), R.mipmap.ic_summary_screen_name));
@@ -133,6 +143,11 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         userInfoList.add(new UserInfo(CONTENT_RETIREMENT_AGE, content.get(CONTENT_RETIREMENT_AGE), R.mipmap.ic_summary_screen_retirement));
         userInfoList.add(new UserInfo(CONTENT_AGE_OF_SHORTFALL, shortfallAge, R.mipmap.ic_summary_screen_age_shortfall));
         userInfoList.add(new UserInfo(CONTENT_CPF_DETAILS, ">", R.mipmap.ic_summary_screen_cpf));
+
+
+
+
+
     }
 
     /**

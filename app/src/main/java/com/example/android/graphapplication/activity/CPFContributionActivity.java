@@ -53,7 +53,7 @@ public class CPFContributionActivity extends AppCompatActivity implements Const 
 
         mChart = findViewById(R.id.pie_chart);
         mToolBar = findViewById(R.id.toolbar);
-        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.vertical_recycler_view);
 
         initData();
         pieChartSetup();
