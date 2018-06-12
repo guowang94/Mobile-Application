@@ -352,15 +352,15 @@ public class GraphActivity extends AppCompatActivity implements Const,
             if (assets < 0f) {
                 if (shortfallAge == -1) {
                     shortfallAge = i;
-                    fileContent = fileContent.concat("//" + CONTENT_AGE_OF_SHORTFALL + ":" + String.valueOf(shortfallAge));
+                    fileContent = fileContent.concat("//" + CONTENT_SHORTFALL_AGE + ":" + String.valueOf(shortfallAge));
                 }
             }
 
             if (i == expectancy) {
                 fileContent += "//" + CONTENT_SHORTFALL + ":" + String.valueOf(assets) +
-                        "//" + CONTENT_CPF_ORDINARY_ACCOUNT + ":" + String.valueOf(cpfOrdinaryAccount) +
-                        "//" + CONTENT_CPF_SPECIAL_ACCOUNT + ":" + String.valueOf(cpfSpecialAccount) +
-                        "//" + CONTENT_CPF_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
+                        "//" + CONTENT_ORDINARY_ACCOUNT + ":" + String.valueOf(cpfOrdinaryAccount) +
+                        "//" + CONTENT_SPECIAL_ACCOUNT + ":" + String.valueOf(cpfSpecialAccount) +
+                        "//" + CONTENT_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
             }
         }
         return yVals;
@@ -440,8 +440,7 @@ public class GraphActivity extends AppCompatActivity implements Const,
         menu.add(3, R.id.nav_events, 0, NAV_EVENTS).setIcon(R.mipmap.ic_nav_event);
         menu.add(4, R.id.nav_milestones, 0, NAV_MILESTONES).setIcon(R.mipmap.ic_nav_milestone);
         menu.add(5, R.id.nav_plans, 0, NAV_PLANS).setIcon(R.mipmap.ic_nav_plans);
-        //TODO need to ask annie for the icon for the graph
-        menu.add(6, R.id.nav_graph, 0, NAV_GRAPH);
+        menu.add(6, R.id.nav_graph, 0, NAV_GRAPH).setIcon(R.mipmap.ic_nav_bar_chart);
         //To create a line after the last item
         menu.add(7, 0, 0, "");
     }

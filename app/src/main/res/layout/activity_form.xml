@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="@string/personal_information"
             android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/expectancy"
                 android:inputType="number"
-                android:text="65" />
+                android:text="85" />
         </android.support.design.widget.TextInputLayout>
 
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
@@ -202,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="@string/financial_information"
             android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/fixed_expenses"
                 android:inputType="numberDecimal"
-                android:text="500" />
+                android:text="1000" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -283,6 +283,7 @@
         <Button
             android:id="@+id/compute_button"
             android:layout_width="match_parent"
+            style="@style/form_button"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:layout_marginEnd="16dp"
@@ -290,7 +291,6 @@
             android:layout_marginTop="32dp"
             android:background="@drawable/compute_button"
             android:text="@string/graph_forecast"
-            android:textAppearance="@style/landing_screen_compute"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
