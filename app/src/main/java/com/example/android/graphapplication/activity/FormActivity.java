@@ -245,8 +245,8 @@ public class FormActivity extends AppCompatActivity implements Const/*, Labelled
                             "//" + CONTENT_VARIABLE_EXPENSES + ":" + mVariableExpensesInput.getEditText().getText().toString() +
                             "//" + CONTENT_RETIREMENT_AGE + ":" + mRetirementAgeInput.getEditText().getText().toString() +
                             "//" + CONTENT_EXPECTANCY + ":" + mExpectancyInput.getEditText().getText().toString() +
-                            "//" + CONTENT_EMPLOYMENT_STATUS + ":" + employmentStatus +
-                            "//" + CONTENT_CITIZENSHIP + ":" + citizenship;
+                            "//" + CONTENT_JOB_STATUS + ":" + employmentStatus +
+                            "//" + CONTENT_CITIZENSHIP_STATUS + ":" + citizenship;
 
                     try {
                         FileOutputStream fileOutputStream = openFileOutput(FILE_USER_INFO, MODE_PRIVATE);

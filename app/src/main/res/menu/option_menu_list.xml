@@ -10,12 +10,12 @@
         <menu>
             <item
                 android:id="@+id/action_apply_scenarios"
-                android:icon="@mipmap/ic_nav_plans"
+                android:icon="@mipmap/ic_opt_menu_filter"
                 android:title="@string/action_apply_scenarios"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/action_export"
-                android:icon="@mipmap/ic_nav_plans"
+                android:icon="@mipmap/ic_opt_menu_export"
                 android:title="@string/action_export"
                 app:showAsAction="ifRoom" />
         </menu>

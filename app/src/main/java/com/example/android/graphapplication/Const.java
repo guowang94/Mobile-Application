@@ -2,25 +2,27 @@ package com.example.android.graphapplication;
 
 public interface Const {
 
-    //Fields
+    //Internal Storage Key
     String CONTENT_NAME = "Name";
     String CONTENT_AGE = "Age";
     String CONTENT_CURRENT_ASSETS = "Current Assets";
     String CONTENT_GROSS_MONTHLY_INCOME = "Gross Monthly Income";
-    String CONTENT_MONTHLY_INCOME = "Monthly Income";
     String CONTENT_FIXED_EXPENSES = "Fixed Expenses";
     String CONTENT_VARIABLE_EXPENSES = "Variable Expenses";
     String CONTENT_RETIREMENT_AGE = "Retirement Age";
-    String CONTENT_AGE_OF_SHORTFALL = "Age Of Shortfall";
-    String CONTENT_CPF_DETAILS = "CPF Details";
+    String CONTENT_SHORTFALL_AGE = "Shortfall Age";
     String CONTENT_EXPECTANCY = "Expectancy";
     String CONTENT_BALANCE = "Balance";
     String CONTENT_SHORTFALL = "Shortfall";
-    String CONTENT_CPF_ORDINARY_ACCOUNT = "CPF Ordinary Account";
-    String CONTENT_CPF_SPECIAL_ACCOUNT = "CPF Special Account";
-    String CONTENT_CPF_MEDISAVE_ACCOUNT = "CPF Medisave Account";
-    String CONTENT_EMPLOYMENT_STATUS = "Employment Status";
-    String CONTENT_CITIZENSHIP = "Citizenship";
+    String CONTENT_ORDINARY_ACCOUNT = "Ordinary Account";
+    String CONTENT_SPECIAL_ACCOUNT = "Special Account";
+    String CONTENT_MEDISAVE_ACCOUNT = "Medisave Account";
+    String CONTENT_JOB_STATUS = "Job Status";
+    String CONTENT_CITIZENSHIP_STATUS = "Citizenship Status";
+
+    //Summary Screen
+    String SUMMARY_BALANCE = "Balance";
+    String SUMMARY_SHORTFALL = "ShortFall";
 
     //File name
     String FILE_USER_INFO = "userInfo";
@@ -47,11 +49,8 @@ public interface Const {
     //Graph Legend
     String GRAPH_LEGEND_ASSETS = "Assets";
     String GRAPH_LEGEND_INCOME = "Income";
-    String GRAPH_LEGEND_CPF_OA = "CPF OA";
-    String GRAPH_LEGEND_CPF_SA = "CPF SA";
-    String GRAPH_LEGEND_CPF_MA = "CPF MA";
 
-    //Error Message
+    //Form Validation Message
     String ERR_MSG_INVALID_NAME = "Please enter valid name";
     String ERR_MSG_INVALID_RETIREMENT_AGE = "Retirement age cannot be less than current age";
     String ERR_MSG_INVALID_EXPECTANCY = "Expectancy cannot be less than current age or retirement age";

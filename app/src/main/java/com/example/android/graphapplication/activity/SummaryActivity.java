@@ -1,7 +1,6 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -9,16 +8,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.android.graphapplication.Const;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.recycleList.RecyclerTouchListener;
+import com.example.android.graphapplication.recycleList.CPFContribution;
+import com.example.android.graphapplication.recycleList.CPFContributionAdapter;
+import com.example.android.graphapplication.recycleList.CirclePagerIndicatorDecoration;
+import com.example.android.graphapplication.recycleList.SummaryBalance;
+import com.example.android.graphapplication.recycleList.SummaryBalanceAdapter;
 import com.example.android.graphapplication.recycleList.UserInfo;
 import com.example.android.graphapplication.recycleList.UserInfoAdapter;
 
@@ -35,16 +37,21 @@ public class SummaryActivity extends AppCompatActivity implements Const {
 
     private static final String TAG = "SummaryActivity";
     private Toolbar mToolBar;
-    private TextView mLeftoversBalance;
-    private TextView mShortfall;
-    private RecyclerView mVerticalRecyclerView;
-    private RecyclerView mHorizontalRecyclerView;
+    private RecyclerView mSummaryRecyclerView;
+    private RecyclerView mBalanceRecyclerView;
+    private RecyclerView mCPFContributionRecyclerView;
     private LinearLayout mLinearLayout;
 
-    private UserInfoAdapter mAdapter;
+    private UserInfoAdapter mUserInfoAdapter;
+    private List<UserInfo> userInfoList = new ArrayList<>();
+    private SummaryBalanceAdapter mSummaryBalanceAdapter;
+    private List<SummaryBalance> summaryBalanceList = new ArrayList<>();
+    private CPFContributionAdapter mCPFContributionAdapter;
+    private List<CPFContribution> cpfContributionList = new ArrayList<>();
+
     private String fileContent;
     private HashMap<String, String> content;
-    private List<UserInfo> userInfoList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,31 +59,12 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
         mToolBar = findViewById(R.id.toolbar);
-//        mLeftoversBalance = findViewById(R.id.leftovers_balance);
-//        mShortfall = findViewById(R.id.short_fall);
-        mVerticalRecyclerView = findViewById(R.id.vertical_recycler_view);
-        mHorizontalRecyclerView = findViewById(R.id.horizontal_recycler_view);
+        mSummaryRecyclerView = findViewById(R.id.summary_recycler_view);
+        mBalanceRecyclerView = findViewById(R.id.horizontal_recycler_view);
+        mCPFContributionRecyclerView = findViewById(R.id.cpf_contribution_recycler_view);
         mLinearLayout = findViewById(R.id.layout);
 
         initData();
-
-        mVerticalRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mVerticalRecyclerView,
-                new RecyclerTouchListener.ClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        UserInfo userInfo = userInfoList.get(position);
-
-                        if (CONTENT_CPF_DETAILS.equals(userInfo.getTitle())) {
-                            startActivity(new Intent(SummaryActivity.this, CPFContributionActivity.class));
-                        }
-                    }
-
-                    @Override
-                    public void onLongClick(View view, int position) {
-
-                    }
-                }));
-
         Log.i(TAG, "onCreate: out");
     }
 
@@ -100,54 +88,66 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         Log.i(TAG, "onCreate: " + fileContent);
         Log.i(TAG, "onCreate: " + content);
 
-        mAdapter = new UserInfoAdapter(userInfoList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mVerticalRecyclerView.setLayoutManager(mLayoutManager);
-        mVerticalRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mVerticalRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        mVerticalRecyclerView.setAdapter(mAdapter);
+        //Recycler View Setup for UserInfo
+        mUserInfoAdapter = new UserInfoAdapter(userInfoList);
+        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mSummaryRecyclerView.setLayoutManager(mSummaryLayoutManager);
+        mSummaryRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mSummaryRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mSummaryRecyclerView.setAdapter(mUserInfoAdapter);
 
-//        if (Float.valueOf(content.get(CONTENT_SHORTFALL)) < 0f) {
-//            mLeftoversBalance.setText("$0.00");
-//        } else {
-//            mLeftoversBalance.setText(String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-//                    .format(Float.valueOf(content.get(CONTENT_BALANCE)))));
-//        }
-//
-//        if (Float.valueOf(content.get(CONTENT_SHORTFALL)) > 0f) {
-//            mShortfall.setText("$0.00");
-//        } else {
-//            mShortfall.setText(String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-//                    .format(Float.valueOf(content.get(CONTENT_SHORTFALL)))));
-//        }
-
-        if (content.get(CONTENT_AGE_OF_SHORTFALL) == null) {
+        if (content.get(CONTENT_SHORTFALL_AGE) == null) {
             shortfallAge = "N/A";
         } else {
-            shortfallAge = content.get(CONTENT_AGE_OF_SHORTFALL);
+            shortfallAge = content.get(CONTENT_SHORTFALL_AGE);
         }
-
-
-        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mHorizontalRecyclerView.setLayoutManager(mLayoutManager2);
-        mHorizontalRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mHorizontalRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.HORIZONTAL));
-        mHorizontalRecyclerView.setAdapter(mAdapter);
-
 
         //Initialise Recycle view data
         userInfoList.add(new UserInfo(CONTENT_NAME, content.get(CONTENT_NAME), R.mipmap.ic_summary_screen_name));
         userInfoList.add(new UserInfo(CONTENT_AGE, content.get(CONTENT_AGE), R.mipmap.ic_summary_screen_age));
-        userInfoList.add(new UserInfo(CONTENT_MONTHLY_INCOME, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(Float.valueOf(content.get(CONTENT_GROSS_MONTHLY_INCOME)))), R.mipmap.ic_summary_screen_income));
+        userInfoList.add(new UserInfo(CONTENT_SHORTFALL_AGE, shortfallAge, R.mipmap.ic_summary_screen_age_shortfall));
         userInfoList.add(new UserInfo(CONTENT_RETIREMENT_AGE, content.get(CONTENT_RETIREMENT_AGE), R.mipmap.ic_summary_screen_retirement));
-        userInfoList.add(new UserInfo(CONTENT_AGE_OF_SHORTFALL, shortfallAge, R.mipmap.ic_summary_screen_age_shortfall));
-        userInfoList.add(new UserInfo(CONTENT_CPF_DETAILS, ">", R.mipmap.ic_summary_screen_cpf));
+        userInfoList.add(new UserInfo(CONTENT_JOB_STATUS, content.get(CONTENT_JOB_STATUS), R.mipmap.ic_summary_screen_job_status));
+        userInfoList.add(new UserInfo(CONTENT_CITIZENSHIP_STATUS, content.get(CONTENT_CITIZENSHIP_STATUS), R.mipmap.ic_summary_screen_citizen));
+        userInfoList.add(new UserInfo(CONTENT_GROSS_MONTHLY_INCOME, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                .format(Float.valueOf(content.get(CONTENT_GROSS_MONTHLY_INCOME)))), R.mipmap.ic_summary_screen_income));
 
+        //Recycler View Setup for Summary Balance
+        mSummaryBalanceAdapter = new SummaryBalanceAdapter(summaryBalanceList);
+        RecyclerView.LayoutManager mBalanceLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mBalanceRecyclerView.setLayoutManager(mBalanceLayoutManager);
+        mBalanceRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mBalanceRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.HORIZONTAL));
+        mBalanceRecyclerView.setAdapter(mSummaryBalanceAdapter);
+        mBalanceRecyclerView.addItemDecoration(new CirclePagerIndicatorDecoration());
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(mBalanceRecyclerView);
 
+        //Initialise Recycle view data
+        summaryBalanceList.add(new SummaryBalance(SUMMARY_BALANCE, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                .format(Float.valueOf(content.get(CONTENT_BALANCE)))), R.mipmap.ic_summary_screen_balance));
+        summaryBalanceList.add(new SummaryBalance(SUMMARY_SHORTFALL, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                .format(Float.valueOf(content.get(CONTENT_SHORTFALL)))), R.mipmap.ic_summary_screen_shortfall));
 
+        //Recycler View Setup for CPF Contribution
+        mCPFContributionAdapter = new CPFContributionAdapter(cpfContributionList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mCPFContributionRecyclerView.setLayoutManager(mLayoutManager);
+        mCPFContributionRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(this,
+                LinearLayoutManager.VERTICAL));
+        mCPFContributionRecyclerView.setAdapter(mCPFContributionAdapter);
 
-
+        //Initialise Recycle view data
+        cpfContributionList.add(new CPFContribution(CONTENT_ORDINARY_ACCOUNT,
+                NumberFormat.getCurrencyInstance(Locale.US)
+                        .format(Float.valueOf(content.get(CONTENT_ORDINARY_ACCOUNT)))));
+        cpfContributionList.add(new CPFContribution(CONTENT_SPECIAL_ACCOUNT,
+                NumberFormat.getCurrencyInstance(Locale.US)
+                        .format(Float.valueOf(content.get(CONTENT_SPECIAL_ACCOUNT)))));
+        cpfContributionList.add(new CPFContribution(CONTENT_MEDISAVE_ACCOUNT,
+                NumberFormat.getCurrencyInstance(Locale.US)
+                        .format(Float.valueOf(content.get(CONTENT_MEDISAVE_ACCOUNT)))));
     }
 
     /**
