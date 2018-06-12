@@ -16,13 +16,13 @@ import android.widget.LinearLayout;
 
 import com.example.android.graphapplication.Const;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.recycleList.CPFContribution;
-import com.example.android.graphapplication.recycleList.CPFContributionAdapter;
-import com.example.android.graphapplication.recycleList.CirclePagerIndicatorDecoration;
-import com.example.android.graphapplication.recycleList.SummaryBalance;
-import com.example.android.graphapplication.recycleList.SummaryBalanceAdapter;
-import com.example.android.graphapplication.recycleList.UserInfo;
-import com.example.android.graphapplication.recycleList.UserInfoAdapter;
+import com.example.android.graphapplication.recyclerList.CPFContribution;
+import com.example.android.graphapplication.recyclerList.CPFContributionAdapter;
+import com.example.android.graphapplication.recyclerList.CirclePagerIndicatorDecoration;
+import com.example.android.graphapplication.recyclerList.SummaryBalance;
+import com.example.android.graphapplication.recyclerList.SummaryBalanceAdapter;
+import com.example.android.graphapplication.recyclerList.UserInfo;
+import com.example.android.graphapplication.recyclerList.UserInfoAdapter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

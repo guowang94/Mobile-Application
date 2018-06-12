@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.recycleList;
+package com.example.android.graphapplication.recyclerList;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
