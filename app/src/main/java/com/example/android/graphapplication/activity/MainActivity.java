@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.Constants;
+import com.example.android.graphapplication.adapter.ViewPagerAdapter;
+import com.example.android.graphapplication.fragment.GraphFragment;
+import com.example.android.graphapplication.fragment.SummaryFragment;
 import com.example.android.graphapplication.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText(Constants.NAV_MILESTONES);
+//        tabThree.setTooltipText(Constants.NAV_MILESTONES);
         tabThree.setWidth(width / 5);
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_nav_milestone, 0, 0);
         tabThree.setCompoundDrawablePadding(8);
@@ -76,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new GraphFragment(), Constants.TOOLBAR_TITLE_GRAPH);
-        adapter.addFragment(new SummaryFragment(), Constants.TOOLBAR_TITLE_EVENTS);
+        adapter.addFragment(new GraphFragment(), Constants.TOOLBAR_TITLE_EVENTS);
         adapter.addFragment(new GraphFragment(), Constants.TOOLBAR_TITLE_MILESTONES);
-        adapter.addFragment(new SummaryFragment(), Constants.TOOLBAR_TITLE_PLANS);
-        adapter.addFragment(new GraphFragment(), Constants.TOOLBAR_TITLE_SUMMARY);
+        adapter.addFragment(new GraphFragment(), Constants.TOOLBAR_TITLE_PLANS);
+        adapter.addFragment(new SummaryFragment(), Constants.TOOLBAR_TITLE_SUMMARY);
         viewPager.setAdapter(adapter);
     }
 }

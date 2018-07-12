@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Adapter;
+package com.example.android.graphapplication;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;

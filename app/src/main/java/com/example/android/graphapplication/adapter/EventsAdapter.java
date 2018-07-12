@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Adapter;
+package com.example.android.graphapplication.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.Model.Events;
+import com.example.android.graphapplication.model.Events;
 
 import java.util.List;
 

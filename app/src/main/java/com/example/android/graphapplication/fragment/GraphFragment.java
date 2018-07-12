@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.activity;
+package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -36,6 +36,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -43,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class GraphFragment extends Fragment implements Constants, OnChartValueSelectedListener {
 
@@ -85,6 +88,13 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
 
         Log.d(TAG, "onCreateView: out");
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //fixme after navigating from SummaryFragment, the option menu has been set to false
+        setHasOptionsMenu(true);
     }
 
     /**
@@ -301,6 +311,14 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
             }
         }
 
+        //Update the file data
+        try {
+            FileOutputStream fileOutputStream = getActivity().openFileOutput(FILE_USER_INFO, MODE_PRIVATE);
+            fileOutputStream.write(fileContent.getBytes());
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return yVals;
     }

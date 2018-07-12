@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.activity;
+package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,15 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.example.android.graphapplication.Adapter.CirclePagerIndicatorDecoration;
+import com.example.android.graphapplication.CirclePagerIndicatorDecoration;
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.Model.CPFContribution;
-import com.example.android.graphapplication.Adapter.CPFContributionAdapter;
-import com.example.android.graphapplication.Model.SummaryBalance;
-import com.example.android.graphapplication.Adapter.SummaryBalanceAdapter;
-import com.example.android.graphapplication.Model.UserInfo;
-import com.example.android.graphapplication.Adapter.UserInfoAdapter;
+import com.example.android.graphapplication.model.CPFContribution;
+import com.example.android.graphapplication.adapter.CPFContributionAdapter;
+import com.example.android.graphapplication.model.SummaryBalance;
+import com.example.android.graphapplication.adapter.SummaryBalanceAdapter;
+import com.example.android.graphapplication.model.UserInfo;
+import com.example.android.graphapplication.adapter.UserInfoAdapter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -79,11 +79,11 @@ public class SummaryFragment extends Fragment implements Constants {
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
         // Get a support ActionBar corresponding to this mToolBar
         ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.setTitle(Constants.TOOLBAR_TITLE_GRAPH);
+        actionBar.setTitle(Constants.TOOLBAR_TITLE_SUMMARY);
 
         // Enable the top left button
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
 
         initData();
 
@@ -170,6 +170,19 @@ public class SummaryFragment extends Fragment implements Constants {
         mCPFContributionRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
         mCPFContributionRecyclerView.setAdapter(mCPFContributionAdapter);
+    }
+
+    /**
+     * This method will clear the current list value when Fragment is onPause()
+     */
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause: in");
+        super.onPause();
+        userInfoList.clear();
+        summaryBalanceList.clear();
+        cpfContributionList.clear();
+        Log.d(TAG, "onPause: out");
     }
 
     /**

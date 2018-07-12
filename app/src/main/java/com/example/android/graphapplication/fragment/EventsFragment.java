@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.activity;
+package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +14,8 @@ import android.util.Log;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.Adapter.EventsAdapter;
-import com.example.android.graphapplication.Model.Events;
+import com.example.android.graphapplication.adapter.EventsAdapter;
+import com.example.android.graphapplication.model.Events;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EventsActivity extends AppCompatActivity implements Constants {
+public class EventsFragment extends AppCompatActivity implements Constants {
 
-    private static final String TAG = "EventsActivity";
+    private static final String TAG = "EventsFragment";
     private RecyclerView mEventsRecyclerView;
     private Toolbar mToolBar;
 
@@ -34,10 +34,6 @@ public class EventsActivity extends AppCompatActivity implements Constants {
     private HashMap<String, String> content;
     private EventsAdapter mEventsAdapter;
     private List<Events> eventsList = new ArrayList<>();
-
-    public EventsActivity() {
-
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

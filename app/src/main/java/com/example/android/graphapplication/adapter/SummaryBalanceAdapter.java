@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Adapter;
+package com.example.android.graphapplication.adapter;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.Model.SummaryBalance;
+import com.example.android.graphapplication.model.SummaryBalance;
 
 import java.util.List;
 

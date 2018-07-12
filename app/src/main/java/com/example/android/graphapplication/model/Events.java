@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.Model;
+package com.example.android.graphapplication.model;
 
 public class Events {
 
