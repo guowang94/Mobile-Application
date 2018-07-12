@@ -1,23 +1,22 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
@@ -37,7 +36,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -46,34 +44,47 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class GraphActivity extends AppCompatActivity implements Constants,
-        OnChartValueSelectedListener, NavigationView.OnNavigationItemSelectedListener {
+public class GraphFragment extends Fragment implements Constants, OnChartValueSelectedListener {
 
-    private static final String TAG = "GraphActivity";
-    private Toolbar mToolBar;
-    private DrawerLayout mDrawerLayout;
-    private FrameLayout mFrameLayout;
-    private NavigationView mNavigationView;
+    private static final String TAG = "GraphFragment";
+    private ConstraintLayout mLayout;
     private BarChart mChart;
+    private Toolbar mToolBar;
 
     private String fileContent;
     private HashMap<String, String> content;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_graph);
+        Log.d(TAG, "onCreate: out");
+    }
 
-        mChart = findViewById(R.id.stack_bar_graph);
-        mToolBar = findViewById(R.id.toolbar);
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        mFrameLayout = findViewById(R.id.content_frame);
-        mNavigationView = findViewById(R.id.nav_view);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: in");
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_graph, container, false);
+
+        mChart = view.findViewById(R.id.stack_bar_graph);
+        mLayout = view.findViewById(R.id.layout);
+        mToolBar = view.findViewById(R.id.toolbar);
+
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
+        // Get a support ActionBar corresponding to this mToolBar
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle(Constants.TOOLBAR_TITLE_GRAPH);
+
+        // Enable the top left button
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        setHasOptionsMenu(true);
 
         initData();
 
-        Log.d(TAG, "onCreate: out");
+        Log.d(TAG, "onCreateView: out");
+        return view;
     }
 
     /**
@@ -81,89 +92,14 @@ public class GraphActivity extends AppCompatActivity implements Constants,
      */
     private void initData() {
         //Get the content from internal storage file
-        Context context = getApplicationContext();
+        Context context = getActivity().getApplicationContext();
         fileContent = readFile(context, FILE_USER_INFO);
         content = splitFileContent(fileContent);
         Log.i(TAG, "onCreate: " + fileContent);
 
-        setSupportActionBar(mToolBar);
-        // Get a support ActionBar corresponding to this toolbar
-        ActionBar actionBar = getSupportActionBar();
-
-        // Enable the top left button
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        //This will open and close the drawer instead of navigate to the parent screen
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        //this will perform action based on the item selected
-        mNavigationView.setNavigationItemSelectedListener(this);
         mChart.setOnChartValueSelectedListener(this);
 
-        drawerMenuSetup();
         graphViewSetup();
-    }
-
-
-    /**
-     * This method will open and close the drawer instead of back button
-     */
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    /**
-     * This method will select the item in the drawer
-     *
-     * @param menuItem store all the menu items
-     * @return boolean
-     */
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        // set item as selected to persist highlight
-        menuItem.setChecked(true);
-        // close drawer when item is tapped
-        mDrawerLayout.closeDrawers();
-
-        // Add code here to update the UI based on the item selected
-        // For example, swap UI fragments here
-        switch (menuItem.getItemId()) {
-            case R.id.nav_summary_details:
-                //Update the file data
-                try {
-                    FileOutputStream fileOutputStream = openFileOutput(FILE_USER_INFO, MODE_PRIVATE);
-                    fileOutputStream.write(fileContent.getBytes());
-                    fileOutputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                startActivity(new Intent(GraphActivity.this, SummaryActivity.class));
-                break;
-
-            case R.id.nav_events:
-                startActivity(new Intent(GraphActivity.this, EventsActivity.class));
-                break;
-
-            case R.id.nav_milestones:
-                break;
-
-            case R.id.nav_plans:
-                break;
-
-            default:
-                Log.i(TAG, "onNavigationItemSelected: in default");
-        }
-        return true;
     }
 
     /**
@@ -199,7 +135,7 @@ public class GraphActivity extends AppCompatActivity implements Constants,
                     Log.i(TAG, "Index Value: " + h.getStackIndex() + ", type not available");
             }
 
-            Snackbar.make(mFrameLayout, "Age: " + NumberFormat.getIntegerInstance().format(entry.getX()) +
+            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(entry.getX()) +
                             type + DecimalFormat.getCurrencyInstance(Locale.US).format(entry.getYVals()[h.getStackIndex()]),
                     Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                 @Override
@@ -364,6 +300,8 @@ public class GraphActivity extends AppCompatActivity implements Constants,
                         "//" + CONTENT_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
             }
         }
+
+
         return yVals;
     }
 
@@ -417,33 +355,16 @@ public class GraphActivity extends AppCompatActivity implements Constants,
 
         Legend legend = mChart.getLegend();
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         legend.setDrawInside(false);
-        legend.setFormSize(20f);
+        legend.setFormSize(15f);
         legend.setFormToTextSpace(5f);
         legend.setXEntrySpace(6f);
         legend.setTextSize(10f);
 
         mChart.setData(data);
         mChart.invalidate();
-    }
-
-    /**
-     * This method will draw the menu programmatically
-     */
-    private void drawerMenuSetup() {
-        Menu menu = mNavigationView.getMenu();
-        //To allow the icon to display it's original color
-        mNavigationView.setItemIconTintList(null);
-        menu.add(1, R.id.nav_home, 0, NAV_HOME).setIcon(R.mipmap.ic_nav_home);
-        menu.add(2, R.id.nav_summary_details, 0, NAV_SUMMARY_DETAILS).setIcon(R.mipmap.ic_nav_summary);
-        menu.add(3, R.id.nav_events, 0, NAV_EVENTS).setIcon(R.mipmap.ic_nav_event);
-        menu.add(4, R.id.nav_milestones, 0, NAV_MILESTONES).setIcon(R.mipmap.ic_nav_milestone);
-        menu.add(5, R.id.nav_plans, 0, NAV_PLANS).setIcon(R.mipmap.ic_nav_plans);
-        menu.add(6, R.id.nav_graph, 0, NAV_GRAPH).setIcon(R.mipmap.ic_nav_bar_chart);
-        //To create a line after the last item
-        menu.add(7, 0, 0, "");
     }
 
     /**
@@ -495,10 +416,9 @@ public class GraphActivity extends AppCompatActivity implements Constants,
      * @return boolean
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.option_menu_list, menu);
-        return super.onCreateOptionsMenu(menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.option_menu_list, menu);
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     /**
@@ -511,7 +431,7 @@ public class GraphActivity extends AppCompatActivity implements Constants,
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_apply_scenarios:
-                Snackbar.make(mFrameLayout, "Apply Scenarios", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                Snackbar.make(mLayout, "Apply Scenarios", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         // Do nothing
@@ -520,7 +440,7 @@ public class GraphActivity extends AppCompatActivity implements Constants,
                 break;
 
             case R.id.action_export:
-                Snackbar.make(mFrameLayout, "Export", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                Snackbar.make(mLayout, "Export", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         // Do nothing

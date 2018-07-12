@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.recyclerList.Model;
+package com.example.android.graphapplication.Model;
 
 public class SummaryBalance {
 

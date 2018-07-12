@@ -3,6 +3,7 @@ package com.example.android.graphapplication.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,17 +13,20 @@ import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.android.graphapplication.Adapter.CirclePagerIndicatorDecoration;
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.recyclerList.Model.CPFContribution;
-import com.example.android.graphapplication.recyclerList.CPFContributionAdapter;
-import com.example.android.graphapplication.recyclerList.CirclePagerIndicatorDecoration;
-import com.example.android.graphapplication.recyclerList.Model.SummaryBalance;
-import com.example.android.graphapplication.recyclerList.SummaryBalanceAdapter;
-import com.example.android.graphapplication.recyclerList.Model.UserInfo;
-import com.example.android.graphapplication.recyclerList.UserInfoAdapter;
+import com.example.android.graphapplication.Model.CPFContribution;
+import com.example.android.graphapplication.Adapter.CPFContributionAdapter;
+import com.example.android.graphapplication.Model.SummaryBalance;
+import com.example.android.graphapplication.Adapter.SummaryBalanceAdapter;
+import com.example.android.graphapplication.Model.UserInfo;
+import com.example.android.graphapplication.Adapter.UserInfoAdapter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -33,9 +37,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class SummaryActivity extends AppCompatActivity implements Constants {
+public class SummaryFragment extends Fragment implements Constants {
 
-    private static final String TAG = "SummaryActivity";
+    private static final String TAG = "SummaryFragment";
     private Toolbar mToolBar;
     private RecyclerView mSummaryRecyclerView;
     private RecyclerView mBalanceRecyclerView;
@@ -52,20 +56,39 @@ public class SummaryActivity extends AppCompatActivity implements Constants {
     private String fileContent;
     private HashMap<String, String> content;
 
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_summary);
-        mToolBar = findViewById(R.id.toolbar);
-        mSummaryRecyclerView = findViewById(R.id.summary_recycler_view);
-        mBalanceRecyclerView = findViewById(R.id.horizontal_recycler_view);
-        mCPFContributionRecyclerView = findViewById(R.id.cpf_contribution_recycler_view);
-        mLinearLayout = findViewById(R.id.layout);
+        Log.i(TAG, "onCreate: out");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: in");
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_summary, container, false);
+
+        mToolBar = view.findViewById(R.id.toolbar);
+        mSummaryRecyclerView = view.findViewById(R.id.summary_recycler_view);
+        mBalanceRecyclerView = view.findViewById(R.id.horizontal_recycler_view);
+        mCPFContributionRecyclerView = view.findViewById(R.id.cpf_contribution_recycler_view);
+        mLinearLayout = view.findViewById(R.id.layout);
+
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
+        // Get a support ActionBar corresponding to this mToolBar
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle(Constants.TOOLBAR_TITLE_GRAPH);
+
+        // Enable the top left button
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        setHasOptionsMenu(true);
 
         initData();
-        Log.i(TAG, "onCreate: out");
+
+        Log.d(TAG, "onCreateView: out");
+        return view;
     }
 
     /**
@@ -74,15 +97,15 @@ public class SummaryActivity extends AppCompatActivity implements Constants {
     private void initData() {
         String shortfallAge = null;
 
-        setSupportActionBar(mToolBar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
         // Get a support ActionBar corresponding to this toolbar
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         // Enable the top left button
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(TOOLBAR_TITLE_SUMMARY);
 
         //Get the content from internal storage file
-        Context context = getApplicationContext();
+        Context context = getActivity().getApplicationContext();
         fileContent = readFile(context, FILE_USER_INFO);
         content = splitFileContent(fileContent);
         Log.i(TAG, "onCreate: " + fileContent);
@@ -106,10 +129,10 @@ public class SummaryActivity extends AppCompatActivity implements Constants {
 
         //Recycler View Setup for UserInfo
         mUserInfoAdapter = new UserInfoAdapter(userInfoList);
-        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mSummaryRecyclerView.setLayoutManager(mSummaryLayoutManager);
         mSummaryRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mSummaryRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mSummaryRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
         mSummaryRecyclerView.setAdapter(mUserInfoAdapter);
 
         //Initialise Recycle view data for Summary Balance
@@ -120,10 +143,10 @@ public class SummaryActivity extends AppCompatActivity implements Constants {
 
         //Recycler View Setup for Summary Balance
         mSummaryBalanceAdapter = new SummaryBalanceAdapter(summaryBalanceList);
-        RecyclerView.LayoutManager mBalanceLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager mBalanceLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         mBalanceRecyclerView.setLayoutManager(mBalanceLayoutManager);
         mBalanceRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mBalanceRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.HORIZONTAL));
+        mBalanceRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL));
         mBalanceRecyclerView.setAdapter(mSummaryBalanceAdapter);
         mBalanceRecyclerView.addItemDecoration(new CirclePagerIndicatorDecoration());
         PagerSnapHelper snapHelper = new PagerSnapHelper();
@@ -142,11 +165,10 @@ public class SummaryActivity extends AppCompatActivity implements Constants {
 
         //Recycler View Setup for CPF Contribution
         mCPFContributionAdapter = new CPFContributionAdapter(cpfContributionList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mCPFContributionRecyclerView.setLayoutManager(mLayoutManager);
         mCPFContributionRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(this,
-                LinearLayoutManager.VERTICAL));
+        mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
         mCPFContributionRecyclerView.setAdapter(mCPFContributionAdapter);
     }
 

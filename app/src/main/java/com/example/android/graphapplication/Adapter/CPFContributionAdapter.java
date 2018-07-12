@@ -1,4 +1,4 @@
-package com.example.android.graphapplication.recyclerList;
+package com.example.android.graphapplication.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.recyclerList.Model.CPFContribution;
+import com.example.android.graphapplication.Model.CPFContribution;
 
 import java.util.List;
 

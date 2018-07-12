@@ -8,31 +8,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.recyclerList.EventsAdapter;
-import com.example.android.graphapplication.recyclerList.Model.CPFContribution;
-import com.example.android.graphapplication.recyclerList.CPFContributionAdapter;
-import com.example.android.graphapplication.recyclerList.CirclePagerIndicatorDecoration;
-import com.example.android.graphapplication.recyclerList.Model.Events;
-import com.example.android.graphapplication.recyclerList.Model.SummaryBalance;
-import com.example.android.graphapplication.recyclerList.SummaryBalanceAdapter;
-import com.example.android.graphapplication.recyclerList.Model.UserInfo;
-import com.example.android.graphapplication.recyclerList.UserInfoAdapter;
+import com.example.android.graphapplication.Adapter.EventsAdapter;
+import com.example.android.graphapplication.Model.Events;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class EventsActivity extends AppCompatActivity implements Constants {
 
@@ -44,6 +34,10 @@ public class EventsActivity extends AppCompatActivity implements Constants {
     private HashMap<String, String> content;
     private EventsAdapter mEventsAdapter;
     private List<Events> eventsList = new ArrayList<>();
+
+    public EventsActivity() {
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -258,7 +258,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                         e.printStackTrace();
                     }
 
-                    startActivity(new Intent(FormActivity.this, GraphActivity.class));
+                    startActivity(new Intent(FormActivity.this, MainActivity.class));
                 }
             }
         });
