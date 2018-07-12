@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.android.graphapplication.Const;
+import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.validations.Validation;
 
@@ -20,7 +20,7 @@ import java.io.FileOutputStream;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
-public class FormActivity extends AppCompatActivity implements Const/*, LabelledSpinner.OnItemChosenListener*/ {
+public class FormActivity extends AppCompatActivity implements Constants/*, LabelledSpinner.OnItemChosenListener*/ {
 
     private static final String TAG = "FormActivity";
     private TextInputLayout mNameInput;
@@ -233,8 +233,10 @@ public class FormActivity extends AppCompatActivity implements Const/*, Labelled
                         mVariableExpensesInput.isErrorEnabled() || mGrossMonthlyIncomeInput.isErrorEnabled()) {
                     Snackbar.make(mLayout, ERR_MSG_ENTER_VALID_INPUT, Snackbar.LENGTH_LONG).show();
                 } else {
-                    String employmentStatus = mEmploymentStatusSegmentedButton.getPosition() == 0 ? SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED : SEGMENTED_BUTTON_VALUE_EMPLOYED;
-                    String citizenship = mCitizenshipSegmentedButton.getPosition() == 0 ? SEGMENTED_BUTTON_VALUE_SINGPOREAN : SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR;
+                    String employmentStatus = mEmploymentStatusSegmentedButton.getPosition() == 0
+                            ? SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED : SEGMENTED_BUTTON_VALUE_EMPLOYED;
+                    String citizenship = mCitizenshipSegmentedButton.getPosition() == 0
+                            ? SEGMENTED_BUTTON_VALUE_SINGPOREAN : SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR;
 
                     //Saving data in internal storage
                     String fileContent = CONTENT_NAME + ":" + mNameInput.getEditText().getText().toString() +

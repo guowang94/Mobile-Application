@@ -14,14 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.LinearLayout;
 
-import com.example.android.graphapplication.Const;
+import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.recyclerList.CPFContribution;
+import com.example.android.graphapplication.recyclerList.Model.CPFContribution;
 import com.example.android.graphapplication.recyclerList.CPFContributionAdapter;
 import com.example.android.graphapplication.recyclerList.CirclePagerIndicatorDecoration;
-import com.example.android.graphapplication.recyclerList.SummaryBalance;
+import com.example.android.graphapplication.recyclerList.Model.SummaryBalance;
 import com.example.android.graphapplication.recyclerList.SummaryBalanceAdapter;
-import com.example.android.graphapplication.recyclerList.UserInfo;
+import com.example.android.graphapplication.recyclerList.Model.UserInfo;
 import com.example.android.graphapplication.recyclerList.UserInfoAdapter;
 
 import java.io.BufferedReader;
@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class SummaryActivity extends AppCompatActivity implements Const {
+public class SummaryActivity extends AppCompatActivity implements Constants {
 
     private static final String TAG = "SummaryActivity";
     private Toolbar mToolBar;
@@ -88,21 +88,13 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         Log.i(TAG, "onCreate: " + fileContent);
         Log.i(TAG, "onCreate: " + content);
 
-        //Recycler View Setup for UserInfo
-        mUserInfoAdapter = new UserInfoAdapter(userInfoList);
-        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mSummaryRecyclerView.setLayoutManager(mSummaryLayoutManager);
-        mSummaryRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mSummaryRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        mSummaryRecyclerView.setAdapter(mUserInfoAdapter);
-
         if (content.get(CONTENT_SHORTFALL_AGE) == null) {
             shortfallAge = "N/A";
         } else {
             shortfallAge = content.get(CONTENT_SHORTFALL_AGE);
         }
 
-        //Initialise Recycle view data
+        //Initialise Recycle view data for UserInfo
         userInfoList.add(new UserInfo(CONTENT_NAME, content.get(CONTENT_NAME), R.mipmap.ic_summary_screen_name));
         userInfoList.add(new UserInfo(CONTENT_AGE, content.get(CONTENT_AGE), R.mipmap.ic_summary_screen_age));
         userInfoList.add(new UserInfo(CONTENT_SHORTFALL_AGE, shortfallAge, R.mipmap.ic_summary_screen_age_shortfall));
@@ -111,6 +103,20 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         userInfoList.add(new UserInfo(CONTENT_CITIZENSHIP_STATUS, content.get(CONTENT_CITIZENSHIP_STATUS), R.mipmap.ic_summary_screen_citizen));
         userInfoList.add(new UserInfo(CONTENT_GROSS_MONTHLY_INCOME, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                 .format(Float.valueOf(content.get(CONTENT_GROSS_MONTHLY_INCOME)))), R.mipmap.ic_summary_screen_income));
+
+        //Recycler View Setup for UserInfo
+        mUserInfoAdapter = new UserInfoAdapter(userInfoList);
+        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mSummaryRecyclerView.setLayoutManager(mSummaryLayoutManager);
+        mSummaryRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mSummaryRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mSummaryRecyclerView.setAdapter(mUserInfoAdapter);
+
+        //Initialise Recycle view data for Summary Balance
+        summaryBalanceList.add(new SummaryBalance(SUMMARY_BALANCE, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                .format(Float.valueOf(content.get(CONTENT_BALANCE)))), R.mipmap.ic_summary_screen_balance));
+        summaryBalanceList.add(new SummaryBalance(SUMMARY_SHORTFALL, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                .format(Float.valueOf(content.get(CONTENT_SHORTFALL)))), R.mipmap.ic_summary_screen_shortfall));
 
         //Recycler View Setup for Summary Balance
         mSummaryBalanceAdapter = new SummaryBalanceAdapter(summaryBalanceList);
@@ -124,21 +130,6 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         snapHelper.attachToRecyclerView(mBalanceRecyclerView);
 
         //Initialise Recycle view data
-        summaryBalanceList.add(new SummaryBalance(SUMMARY_BALANCE, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(Float.valueOf(content.get(CONTENT_BALANCE)))), R.mipmap.ic_summary_screen_balance));
-        summaryBalanceList.add(new SummaryBalance(SUMMARY_SHORTFALL, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(Float.valueOf(content.get(CONTENT_SHORTFALL)))), R.mipmap.ic_summary_screen_shortfall));
-
-        //Recycler View Setup for CPF Contribution
-        mCPFContributionAdapter = new CPFContributionAdapter(cpfContributionList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mCPFContributionRecyclerView.setLayoutManager(mLayoutManager);
-        mCPFContributionRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(this,
-                LinearLayoutManager.VERTICAL));
-        mCPFContributionRecyclerView.setAdapter(mCPFContributionAdapter);
-
-        //Initialise Recycle view data
         cpfContributionList.add(new CPFContribution(CONTENT_ORDINARY_ACCOUNT,
                 NumberFormat.getCurrencyInstance(Locale.US)
                         .format(Float.valueOf(content.get(CONTENT_ORDINARY_ACCOUNT)))));
@@ -148,6 +139,15 @@ public class SummaryActivity extends AppCompatActivity implements Const {
         cpfContributionList.add(new CPFContribution(CONTENT_MEDISAVE_ACCOUNT,
                 NumberFormat.getCurrencyInstance(Locale.US)
                         .format(Float.valueOf(content.get(CONTENT_MEDISAVE_ACCOUNT)))));
+
+        //Recycler View Setup for CPF Contribution
+        mCPFContributionAdapter = new CPFContributionAdapter(cpfContributionList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mCPFContributionRecyclerView.setLayoutManager(mLayoutManager);
+        mCPFContributionRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(this,
+                LinearLayoutManager.VERTICAL));
+        mCPFContributionRecyclerView.setAdapter(mCPFContributionAdapter);
     }
 
     /**

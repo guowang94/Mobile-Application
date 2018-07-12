@@ -1,6 +1,6 @@
 package com.example.android.graphapplication;
 
-public interface Const {
+public interface Constants {
 
     //Internal Storage Key
     String CONTENT_NAME = "Name";
@@ -19,6 +19,7 @@ public interface Const {
     String CONTENT_MEDISAVE_ACCOUNT = "Medisave Account";
     String CONTENT_JOB_STATUS = "Job Status";
     String CONTENT_CITIZENSHIP_STATUS = "Citizenship Status";
+    String CONTENT_EVENT_TITLE = "Event Title";
 
     //Summary Screen
     String SUMMARY_BALANCE = "Balance";
@@ -43,7 +44,7 @@ public interface Const {
 
     //Toolbar title
     String TOOLBAR_TITLE_SUMMARY = "Summary";
-    String TOOLBAR_TITLE_ACCUMULATIVE_CPF = "Accumulative CPF";
+    String TOOLBAR_TITLE_EVENTS = "Events";
     String TOOLBAR_TITLE_ENTER_YOUR_DETAILS = "Enter Your Details";
 
     //Graph Legend

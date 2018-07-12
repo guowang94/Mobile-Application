@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.recyclerList.Model.CPFContribution;
 
 import java.util.List;
 

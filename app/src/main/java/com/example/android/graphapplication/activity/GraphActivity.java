@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.example.android.graphapplication.Const;
+import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
@@ -46,7 +46,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class GraphActivity extends AppCompatActivity implements Const,
+public class GraphActivity extends AppCompatActivity implements Constants,
         OnChartValueSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "GraphActivity";
@@ -151,6 +151,7 @@ public class GraphActivity extends AppCompatActivity implements Const,
                 break;
 
             case R.id.nav_events:
+                startActivity(new Intent(GraphActivity.this, EventsActivity.class));
                 break;
 
             case R.id.nav_milestones:
@@ -245,10 +246,10 @@ public class GraphActivity extends AppCompatActivity implements Const,
 
                 if (i == age) {
                     Log.i(TAG, "getGraphData: first year");
-                    annualIncome = firstYearIncome;
+                    annualIncome = firstYearIncome * 0.8f;
                 } else {
                     Log.i(TAG, "getGraphData: subsequent");
-                    annualIncome = grossIncome * 12;
+                    annualIncome = (grossIncome * 12) * 0.8f;
                 }
 
                 float cpfContribution;
@@ -509,7 +510,6 @@ public class GraphActivity extends AppCompatActivity implements Const,
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            //TODO need to get the icon for apply scenario and export
             case R.id.action_apply_scenarios:
                 Snackbar.make(mFrameLayout, "Apply Scenarios", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                     @Override

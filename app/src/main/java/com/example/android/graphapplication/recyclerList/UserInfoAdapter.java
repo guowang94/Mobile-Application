@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.recyclerList.Model.UserInfo;
 
 import java.util.List;
 
