@@ -19,8 +19,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/toolbar"
-            layout="@layout/form_toolbar_layout" />
+            android:id="@+id/form_toolbar"
+            layout="@layout/white_toolbar_layout" />
 
         <View
             android:id="@+id/divider4"
@@ -29,7 +29,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/form_toolbar" />
 
         <TextView
             android:id="@+id/textView2"
@@ -40,7 +40,7 @@
             android:text="@string/personal_information"
             android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/form_toolbar" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/name_input_layout"

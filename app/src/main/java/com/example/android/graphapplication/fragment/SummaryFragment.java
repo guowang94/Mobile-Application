@@ -52,6 +52,9 @@ public class SummaryFragment extends Fragment implements Constants {
     private List<SummaryBalance> summaryBalanceList = new ArrayList<>();
     private CPFContributionAdapter mCPFContributionAdapter;
     private List<CPFContribution> cpfContributionList = new ArrayList<>();
+    private boolean isViewShown = false;
+    private boolean isViewLoaded = false;
+    private boolean isDataLoaded = false;
 
     private String fileContent;
     private HashMap<String, String> content;
@@ -70,46 +73,62 @@ public class SummaryFragment extends Fragment implements Constants {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_summary, container, false);
 
-        mToolBar = view.findViewById(R.id.toolbar);
+        mToolBar = view.findViewById(R.id.summary_toolbar);
         mSummaryRecyclerView = view.findViewById(R.id.summary_recycler_view);
         mBalanceRecyclerView = view.findViewById(R.id.horizontal_recycler_view);
         mCPFContributionRecyclerView = view.findViewById(R.id.cpf_contribution_recycler_view);
         mLinearLayout = view.findViewById(R.id.layout);
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
-        // Get a support ActionBar corresponding to this mToolBar
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.setTitle(Constants.TOOLBAR_TITLE_SUMMARY);
+        isViewLoaded = true;
 
-        // Enable the top left button
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        setHasOptionsMenu(false);
-
-        initData();
+        if (isViewShown) {
+            initData();
+            isDataLoaded = true;
+        }
 
         Log.d(TAG, "onCreateView: out");
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.d(TAG, "setUserVisibleHint: in, isVisibleToUser: " + isVisibleToUser);
+        super.setUserVisibleHint(isVisibleToUser);
+        if(getUserVisibleHint()) {
+            isViewShown = true;
+            if (isViewLoaded) {
+                if (!isDataLoaded) {
+                    initData();
+                    isDataLoaded = true;
+                }
+            }
+        } else {
+            isViewShown = false;
+        }
+        Log.d(TAG, "setUserVisibleHint: out");
     }
 
     /**
      * This method will initialise the data for the activity
      */
     private void initData() {
-        String shortfallAge = null;
+        Log.d(TAG, "initData: in");
+        String shortfallAge;
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
-        // Get a support ActionBar corresponding to this toolbar
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
+        // Get a support ActionBar corresponding to this mToolBar
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setTitle(Constants.TOOLBAR_TITLE_SUMMARY);
+
         // Enable the top left button
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(TOOLBAR_TITLE_SUMMARY);
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
         fileContent = readFile(context, FILE_USER_INFO);
         content = splitFileContent(fileContent);
-        Log.i(TAG, "onCreate: " + fileContent);
-        Log.i(TAG, "onCreate: " + content);
+        Log.i(TAG, "onCreateView: " + fileContent);
+        Log.i(TAG, "onCreateView: " + content);
 
         if (content.get(CONTENT_SHORTFALL_AGE) == null) {
             shortfallAge = "N/A";
@@ -170,6 +189,7 @@ public class SummaryFragment extends Fragment implements Constants {
         mCPFContributionRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
         mCPFContributionRecyclerView.setAdapter(mCPFContributionAdapter);
+        Log.d(TAG, "initData: out");
     }
 
     /**
@@ -177,12 +197,12 @@ public class SummaryFragment extends Fragment implements Constants {
      */
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause: in");
         super.onPause();
         userInfoList.clear();
         summaryBalanceList.clear();
         cpfContributionList.clear();
-        Log.d(TAG, "onPause: out");
+        isViewLoaded = false;
+        isDataLoaded = false;
     }
 
     /**

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/toolbar"
+        android:id="@+id/graph_toolbar"
         layout="@layout/toolbar_layout" />
 
     <com.github.mikephil.charting.charts.BarChart
@@ -20,6 +20,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/graph_toolbar" />
 
 </android.support.constraint.ConstraintLayout>
