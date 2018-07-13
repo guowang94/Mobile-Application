@@ -58,14 +58,6 @@
         <item name="android:background">@color/actionBar</item>
     </style>
 
-    <style name="formActionBar">
-        <item name="android:background">@color/white</item>
-    </style>
-
-    <style name="summaryActionBar">
-        <item name="android:background">@color/summaryActionBar</item>
-    </style>
-
     <style name="summary_screen_white_text">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>

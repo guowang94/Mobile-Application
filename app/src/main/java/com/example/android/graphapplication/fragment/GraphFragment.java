@@ -56,11 +56,15 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
 
     private String fileContent;
     private HashMap<String, String> content;
+    private boolean isViewShown = false;
+    private boolean isViewLoaded = false;
+    private boolean isDataLoaded = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.d(TAG, "onCreate: out");
     }
 
@@ -73,43 +77,60 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
 
         mChart = view.findViewById(R.id.stack_bar_graph);
         mLayout = view.findViewById(R.id.layout);
-        mToolBar = view.findViewById(R.id.toolbar);
+        mToolBar = view.findViewById(R.id.graph_toolbar);
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
-        // Get a support ActionBar corresponding to this mToolBar
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.setTitle(Constants.TOOLBAR_TITLE_GRAPH);
+        isViewLoaded = true;
 
-        // Enable the top left button
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        setHasOptionsMenu(true);
-
-        initData();
+        if (isViewShown) {
+            initData();
+            isDataLoaded = true;
+        }
 
         Log.d(TAG, "onCreateView: out");
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        //fixme after navigating from SummaryFragment, the option menu has been set to false
-        setHasOptionsMenu(true);
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.d(TAG, "setUserVisibleHint: in, isVisibleToUser: " + isVisibleToUser);
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getUserVisibleHint()) {
+            isViewShown = true;
+            if (isViewLoaded) {
+                if (!isDataLoaded) {
+                    initData();
+                    isDataLoaded = true;
+                }
+            }
+        } else {
+            isViewShown = false;
+        }
+        Log.d(TAG, "setUserVisibleHint: out");
     }
 
     /**
      * This method will initialise the data for the activity
      */
     private void initData() {
+        Log.d(TAG, "initData: in");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
+        // Get a support ActionBar corresponding to this mToolBar
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setTitle(Constants.TOOLBAR_TITLE_GRAPH);
+
+        // Enable the top left button
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
         fileContent = readFile(context, FILE_USER_INFO);
         content = splitFileContent(fileContent);
-        Log.i(TAG, "onCreate: " + fileContent);
+        Log.i(TAG, "onCreateView: " + fileContent);
 
         mChart.setOnChartValueSelectedListener(this);
 
         graphViewSetup();
+        Log.d(TAG, "initData: out");
     }
 
     /**
@@ -160,7 +181,13 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
     @Override
     public void onNothingSelected() {
         // TODO Auto-generated method stub
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        isDataLoaded = false;
+        isViewLoaded = false;
     }
 
     /**
@@ -191,10 +218,10 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
             if (i < retirementAge + 1) {
 
                 if (i == age) {
-                    Log.i(TAG, "getGraphData: first year");
+//                    Log.i(TAG, "getGraphData: first year");
                     annualIncome = firstYearIncome * 0.8f;
                 } else {
-                    Log.i(TAG, "getGraphData: subsequent");
+//                    Log.i(TAG, "getGraphData: subsequent");
                     annualIncome = (grossIncome * 12) * 0.8f;
                 }
 
@@ -227,43 +254,43 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
                 //----------------Calculation for CPF distribution-------------------
 
                 if (i < 35) {
-                    Log.i(TAG, "getGraphData: under 35 " + i);
+//                    Log.i(TAG, "getGraphData: under 35, " + i);
                     cpfOrdinaryAccount += cpfContribution * 0.6217;
                     cpfSpecialAccount += cpfContribution * 0.2162;
                     cpfMedisaveAccount += cpfContribution * 0.1621;
 
                 } else if (i <= 45) {
-                    Log.i(TAG, "getGraphData: 35 to 45 " + i);
+//                    Log.i(TAG, "getGraphData: 35 to 45, " + i);
                     cpfOrdinaryAccount += cpfContribution * 0.5677;
                     cpfSpecialAccount += cpfContribution * 0.1891;
                     cpfMedisaveAccount += cpfContribution * 0.2432;
 
                 } else if (i <= 50) {
-                    Log.i(TAG, "getGraphData: 46 to 50 " + i);
+//                    Log.i(TAG, "getGraphData: 46 to 50, " + i);
                     cpfOrdinaryAccount += cpfContribution * 0.5136;
                     cpfSpecialAccount += cpfContribution * 0.2162;
                     cpfMedisaveAccount += cpfContribution * 0.2702;
 
                 } else if (i <= 55) {
-                    Log.i(TAG, "getGraphData: 51 to 55 " + i);
+//                    Log.i(TAG, "getGraphData: 51 to 55, " + i);
                     cpfOrdinaryAccount += cpfContribution * 0.4055;
                     cpfSpecialAccount += cpfContribution * 0.3108;
                     cpfMedisaveAccount += cpfContribution * 0.2837;
 
                 } else if (i <= 60) {
-                    Log.i(TAG, "getGraphData: 56 to 60 " + i);
+//                    Log.i(TAG, "getGraphData: 56 to 60, " + i);
                     cpfOrdinaryAccount += cpfContribution * 0.4616;
                     cpfSpecialAccount += cpfContribution * 0.1346;
                     cpfMedisaveAccount += cpfContribution * 0.4038;
 
                 } else if (i <= 65) {
-                    Log.i(TAG, "getGraphData: 61 to 65 " + i);
+//                    Log.i(TAG, "getGraphData: 61 to 65, " + i);
                     cpfOrdinaryAccount += cpfContribution * 0.2122;
                     cpfSpecialAccount += cpfContribution * 0.1515;
                     cpfMedisaveAccount += cpfContribution * 0.6363;
 
                 } else {
-                    Log.i(TAG, "getGraphData: above 65 " + i);
+//                    Log.i(TAG, "getGraphData: above 65, " + i);
                     cpfOrdinaryAccount += cpfContribution * 0.08;
                     cpfSpecialAccount += cpfContribution * 0.08;
                     cpfMedisaveAccount += cpfContribution * 0.84;
@@ -435,8 +462,8 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.option_menu_list, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.graph_fragment_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**

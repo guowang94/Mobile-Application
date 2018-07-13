@@ -57,7 +57,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
         mEmploymentStatusSegmentedButton = findViewById(R.id.employment_status_segmented_button);
         mCitizenshipSegmentedButton = findViewById(R.id.citizenship_segmented_button);
         mComputeButton = findViewById(R.id.compute_button);
-        mToolBar = findViewById(R.id.toolbar);
+        mToolBar = findViewById(R.id.form_toolbar);
         mLayout = findViewById(R.id.layout);
 
 //        mNameInput.getEditText().setText("");
