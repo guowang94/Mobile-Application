@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
@@ -36,6 +37,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
     private Button mComputeButton;
     private Toolbar mToolBar;
     private ConstraintLayout mLayout;
+    private TextView mToolbarTitle;
 
     private Validation validation = new Validation();
 
@@ -59,6 +61,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
         mComputeButton = findViewById(R.id.compute_button);
         mToolBar = findViewById(R.id.form_toolbar);
         mLayout = findViewById(R.id.layout);
+        mToolbarTitle = findViewById(R.id.toolbar_title);
 
 //        mNameInput.getEditText().setText("");
 //        mAgeInput.getEditText().setText("");
@@ -72,7 +75,8 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
         setSupportActionBar(mToolBar);
         // Get a support ActionBar corresponding to this toolbar
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(TOOLBAR_TITLE_ENTER_YOUR_DETAILS);
+        mToolbarTitle.setText(Constants.TOOLBAR_TITLE_ENTER_YOUR_DETAILS);
+        mToolbarTitle.setTextColor(getResources().getColor(R.color.form_color));
 
         mNameInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

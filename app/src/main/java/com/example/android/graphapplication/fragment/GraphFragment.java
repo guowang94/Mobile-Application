@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
@@ -53,6 +54,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
     private ConstraintLayout mLayout;
     private BarChart mChart;
     private Toolbar mToolBar;
+    private TextView mToolbarTitle;
 
     private String fileContent;
     private HashMap<String, String> content;
@@ -78,6 +80,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
         mChart = view.findViewById(R.id.stack_bar_graph);
         mLayout = view.findViewById(R.id.layout);
         mToolBar = view.findViewById(R.id.graph_toolbar);
+        mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
         isViewLoaded = true;
 
@@ -116,10 +119,8 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
         // Get a support ActionBar corresponding to this mToolBar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(Constants.TOOLBAR_TITLE_GRAPH);
-
-        // Enable the top left button
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        mToolbarTitle.setText(Constants.TOOLBAR_TITLE_GRAPH);
+        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();

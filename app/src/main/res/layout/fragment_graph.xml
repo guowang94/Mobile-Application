@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/graph_toolbar"
-        layout="@layout/toolbar_layout" />
+        layout="@layout/toolbar_layout_blue" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/stack_bar_graph"

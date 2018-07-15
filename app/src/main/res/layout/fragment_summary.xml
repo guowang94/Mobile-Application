@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/summary_toolbar"
-        layout="@layout/transparent_toolbar_layout" />
+        layout="@layout/toolbar_layout_transparent" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
+import android.mtp.MtpEvent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
@@ -39,6 +41,7 @@ public class EventsFragment extends Fragment implements Constants {
     private RecyclerView mEventsRecyclerView;
     private Toolbar mToolBar;
     private ConstraintLayout mLayout;
+    private TextView mToolbarTitle;
 
     private String fileContent;
     private HashMap<String, String> content;
@@ -66,6 +69,7 @@ public class EventsFragment extends Fragment implements Constants {
         mEventsRecyclerView = view.findViewById(R.id.event_recycler_view);
         mToolBar = view.findViewById(R.id.event_toolbar);
         mLayout = view.findViewById(R.id.layout);
+        mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
         isViewLoaded = true;
 
@@ -104,7 +108,8 @@ public class EventsFragment extends Fragment implements Constants {
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
         // Get a support ActionBar corresponding to this mToolBar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(Constants.TOOLBAR_TITLE_EVENTS);
+        mToolbarTitle.setText(Constants.TOOLBAR_TITLE_EVENTS);
+        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         // Enable the top left button
         actionBar.setDisplayHomeAsUpEnabled(true);
