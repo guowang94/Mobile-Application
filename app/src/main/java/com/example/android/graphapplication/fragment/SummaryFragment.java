@@ -17,16 +17,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.android.graphapplication.CirclePagerIndicatorDecoration;
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.CPFContribution;
 import com.example.android.graphapplication.adapter.CPFContributionAdapter;
-import com.example.android.graphapplication.model.SummaryBalance;
 import com.example.android.graphapplication.adapter.SummaryBalanceAdapter;
-import com.example.android.graphapplication.model.UserInfo;
 import com.example.android.graphapplication.adapter.UserInfoAdapter;
+import com.example.android.graphapplication.model.CPFContribution;
+import com.example.android.graphapplication.model.SummaryBalance;
+import com.example.android.graphapplication.model.UserInfo;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -45,6 +46,7 @@ public class SummaryFragment extends Fragment implements Constants {
     private RecyclerView mBalanceRecyclerView;
     private RecyclerView mCPFContributionRecyclerView;
     private LinearLayout mLinearLayout;
+    private TextView mToolbarTitle;
 
     private UserInfoAdapter mUserInfoAdapter;
     private List<UserInfo> userInfoList = new ArrayList<>();
@@ -78,6 +80,7 @@ public class SummaryFragment extends Fragment implements Constants {
         mBalanceRecyclerView = view.findViewById(R.id.horizontal_recycler_view);
         mCPFContributionRecyclerView = view.findViewById(R.id.cpf_contribution_recycler_view);
         mLinearLayout = view.findViewById(R.id.layout);
+        mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
         isViewLoaded = true;
 
@@ -94,7 +97,7 @@ public class SummaryFragment extends Fragment implements Constants {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         Log.d(TAG, "setUserVisibleHint: in, isVisibleToUser: " + isVisibleToUser);
         super.setUserVisibleHint(isVisibleToUser);
-        if(getUserVisibleHint()) {
+        if (getUserVisibleHint()) {
             isViewShown = true;
             if (isViewLoaded) {
                 if (!isDataLoaded) {
@@ -117,11 +120,9 @@ public class SummaryFragment extends Fragment implements Constants {
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
         // Get a support ActionBar corresponding to this mToolBar
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(Constants.TOOLBAR_TITLE_SUMMARY);
-
-        // Enable the top left button
-        actionBar.setDisplayHomeAsUpEnabled(true);
+//        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mToolbarTitle.setText(Constants.TOOLBAR_TITLE_SUMMARY);
+        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();

@@ -20,7 +20,7 @@
 
         <include
             android:id="@+id/form_toolbar"
-            layout="@layout/white_toolbar_layout" />
+            layout="@layout/toolbar_layout_white" />
 
         <View
             android:id="@+id/divider4"
