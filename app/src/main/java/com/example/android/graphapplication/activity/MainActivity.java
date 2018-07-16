@@ -10,13 +10,15 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.Constants;
+import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.adapter.ViewPagerAdapter;
 import com.example.android.graphapplication.fragment.EventsFragment;
 import com.example.android.graphapplication.fragment.GraphFragment;
 import com.example.android.graphapplication.fragment.MileStonesFragment;
 import com.example.android.graphapplication.fragment.PlansFragment;
 import com.example.android.graphapplication.fragment.SummaryFragment;
-import com.example.android.graphapplication.R;
+
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.viewpager);
         setupViewPager(mViewPager);
 
+        try {
+            if (getIntent() != null) {
+                mViewPager.setCurrentItem(getIntent()
+                        .getIntExtra(Constants.INTENT_KEY_FRAGMENT_POSITION, 0));
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: getIntent() is null");
+        }
+
         mTabLayout = findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
         setupTabIcons();
@@ -43,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         int width = displayMetrics.widthPixels;
         Log.d(TAG, "setupTabIcons: width, " + width);
 
-        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, mTabLayout, false);
         tabOne.setText(Constants.NAV_GRAPH);
         tabOne.setWidth(width / 5);
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_nav_bar_chart, 0, 0);

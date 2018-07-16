@@ -3,6 +3,7 @@ package com.example.android.graphapplication.fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.ReadFileData;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
 import com.github.mikephil.charting.charts.BarChart;
@@ -31,6 +33,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -53,7 +56,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
     private static final String TAG = "GraphFragment";
     private ConstraintLayout mLayout;
     private BarChart mChart;
-    private Toolbar mToolBar;
+    private Toolbar mToolbar;
     private TextView mToolbarTitle;
 
     private String fileContent;
@@ -71,7 +74,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: in");
         // Inflate the layout for this fragment
@@ -79,7 +82,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
 
         mChart = view.findViewById(R.id.stack_bar_graph);
         mLayout = view.findViewById(R.id.layout);
-        mToolBar = view.findViewById(R.id.graph_toolbar);
+        mToolbar = view.findViewById(R.id.graph_toolbar);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
         isViewLoaded = true;
@@ -116,17 +119,22 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
      */
     private void initData() {
         Log.d(TAG, "initData: in");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
-        // Get a support ActionBar corresponding to this mToolBar
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mToolbarTitle.setText(Constants.TOOLBAR_TITLE_GRAPH);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
-        fileContent = readFile(context, FILE_USER_INFO);
-        content = splitFileContent(fileContent);
-        Log.i(TAG, "onCreateView: " + fileContent);
+        fileContent = new ReadFileData().readFile(context, FILE_USER_INFO);
+        content = new ReadFileData().splitFileContent(fileContent);
+        Log.i(TAG, "initData: " + content);
+
+        //if event count does not exist, make event count = 1
+        if (content.get(CONTENT_EVENT_COUNT) == null) {
+            fileContent += "//" + CONTENT_EVENT_COUNT + ":" + "0";
+        }
 
         mChart.setOnChartValueSelectedListener(this);
 
@@ -361,7 +369,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
                 Float.valueOf(content.get(CONTENT_VARIABLE_EXPENSES)),
                 Integer.valueOf(content.get(CONTENT_AGE)),
                 Integer.valueOf(content.get(CONTENT_RETIREMENT_AGE)),
-                Integer.valueOf(content.get(CONTENT_EXPECTANCY).trim()));
+                Integer.valueOf(content.get(CONTENT_EXPECTANCY)));
 
         //BarDataSet is similar to series
         BarDataSet set1 = new BarDataSet(yVals1, null);
@@ -414,52 +422,10 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
     }
 
     /**
-     * This method will return the file content
-     *
-     * @param context
-     * @param filename
-     * @return String
-     */
-    private String readFile(Context context, String filename) {
-        try {
-            FileInputStream fis = context.openFileInput(filename);
-            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * This method will split the File Content into key and value
-     *
-     * @param fileContent
-     * @return HashMap
-     */
-    private HashMap<String, String> splitFileContent(String fileContent) {
-        String[] value = fileContent.split("//");
-        HashMap<String, String> content = new HashMap<>();
-
-        for (String val : value) {
-            content.put(val.split(":")[0], val.split(":")[1].trim());
-        }
-        System.out.println(content);
-        return content;
-    }
-
-    /**
      * This method will create the more option in the action bar
      *
      * @param menu store all the menu items
-     * @return boolean
+     * @param inflater it takes an XML file as input and builds the View objects from it
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

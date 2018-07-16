@@ -110,4 +110,8 @@
         <item name="android:textColor">#FFFFFFFF</item>
     </style>
 
+    <style name="input_layout_hint_color">
+        <item name="android:textColor">@color/form_color</item>
+    </style>
+
 </resources>

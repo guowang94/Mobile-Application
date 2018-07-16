@@ -1,5 +1,6 @@
 package com.example.android.graphapplication.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,12 +19,12 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.MyView
     private static final String TAG = "UserInfoAdapter";
     private List<UserInfo> userInfoList;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
         private TextView mValue;
         private ImageView mImage;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
 
             mTitle = view.findViewById(R.id.title);
@@ -38,15 +39,16 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.MyView
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.user_info_list_row, parent, false);
+                .inflate(R.layout.list_row_user_info, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
         UserInfo userInfo = userInfoList.get(position);

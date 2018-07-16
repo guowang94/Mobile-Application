@@ -2,6 +2,7 @@ package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -32,7 +33,7 @@ public class MileStonesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: in");
         // Inflate the layout for this fragment
@@ -52,8 +53,7 @@ public class MileStonesFragment extends Fragment {
         Context context = getActivity().getApplicationContext();
         fileContent = readFile(context, FILE_USER_INFO);
         content = splitFileContent(fileContent);
-        Log.i(TAG, "onCreate: " + fileContent);
-        Log.i(TAG, "onCreate: " + content);
+        Log.i(TAG, "initData: " + content);
 
         //Initialise Recycle view data for Events
 //        eventsList.add(new Events(content.get(CONTENT_EVENT_TITLE)));
@@ -70,46 +70,5 @@ public class MileStonesFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-    }
-
-    /**
-     * This method will return the file content
-     *
-     * @param context
-     * @param filename
-     * @return String
-     */
-    private String readFile(Context context, String filename) {
-        try {
-            FileInputStream fis = context.openFileInput(filename);
-            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * This method will split the File Content into key and value
-     *
-     * @param fileContent
-     * @return HashMap
-     */
-    private HashMap<String, String> splitFileContent(String fileContent) {
-        String[] value = fileContent.split("//");
-        HashMap<String, String> content = new HashMap<>();
-
-        for (String val : value) {
-            content.put(val.split(":")[0], val.split(":")[1].trim());
-        }
-
-        return content;
     }
 }

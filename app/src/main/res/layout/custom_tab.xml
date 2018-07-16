@@ -3,7 +3,12 @@
     android:id="@+id/tab"
     android:textAlignment="center"
     android:maxLines="1"
+    android:paddingTop="16dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
     android:autoSizeTextType="uniform"
-    android:autoSizeMinTextSize="10sp"
+    android:autoSizeMinTextSize="8sp"
+    android:autoSizeMaxTextSize="14sp"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"/>
