@@ -2,9 +2,9 @@ package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.example.android.graphapplication.CirclePagerIndicatorDecoration;
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.ReadFileData;
 import com.example.android.graphapplication.adapter.CPFContributionAdapter;
 import com.example.android.graphapplication.adapter.SummaryBalanceAdapter;
 import com.example.android.graphapplication.adapter.UserInfoAdapter;
@@ -29,9 +30,6 @@ import com.example.android.graphapplication.model.CPFContribution;
 import com.example.android.graphapplication.model.SummaryBalance;
 import com.example.android.graphapplication.model.UserInfo;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +39,7 @@ import java.util.Locale;
 public class SummaryFragment extends Fragment implements Constants {
 
     private static final String TAG = "SummaryFragment";
-    private Toolbar mToolBar;
+    private Toolbar mToolbar;
     private RecyclerView mSummaryRecyclerView;
     private RecyclerView mBalanceRecyclerView;
     private RecyclerView mCPFContributionRecyclerView;
@@ -69,13 +67,13 @@ public class SummaryFragment extends Fragment implements Constants {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: in");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_summary, container, false);
 
-        mToolBar = view.findViewById(R.id.summary_toolbar);
+        mToolbar = view.findViewById(R.id.summary_toolbar);
         mSummaryRecyclerView = view.findViewById(R.id.summary_recycler_view);
         mBalanceRecyclerView = view.findViewById(R.id.horizontal_recycler_view);
         mCPFContributionRecyclerView = view.findViewById(R.id.cpf_contribution_recycler_view);
@@ -118,18 +116,17 @@ public class SummaryFragment extends Fragment implements Constants {
         Log.d(TAG, "initData: in");
         String shortfallAge;
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
-        // Get a support ActionBar corresponding to this mToolBar
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        // Get a support ActionBar corresponding to this mToolbar
 //        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mToolbarTitle.setText(Constants.TOOLBAR_TITLE_SUMMARY);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
-        fileContent = readFile(context, FILE_USER_INFO);
-        content = splitFileContent(fileContent);
-        Log.i(TAG, "onCreateView: " + fileContent);
-        Log.i(TAG, "onCreateView: " + content);
+        fileContent = new ReadFileData().readFile(context, FILE_USER_INFO);
+        content = new ReadFileData().splitFileContent(fileContent);
+        Log.i(TAG, "initData: " + content);
 
         if (content.get(CONTENT_SHORTFALL_AGE) == null) {
             shortfallAge = "N/A";
@@ -204,47 +201,6 @@ public class SummaryFragment extends Fragment implements Constants {
         cpfContributionList.clear();
         isViewLoaded = false;
         isDataLoaded = false;
-    }
-
-    /**
-     * This method will return the file content
-     *
-     * @param context
-     * @param filename
-     * @return String
-     */
-    private String readFile(Context context, String filename) {
-        try {
-            FileInputStream fis = context.openFileInput(filename);
-            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * This method will split the File Content into key and value
-     *
-     * @param fileContent
-     * @return HashMap
-     */
-    private HashMap<String, String> splitFileContent(String fileContent) {
-        String[] value = fileContent.split("//");
-        HashMap<String, String> content = new HashMap<>();
-
-        for (String val : value) {
-            content.put(val.split(":")[0], val.split(":")[1].trim());
-        }
-
-        return content;
     }
 }
 

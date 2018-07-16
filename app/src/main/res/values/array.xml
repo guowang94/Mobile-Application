@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="employment_status_array">
-        <item>"Self-Employed"</item>
-        <item>"Employed"</item>
-        <item>"Retired"</item>
-        <item>"Home Maker"</item>
+    <array name="event_type_array">
+        <item>"Illness"</item>
+        <item>"Accident"</item>
+        <item>"TPD (Total Permanent Disability)"</item>
+        <item>"Disability"</item>
     </array>
 </resources>
 

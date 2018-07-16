@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/form_toolbar"
+            android:id="@+id/create_event_toolbar"
             layout="@layout/toolbar_layout_white" />
 
         <View
@@ -29,7 +29,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/form_toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/create_event_toolbar" />
 
         <TextView
             android:id="@+id/textView2"
@@ -40,7 +40,7 @@
             android:text="@string/personal_information"
             android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/form_toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/create_event_toolbar" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/name_input_layout"
@@ -121,7 +121,7 @@
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
             android:id="@+id/employment_status_segmented_button"
             android:layout_width="0dp"
-            android:layout_height="24dp"
+            android:layout_height="30dp"
             android:layout_marginTop="8dp"
             android:elevation="2dp"
             app:layout_constraintEnd_toEndOf="@+id/expectancy_input_layout"
@@ -137,10 +137,10 @@
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="3dp"
-                android:paddingTop="3dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/self_employed"
                 app:sb_textColor="@color/form_color"
@@ -148,9 +148,10 @@
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawablePadding="4dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/employed"
                 app:sb_textColor="@color/form_color"
@@ -161,7 +162,7 @@
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
             android:id="@+id/citizenship_segmented_button"
             android:layout_width="0dp"
-            android:layout_height="24dp"
+            android:layout_height="30dp"
             android:layout_marginTop="16dp"
             android:elevation="2dp"
             app:layout_constraintEnd_toEndOf="@+id/employment_status_segmented_button"
@@ -177,10 +178,10 @@
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="3dp"
-                android:paddingTop="3dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/singaporean"
                 app:sb_textColor="@color/form_color"
@@ -188,8 +189,10 @@
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/foreigner_or_pr"
                 app:sb_textColor="@color/form_color"
@@ -299,5 +302,4 @@
             app:layout_constraintVertical_bias="0.0" />
 
     </android.support.constraint.ConstraintLayout>
-
 </android.support.v4.widget.NestedScrollView>

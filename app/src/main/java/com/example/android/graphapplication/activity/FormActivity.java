@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,7 +34,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
     private SegmentedButtonGroup mEmploymentStatusSegmentedButton;
     private SegmentedButtonGroup mCitizenshipSegmentedButton;
     private Button mComputeButton;
-    private Toolbar mToolBar;
+    private Toolbar mToolbar;
     private ConstraintLayout mLayout;
     private TextView mToolbarTitle;
 
@@ -59,7 +58,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
         mEmploymentStatusSegmentedButton = findViewById(R.id.employment_status_segmented_button);
         mCitizenshipSegmentedButton = findViewById(R.id.citizenship_segmented_button);
         mComputeButton = findViewById(R.id.compute_button);
-        mToolBar = findViewById(R.id.form_toolbar);
+        mToolbar = findViewById(R.id.create_event_toolbar);
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
@@ -72,9 +71,16 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
 //        mRetirementAgeInput.getEditText().setText("");
 //        mExpectancyInput.getEditText().setText("");
 
-        setSupportActionBar(mToolBar);
+        initData();
+        Log.d(TAG, "onCreate: out");
+    }
+
+    /**
+     * This method will setup toolbar and set onClickListener
+     */
+    private void initData() {
+        setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this toolbar
-        ActionBar actionBar = getSupportActionBar();
         mToolbarTitle.setText(Constants.TOOLBAR_TITLE_ENTER_YOUR_DETAILS);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.form_color));
 
@@ -95,7 +101,6 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                 }
             }
         });
-
 
         mCurrentAssets.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -150,10 +155,6 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                 }
             }
         });
-
-//        mJobStatusSpinner = findViewById(R.id.job_status_spinner);
-//        mJobStatusSpinner.setItemsArray(R.array.employment_status_array);
-//        mJobStatusSpinner.setOnItemChosenListener(this);
 
         mComputeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,8 +233,9 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                 }
 
                 //Check if any of the EditText has error
-                if (mNameInput.isErrorEnabled() || mRetirementAgeInput.isErrorEnabled() || mExpectancyInput.isErrorEnabled() ||
-                        mAgeInput.isErrorEnabled() || mCurrentAssets.isErrorEnabled() || mFixedExpensesInput.isErrorEnabled() ||
+                if (mNameInput.isErrorEnabled() || mRetirementAgeInput.isErrorEnabled() ||
+                        mExpectancyInput.isErrorEnabled() || mAgeInput.isErrorEnabled() ||
+                        mCurrentAssets.isErrorEnabled() || mFixedExpensesInput.isErrorEnabled() ||
                         mVariableExpensesInput.isErrorEnabled() || mGrossMonthlyIncomeInput.isErrorEnabled()) {
                     Snackbar.make(mLayout, ERR_MSG_ENTER_VALID_INPUT, Snackbar.LENGTH_LONG).show();
                 } else {
@@ -266,7 +268,6 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                 }
             }
         });
-        Log.d(TAG, "onCreate: out");
     }
 
     /**
@@ -367,7 +368,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
     /**
      * This method will validate the input value
      *
-     * @param textInputLayout
+     * @param textInputLayout is the view
      */
     private void currencyValidation(TextInputLayout textInputLayout) {
         try {
@@ -386,7 +387,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                         mVariableExpensesInput.setError(ERR_MSG_INVALID_VARIABLE_EXPENSES);
                         break;
                     default:
-                        System.out.println("In if() default: currencyValidation()");
+                        Log.d(TAG, "currencyValidation: In if() default");
                 }
             } else {
                 switch (textInputLayout.getId()) {
@@ -403,7 +404,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                         mVariableExpensesInput.setErrorEnabled(false);
                         break;
                     default:
-                        System.out.println("In else() default: currencyValidation()");
+                        Log.d(TAG, "currencyValidation: In else() default");
                 }
             }
         } catch (NumberFormatException e) {
@@ -421,7 +422,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                     mVariableExpensesInput.setError(ERR_MSG_INVALID_VARIABLE_EXPENSES);
                     break;
                 default:
-                    System.out.println("In if() default: currencyValidation()");
+                    Log.d(TAG, "currencyValidation: In catch() default");
             }
         }
     }
@@ -429,8 +430,8 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
     /**
      * This method will check for blank input field
      *
-     * @param textInputLayout
-     * @return
+     * @param textInputLayout is the view
+     * @return boolean
      */
     private boolean blankFieldValidation(TextInputLayout textInputLayout) {
         try {
@@ -461,7 +462,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                         mGrossMonthlyIncomeInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     default:
-                        System.out.println("In default: blankFieldValidation()");
+                        Log.d(TAG, "blankFieldValidation: in default");
                 }
             }
         } catch (NumberFormatException e) {
@@ -470,19 +471,3 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
         return false;
     }
 }
-
-//This code is for spinner, but I will be using this in another screen
-//    @Override
-//    public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
-//        switch (labelledSpinner.getId()) {
-//            case R.id.job_status_spinner:
-//                Log.i(TAG, "onCreate: test " + mJobStatusSpinner.getSpinner().getItemAtPosition(position).toString());
-//                jobStatusSpinnerValue = mJobStatusSpinner.getSpinner().getItemAtPosition(position).toString();
-//                break;
-//        }
-//    }
-//
-//    @Override
-//    public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
-//        // Do something here
-//    }

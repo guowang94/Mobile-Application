@@ -19,7 +19,15 @@ public interface Constants {
     String CONTENT_MEDISAVE_ACCOUNT = "Medisave Account";
     String CONTENT_JOB_STATUS = "Job Status";
     String CONTENT_CITIZENSHIP_STATUS = "Citizenship Status";
-    String CONTENT_EVENT_TITLE = "Event Title";
+    String CONTENT_EVENT_COUNT = "Event Count";
+    String CONTENT_EVENT_NAME = "Event Name";
+    String CONTENT_EVENT_TYPE = "Event Type";
+    String CONTENT_EVENT_YEAR_OCCURRED = "Year Occurred";
+    String CONTENT_EVENT_DESCRIPTION = "Event Description";
+    String CONTENT_EVENT_STATUS = "Event Status";
+    String CONTENT_EVENT_AMOUNT = "Event Amount";
+    String CONTENT_EVENT_DURATION = "Event Duration";
+    String CONTENT_EVENT_COST = "Event Cost";
 
     //Summary Screen
     String SUMMARY_BALANCE = "Balance";
@@ -28,11 +36,16 @@ public interface Constants {
     //File name
     String FILE_USER_INFO = "userInfo";
 
+    //Intent key
+    String INTENT_KEY_FRAGMENT_POSITION = "Fragment Position";
+
     //Segmented Button Value
     String SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED = "Self-Employed";
     String SEGMENTED_BUTTON_VALUE_EMPLOYED = "Employed";
     String SEGMENTED_BUTTON_VALUE_SINGPOREAN = "Singaporean";
     String SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR = "Foreigner/PR";
+    String SEGMENTED_BUTTON_VALUE_ONE_TIME = "One-Time";
+    String SEGMENTED_BUTTON_VALUE_RECURRING = "Recurring";
 
     //Navigation Fields name
     String NAV_PLANS = "Plans";

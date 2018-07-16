@@ -26,9 +26,25 @@
     <string name="cpf_medisave_account">CPF MA</string>
     <string name="cpf_contribution">CPF Contributions</string>
 
+    <!--Create Event Screen-->
+    <string name="event_name">Event Name</string>
+    <string name="event_type">Event Type</string>
+    <string name="year_occurred">Year Occurred</string>
+    <string name="event_description">Event Description(Optional)</string>
+    <string name="one_time">One-Time</string>
+    <string name="recurring">Recurring</string>
+    <string name="amount">Amount</string>
+    <string name="duration">Duration (in Months)</string>
+    <string name="cost_per_month">Cost Per Month</string>
+
+    <!--List Row-->
+    <string name="right_nav_icon">Right Nav icon</string>
+    <string name="summary_icon">Summary icon</string>
+
     <!--Option Menu-->
     <string name="action_apply_scenarios">Apply Scenarios</string>
     <string name="action_export">Export</string>
+    <string name="save">Save</string>
     
     <!--code string-->
     <string name="navigation_drawer_open">Open navigation drawer</string>

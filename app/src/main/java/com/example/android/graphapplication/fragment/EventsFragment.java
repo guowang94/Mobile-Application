@@ -1,11 +1,11 @@
 package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
-import android.mtp.MtpEvent;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,12 +25,11 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.ReadFileData;
+import com.example.android.graphapplication.activity.CreateEventActivity;
 import com.example.android.graphapplication.adapter.EventsAdapter;
 import com.example.android.graphapplication.model.Events;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,7 @@ public class EventsFragment extends Fragment implements Constants {
 
     private static final String TAG = "EventsFragment";
     private RecyclerView mEventsRecyclerView;
-    private Toolbar mToolBar;
+    private Toolbar mToolbar;
     private ConstraintLayout mLayout;
     private TextView mToolbarTitle;
 
@@ -60,14 +59,14 @@ public class EventsFragment extends Fragment implements Constants {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: in");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_events, container, false);
 
         mEventsRecyclerView = view.findViewById(R.id.event_recycler_view);
-        mToolBar = view.findViewById(R.id.event_toolbar);
+        mToolbar = view.findViewById(R.id.event_toolbar);
         mLayout = view.findViewById(R.id.layout);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
@@ -82,11 +81,12 @@ public class EventsFragment extends Fragment implements Constants {
         return view;
     }
 
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         Log.d(TAG, "setUserVisibleHint: in, isVisibleToUser: " + isVisibleToUser);
         super.setUserVisibleHint(isVisibleToUser);
-        if(getUserVisibleHint()) {
+        if (getUserVisibleHint()) {
             isViewShown = true;
             if (isViewLoaded) {
                 if (!isDataLoaded) {
@@ -105,8 +105,8 @@ public class EventsFragment extends Fragment implements Constants {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolBar);
-        // Get a support ActionBar corresponding to this mToolBar
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mToolbarTitle.setText(Constants.TOOLBAR_TITLE_EVENTS);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
@@ -117,14 +117,16 @@ public class EventsFragment extends Fragment implements Constants {
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
-        fileContent = readFile(context, FILE_USER_INFO);
-        content = splitFileContent(fileContent);
-        Log.i(TAG, "onCreateView: " + fileContent);
+        fileContent = new ReadFileData().readFile(context, FILE_USER_INFO);
+        content = new ReadFileData().splitFileContent(fileContent);
         Log.i(TAG, "onCreateView: " + content);
 
         //Initialise Recycle view data for Events
-//        eventsList.add(new Events(content.get(CONTENT_EVENT_TITLE)));
-        eventsList.add(new Events("Testing"));
+        int eventCount = Integer.valueOf(content.get(CONTENT_EVENT_COUNT));
+        for (int i = 0; i < eventCount; i++) {
+            int currentEvent = i + 1;
+            eventsList.add(new Events(content.get(CONTENT_EVENT_NAME + currentEvent)));
+        }
 
         //Recycler View Setup for Events
         mEventsAdapter = new EventsAdapter(eventsList);
@@ -145,51 +147,10 @@ public class EventsFragment extends Fragment implements Constants {
     }
 
     /**
-     * This method will return the file content
-     *
-     * @param context
-     * @param filename
-     * @return String
-     */
-    private String readFile(Context context, String filename) {
-        try {
-            FileInputStream fis = context.openFileInput(filename);
-            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * This method will split the File Content into key and value
-     *
-     * @param fileContent
-     * @return HashMap
-     */
-    private HashMap<String, String> splitFileContent(String fileContent) {
-        String[] value = fileContent.split("//");
-        HashMap<String, String> content = new HashMap<>();
-
-        for (String val : value) {
-            content.put(val.split(":")[0], val.split(":")[1].trim());
-        }
-
-        return content;
-    }
-
-    /**
      * This method will create the more option in the action bar
      *
      * @param menu store all the menu items
-     * @return boolean
+     * @param inflater it takes an XML file as input and builds the View objects from it
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -207,12 +168,7 @@ public class EventsFragment extends Fragment implements Constants {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.add_event:
-                Snackbar.make(mLayout, "Add Event", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Do nothing
-                    }
-                }).show();
+                startActivity(new Intent(getActivity().getApplicationContext(), CreateEventActivity.class));
                 break;
 
             default:
