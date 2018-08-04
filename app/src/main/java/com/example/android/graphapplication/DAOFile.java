@@ -1,13 +1,19 @@
 package com.example.android.graphapplication;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.example.android.graphapplication.constants.KeyConstants;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-public class ReadFileData {
+import static android.content.Context.MODE_PRIVATE;
+
+public class DAOFile {
     /**
      * This method will return the file content
      *
@@ -35,10 +41,11 @@ public class ReadFileData {
     /**
      * This method will split the File Content into key and value
      *
-     * @param fileContent file that store the raw data
+     * @param fileContent file that store raw data
      * @return HashMap
      */
     public HashMap<String, String> splitFileContent(String fileContent) {
+        Log.d("", "splitFileContent: " + fileContent);
         String[] value = fileContent.split("//");
         HashMap<String, String> content = new HashMap<>();
 
@@ -47,5 +54,21 @@ public class ReadFileData {
         }
 
         return content;
+    }
+
+    /**
+     * This method will save the fileContent
+     * @param fileContent
+     * @param context
+     */
+    public void saveDate(String fileContent, Context context) {
+        try {
+            FileOutputStream fileOutputStream = context.openFileOutput(
+                    KeyConstants.FILE_USER_INFO, MODE_PRIVATE);
+            fileOutputStream.write(fileContent.getBytes());
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

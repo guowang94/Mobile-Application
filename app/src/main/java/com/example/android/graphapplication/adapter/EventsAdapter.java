@@ -55,4 +55,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHold
     public int getItemCount() {
         return events.size();
     }
+
+    public void removeItem(int position) {
+        events.remove(position);
+        // notify the item removed by position to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Events item, int position) {
+        events.add(position, item);
+        // notify item added by position
+        notifyItemInserted(position);
+    }
 }
