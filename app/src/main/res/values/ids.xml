@@ -11,5 +11,4 @@
     <item name="amount_input_layout" type="id" />
     <item name="cost_input_layout" type="id" />
     <item name="duration_input_layout" type="id" />
-
 </resources>

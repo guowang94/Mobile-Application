@@ -8,7 +8,7 @@
     <string name="financial_information">Financial Information</string>
     <string name="name">Name</string>
     <string name="age">Age</string>
-    <string name="retirement_age">Expected Retirement Age</string>
+    <string name="expected_retirement_age">Expected Retirement Age</string>
     <string name="expectancy">Expected to Live Age</string>
     <string name="self_employed">Self-Employed</string>
     <string name="employed">Employed</string>
@@ -20,10 +20,14 @@
     <string name="current_assets">Current Assets</string>
     <string name="graph_forecast">Graph Forecast</string>
     
-    <!--Summary Detail Screen-->
-    <string name="cpf_ordinary_account">CPF OA</string>
-    <string name="cpf_special_account">CPF SA</string>
-    <string name="cpf_medisave_account">CPF MA</string>
+    <!--Summary Screen-->
+    <string name="shortfall_age">ShortFall Age</string>
+    <string name="retirement_age">Retirement Age</string>
+    <string name="job_status">Job Status</string>
+    <string name="citizenship_status">Citizenship Status</string>
+    <string name="cpf_ordinary_account">Ordinary Account</string>
+    <string name="cpf_special_account">Special Account</string>
+    <string name="cpf_medisave_account">Medisave Account</string>
     <string name="cpf_contribution">CPF Contributions</string>
 
     <!--Create Event Screen-->

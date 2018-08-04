@@ -12,15 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.DAOFile;
+import com.example.android.graphapplication.constants.ErrorMsgConstants;
+import com.example.android.graphapplication.constants.KeyConstants;
+import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.validations.Validation;
-
-import java.io.FileOutputStream;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
-public class FormActivity extends AppCompatActivity implements Constants/*, LabelledSpinner.OnItemChosenListener*/ {
+public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemChosenListener*/ {
 
     private static final String TAG = "FormActivity";
     private TextInputLayout mNameInput;
@@ -81,7 +82,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
     private void initData() {
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this toolbar
-        mToolbarTitle.setText(Constants.TOOLBAR_TITLE_ENTER_YOUR_DETAILS);
+        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ENTER_YOUR_DETAILS);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.form_color));
 
         mNameInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -233,36 +234,41 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
                 }
 
                 //Check if any of the EditText has error
-                if (mNameInput.isErrorEnabled() || mRetirementAgeInput.isErrorEnabled() ||
+                if (mNameInput.isErrorEnabled() || mGrossMonthlyIncomeInput.isErrorEnabled() ||
                         mExpectancyInput.isErrorEnabled() || mAgeInput.isErrorEnabled() ||
                         mCurrentAssets.isErrorEnabled() || mFixedExpensesInput.isErrorEnabled() ||
-                        mVariableExpensesInput.isErrorEnabled() || mGrossMonthlyIncomeInput.isErrorEnabled()) {
-                    Snackbar.make(mLayout, ERR_MSG_ENTER_VALID_INPUT, Snackbar.LENGTH_LONG).show();
+                        mVariableExpensesInput.isErrorEnabled() || mRetirementAgeInput.isErrorEnabled()) {
+                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
+                            Snackbar.LENGTH_LONG).show();
                 } else {
                     String employmentStatus = mEmploymentStatusSegmentedButton.getPosition() == 0
-                            ? SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED : SEGMENTED_BUTTON_VALUE_EMPLOYED;
+                            ? ScreenConstants.SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED
+                            : ScreenConstants.SEGMENTED_BUTTON_VALUE_EMPLOYED;
                     String citizenship = mCitizenshipSegmentedButton.getPosition() == 0
-                            ? SEGMENTED_BUTTON_VALUE_SINGPOREAN : SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR;
+                            ? ScreenConstants.SEGMENTED_BUTTON_VALUE_SINGPOREAN
+                            : ScreenConstants.SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR;
 
                     //Saving data in internal storage
-                    String fileContent = CONTENT_NAME + ":" + mNameInput.getEditText().getText().toString() +
-                            "//" + CONTENT_AGE + ":" + mAgeInput.getEditText().getText().toString() +
-                            "//" + CONTENT_CURRENT_ASSETS + ":" + mCurrentAssets.getEditText().getText().toString() +
-                            "//" + CONTENT_GROSS_MONTHLY_INCOME + ":" + mGrossMonthlyIncomeInput.getEditText().getText().toString() +
-                            "//" + CONTENT_FIXED_EXPENSES + ":" + mFixedExpensesInput.getEditText().getText().toString() +
-                            "//" + CONTENT_VARIABLE_EXPENSES + ":" + mVariableExpensesInput.getEditText().getText().toString() +
-                            "//" + CONTENT_RETIREMENT_AGE + ":" + mRetirementAgeInput.getEditText().getText().toString() +
-                            "//" + CONTENT_EXPECTANCY + ":" + mExpectancyInput.getEditText().getText().toString() +
-                            "//" + CONTENT_JOB_STATUS + ":" + employmentStatus +
-                            "//" + CONTENT_CITIZENSHIP_STATUS + ":" + citizenship;
+                    String fileContent = KeyConstants.CONTENT_NAME +
+                            ":" + mNameInput.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_AGE +
+                            ":" + mAgeInput.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_CURRENT_ASSETS +
+                            ":" + mCurrentAssets.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_GROSS_MONTHLY_INCOME +
+                            ":" + mGrossMonthlyIncomeInput.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_FIXED_EXPENSES +
+                            ":" + mFixedExpensesInput.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_VARIABLE_EXPENSES +
+                            ":" + mVariableExpensesInput.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_RETIREMENT_AGE +
+                            ":" + mRetirementAgeInput.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_EXPECTANCY +
+                            ":" + mExpectancyInput.getEditText().getText().toString() +
+                            "//" + KeyConstants.CONTENT_JOB_STATUS + ":" + employmentStatus +
+                            "//" + KeyConstants.CONTENT_CITIZENSHIP_STATUS + ":" + citizenship;
 
-                    try {
-                        FileOutputStream fileOutputStream = openFileOutput(FILE_USER_INFO, MODE_PRIVATE);
-                        fileOutputStream.write(fileContent.getBytes());
-                        fileOutputStream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    new DAOFile().saveDate(fileContent, getApplicationContext());
 
                     startActivity(new Intent(FormActivity.this, MainActivity.class));
                 }
@@ -277,7 +283,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
         try {
             if ((!validation.matchCharOnly(mNameInput.getEditText().getText().toString())) &&
                     mNameInput.getEditText().getText().length() > 0) {
-                mNameInput.setError(ERR_MSG_INVALID_NAME);
+                mNameInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_NAME);
             } else {
                 mNameInput.setErrorEnabled(false);
             }
@@ -295,9 +301,9 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
             if (mAgeInput.getEditText().getText().toString().isEmpty()) {
                 mAgeInput.setErrorEnabled(false);
             } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) > 999) {
-                mAgeInput.setError(ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
+                mAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
             } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) < 18) {
-                mAgeInput.setError(ERR_MSG_INVALID_AGE);
+                mAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_AGE);
             } else {
                 mAgeInput.setErrorEnabled(false);
             }
@@ -310,9 +316,9 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
             if (mRetirementAgeInput.getEditText().getText().toString().isEmpty()) {
                 mRetirementAgeInput.setErrorEnabled(false);
             } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 999) {
-                mRetirementAgeInput.setError(ERR_MSG_RETIREMENT_AGE_CANNOT_BE_MORE_THAN_999);
+                mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_RETIREMENT_AGE_CANNOT_BE_MORE_THAN_999);
             } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 18) {
-                mRetirementAgeInput.setError(ERR_MSG_RETIREMENT_AGE_CANNOT_BE_LESS_THAN_18);
+                mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_RETIREMENT_AGE_CANNOT_BE_LESS_THAN_18);
             } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 999 &&
                     Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 18) {
                 mRetirementAgeInput.setErrorEnabled(false);
@@ -323,7 +329,7 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
             if (!mRetirementAgeInput.isErrorEnabled()) {
                 if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) <
                         Integer.valueOf(mAgeInput.getEditText().getText().toString())) {
-                    mRetirementAgeInput.setError(ERR_MSG_INVALID_RETIREMENT_AGE);
+                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_RETIREMENT_AGE);
                 } else {
                     mRetirementAgeInput.setErrorEnabled(false);
                 }
@@ -337,9 +343,9 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
             if (mExpectancyInput.getEditText().getText().toString().isEmpty()) {
                 mExpectancyInput.setErrorEnabled(false);
             } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 999) {
-                mExpectancyInput.setError(ERR_MSG_EXPECTANCY_CANNOT_BE_MORE_THAN_999);
+                mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_EXPECTANCY_CANNOT_BE_MORE_THAN_999);
             } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 18) {
-                mExpectancyInput.setError(ERR_MSG_EXPECTANCY_CANNOT_BE_LESS_THAN_18);
+                mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_EXPECTANCY_CANNOT_BE_LESS_THAN_18);
             } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 999 &&
                     Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 18) {
                 mExpectancyInput.setErrorEnabled(false);
@@ -350,12 +356,12 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
             if (!mExpectancyInput.isErrorEnabled()) {
                 if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
                         Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
-                    mExpectancyInput.setError(ERR_MSG_INVALID_EXPECTANCY);
+                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
                 } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
                         Integer.valueOf(mAgeInput.getEditText().getText().toString()) ||
                         Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
                                 Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
-                    mExpectancyInput.setError(ERR_MSG_INVALID_EXPECTANCY);
+                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
                 } else {
                     mExpectancyInput.setErrorEnabled(false);
                 }
@@ -375,16 +381,16 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
             if (Float.valueOf(textInputLayout.getEditText().getText().toString()) < 0f) {
                 switch (textInputLayout.getId()) {
                     case R.id.current_assets_input_layout:
-                        mCurrentAssets.setError(ERR_MSG_INVALID_ASSETS);
+                        mCurrentAssets.setError(ErrorMsgConstants.ERR_MSG_INVALID_ASSETS);
                         break;
                     case R.id.gross_monthly_income_input_layout:
-                        mGrossMonthlyIncomeInput.setError(ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
+                        mGrossMonthlyIncomeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
                         break;
                     case R.id.fixed_expenses_input_layout:
-                        mFixedExpensesInput.setError(ERR_MSG_INVALID_FIXED_EXPENSES);
+                        mFixedExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_FIXED_EXPENSES);
                         break;
                     case R.id.variable_expenses_input_layout:
-                        mVariableExpensesInput.setError(ERR_MSG_INVALID_VARIABLE_EXPENSES);
+                        mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
                         break;
                     default:
                         Log.d(TAG, "currencyValidation: In if() default");
@@ -410,16 +416,16 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
         } catch (NumberFormatException e) {
             switch (textInputLayout.getId()) {
                 case R.id.current_assets_input_layout:
-                    mCurrentAssets.setError(ERR_MSG_INVALID_ASSETS);
+                    mCurrentAssets.setError(ErrorMsgConstants.ERR_MSG_INVALID_ASSETS);
                     break;
                 case R.id.gross_monthly_income_input_layout:
-                    mGrossMonthlyIncomeInput.setError(ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
+                    mGrossMonthlyIncomeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
                     break;
                 case R.id.fixed_expenses_input_layout:
-                    mFixedExpensesInput.setError(ERR_MSG_INVALID_FIXED_EXPENSES);
+                    mFixedExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_FIXED_EXPENSES);
                     break;
                 case R.id.variable_expenses_input_layout:
-                    mVariableExpensesInput.setError(ERR_MSG_INVALID_VARIABLE_EXPENSES);
+                    mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
                     break;
                 default:
                     Log.d(TAG, "currencyValidation: In catch() default");
@@ -438,28 +444,28 @@ public class FormActivity extends AppCompatActivity implements Constants/*, Labe
             if (textInputLayout.getEditText().getText().toString().isEmpty()) {
                 switch (textInputLayout.getId()) {
                     case R.id.name_input_layout:
-                        mNameInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mNameInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     case R.id.retirement_age_input_layout:
-                        mRetirementAgeInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     case R.id.expectancy_input_layout:
-                        mExpectancyInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     case R.id.age_input_layout:
-                        mAgeInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mAgeInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     case R.id.current_assets_input_layout:
-                        mCurrentAssets.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mCurrentAssets.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     case R.id.fixed_expenses_input_layout:
-                        mFixedExpensesInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mFixedExpensesInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     case R.id.variable_expenses_input_layout:
-                        mVariableExpensesInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     case R.id.gross_monthly_income_input_layout:
-                        mGrossMonthlyIncomeInput.setError(ERR_MSG_FIELD_CANNOT_BE_BLANK);
+                        mGrossMonthlyIncomeInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                         return true;
                     default:
                         Log.d(TAG, "blankFieldValidation: in default");

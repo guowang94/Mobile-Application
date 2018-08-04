@@ -20,9 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.graphapplication.Constants;
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.ReadFileData;
+import com.example.android.graphapplication.DAOFile;
+import com.example.android.graphapplication.constants.KeyConstants;
+import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
 import com.github.mikephil.charting.charts.BarChart;
@@ -33,15 +34,10 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -49,9 +45,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-import static android.content.Context.MODE_PRIVATE;
-
-public class GraphFragment extends Fragment implements Constants, OnChartValueSelectedListener {
+public class GraphFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String TAG = "GraphFragment";
     private ConstraintLayout mLayout;
@@ -115,25 +109,25 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
     }
 
     /**
-     * This method will initialise the data for the activity
+     * This method will initialise the data for the fragment
      */
     private void initData() {
         Log.d(TAG, "initData: in");
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        mToolbarTitle.setText(Constants.TOOLBAR_TITLE_GRAPH);
+        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_GRAPH);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
-        fileContent = new ReadFileData().readFile(context, FILE_USER_INFO);
-        content = new ReadFileData().splitFileContent(fileContent);
+        fileContent = new DAOFile().readFile(context, KeyConstants.FILE_USER_INFO);
+        content = new DAOFile().splitFileContent(fileContent);
         Log.i(TAG, "initData: " + content);
 
         //if event count does not exist, make event count = 1
-        if (content.get(CONTENT_EVENT_COUNT) == null) {
-            fileContent += "//" + CONTENT_EVENT_COUNT + ":" + "0";
+        if (content.get(KeyConstants.CONTENT_EVENT_COUNT) == null) {
+            fileContent += "//" + KeyConstants.CONTENT_EVENT_COUNT + ":" + "0";
         }
 
         mChart.setOnChartValueSelectedListener(this);
@@ -324,7 +318,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
                 assets += annualIncome;
 
                 if (i == retirementAge) {
-                    fileContent = fileContent.concat("//" + CONTENT_BALANCE + ":" + String.valueOf(assets));
+                    fileContent = fileContent.concat("//" + KeyConstants.CONTENT_BALANCE + ":" + String.valueOf(assets));
                 }
 
             } else {
@@ -335,26 +329,20 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
             if (assets < 0f) {
                 if (shortfallAge == -1) {
                     shortfallAge = i;
-                    fileContent = fileContent.concat("//" + CONTENT_SHORTFALL_AGE + ":" + String.valueOf(shortfallAge));
+                    fileContent = fileContent.concat("//" + KeyConstants.CONTENT_SHORTFALL_AGE + ":" + String.valueOf(shortfallAge));
                 }
             }
 
             if (i == expectancy) {
-                fileContent += "//" + CONTENT_SHORTFALL + ":" + String.valueOf(assets) +
-                        "//" + CONTENT_ORDINARY_ACCOUNT + ":" + String.valueOf(cpfOrdinaryAccount) +
-                        "//" + CONTENT_SPECIAL_ACCOUNT + ":" + String.valueOf(cpfSpecialAccount) +
-                        "//" + CONTENT_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
+                fileContent += "//" + KeyConstants.CONTENT_SHORTFALL + ":" + String.valueOf(assets) +
+                        "//" + KeyConstants.CONTENT_ORDINARY_ACCOUNT + ":" + String.valueOf(cpfOrdinaryAccount) +
+                        "//" + KeyConstants.CONTENT_SPECIAL_ACCOUNT + ":" + String.valueOf(cpfSpecialAccount) +
+                        "//" + KeyConstants.CONTENT_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
             }
         }
 
         //Update the file data
-        try {
-            FileOutputStream fileOutputStream = getActivity().openFileOutput(FILE_USER_INFO, MODE_PRIVATE);
-            fileOutputStream.write(fileContent.getBytes());
-            fileOutputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new DAOFile().saveDate(fileContent, getActivity().getApplicationContext());
 
         return yVals;
     }
@@ -363,18 +351,18 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
      * This method will show the graph
      */
     private void graphViewSetup() {
-        ArrayList<BarEntry> yVals1 = getGraphData(Float.valueOf(content.get(CONTENT_CURRENT_ASSETS)),
-                Float.valueOf(content.get(CONTENT_GROSS_MONTHLY_INCOME)),
-                Float.valueOf(content.get(CONTENT_FIXED_EXPENSES)),
-                Float.valueOf(content.get(CONTENT_VARIABLE_EXPENSES)),
-                Integer.valueOf(content.get(CONTENT_AGE)),
-                Integer.valueOf(content.get(CONTENT_RETIREMENT_AGE)),
-                Integer.valueOf(content.get(CONTENT_EXPECTANCY)));
+        ArrayList<BarEntry> yVals1 = getGraphData(Float.valueOf(content.get(KeyConstants.CONTENT_CURRENT_ASSETS)),
+                Float.valueOf(content.get(KeyConstants.CONTENT_GROSS_MONTHLY_INCOME)),
+                Float.valueOf(content.get(KeyConstants.CONTENT_FIXED_EXPENSES)),
+                Float.valueOf(content.get(KeyConstants.CONTENT_VARIABLE_EXPENSES)),
+                Integer.valueOf(content.get(KeyConstants.CONTENT_AGE)),
+                Integer.valueOf(content.get(KeyConstants.CONTENT_RETIREMENT_AGE)),
+                Integer.valueOf(content.get(KeyConstants.CONTENT_EXPECTANCY)));
 
         //BarDataSet is similar to series
         BarDataSet set1 = new BarDataSet(yVals1, null);
         set1.setColors(getResources().getColor(R.color.incomeGraph), getResources().getColor(R.color.assetsGraph));
-        set1.setStackLabels(new String[]{GRAPH_LEGEND_INCOME, GRAPH_LEGEND_ASSETS});
+        set1.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_INCOME, ScreenConstants.GRAPH_LEGEND_ASSETS});
 
         //values will appear on the graph
         set1.setDrawValues(false);
@@ -424,7 +412,7 @@ public class GraphFragment extends Fragment implements Constants, OnChartValueSe
     /**
      * This method will create the more option in the action bar
      *
-     * @param menu store all the menu items
+     * @param menu     store all the menu items
      * @param inflater it takes an XML file as input and builds the View objects from it
      */
     @Override
