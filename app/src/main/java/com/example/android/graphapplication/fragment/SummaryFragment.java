@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
@@ -36,18 +35,9 @@ public class SummaryFragment extends Fragment {
 
     private static final String TAG = "SummaryFragment";
     private Toolbar mToolbar;
-    private RecyclerView mSummaryRecyclerView;
-    private RecyclerView mBalanceRecyclerView;
-    private RecyclerView mCPFContributionRecyclerView;
-    private LinearLayout mLinearLayout;
+    private RecyclerView mRecyclerView;
     private TextView mToolbarTitle;
 
-//    private UserInfoAdapter mUserInfoAdapter;
-//    private List<UserInfo> userInfoList = new ArrayList<>();
-//    private SummaryBalanceAdapter mSummaryBalanceAdapter;
-//    private List<SummaryBalance> summaryBalanceList = new ArrayList<>();
-//    private CPFContributionAdapter mCPFContributionAdapter;
-//    private List<CPFContribution> cpfContributionList = new ArrayList<>();
     private List<SectionModel> sectionModels = new ArrayList<>();
     private List<SummaryModel> financialSummary = new ArrayList<>();
     private List<SummaryModel> detailsSummary = new ArrayList<>();
@@ -73,16 +63,13 @@ public class SummaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_summary, container, false);
 
         mToolbar = view.findViewById(R.id.summary_toolbar);
-        mSummaryRecyclerView = view.findViewById(R.id.recycerView);
-//        mBalanceRecyclerView = view.findViewById(R.id.horizontal_recycler_view);
-//        mCPFContributionRecyclerView = view.findViewById(R.id.cpf_contribution_recycler_view);
-//        mLinearLayout = view.findViewById(R.id.layout);
+        mRecyclerView = view.findViewById(R.id.recycerView);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
         isViewLoaded = true;
+        mydb = new DBHelper(getActivity().getApplicationContext());
 
         if (isViewShown) {
-            mydb = new DBHelper(getActivity().getApplicationContext());
             initData();
             isDataLoaded = true;
         }
@@ -175,96 +162,11 @@ public class SummaryFragment extends Fragment {
         SectionRecyclerAdapter sectionRecyclerAdapter = new SectionRecyclerAdapter(context, sectionModels);
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
-        mSummaryRecyclerView.setLayoutManager(mSummaryLayoutManager);
-        mSummaryRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mSummaryRecyclerView.addItemDecoration(new DividerItemDecoration(
+        mRecyclerView.setLayoutManager(mSummaryLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 context, LinearLayoutManager.VERTICAL));
-        mSummaryRecyclerView.setAdapter(sectionRecyclerAdapter);
-
-//        if (content.get(KeyConstants.CONTENT_SHORTFALL_AGE) == null) {
-//            shortfallAge = "N/A";
-//        } else {
-//            shortfallAge = content.get(KeyConstants.CONTENT_SHORTFALL_AGE);
-//        }
-
-        //Initialise Recycle view data for UserInfo
-//        userInfoList.add(new UserInfo(getString(R.string.name),
-//                content.get(KeyConstants.CONTENT_NAME), R.mipmap.ic_summary_screen_name));
-//        userInfoList.add(new UserInfo(getString(R.string.age),
-//                content.get(KeyConstants.CONTENT_AGE), R.mipmap.ic_summary_screen_age));
-//        userInfoList.add(new UserInfo(getString(R.string.shortfall_age),
-//                shortfallAge, R.mipmap.ic_summary_screen_age_shortfall));
-//        userInfoList.add(new UserInfo(getString(R.string.retirement_age),
-//                content.get(KeyConstants.CONTENT_RETIREMENT_AGE), R.mipmap.ic_summary_screen_retirement));
-//        userInfoList.add(new UserInfo(getString(R.string.job_status),
-//                content.get(KeyConstants.CONTENT_JOB_STATUS), R.mipmap.ic_summary_screen_job_status));
-//        userInfoList.add(new UserInfo(getString(R.string.citizenship_status),
-//                content.get(KeyConstants.CONTENT_CITIZENSHIP_STATUS), R.mipmap.ic_summary_screen_citizen));
-//        userInfoList.add(new UserInfo(getString(R.string.gross_monthly_income),
-//                String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-//                .format(Float.valueOf(content.get(KeyConstants.CONTENT_GROSS_MONTHLY_INCOME)))),
-//                R.mipmap.ic_summary_screen_income));
-//        userInfoList.add(new UserInfo(getString(R.string.name), name, R.mipmap.ic_summary_screen_name));
-//        userInfoList.add(new UserInfo(getString(R.string.age), age, R.mipmap.ic_summary_screen_age));
-//        userInfoList.add(new UserInfo(getString(R.string.shortfall_age), shortfallAge, R.mipmap.ic_summary_screen_age_shortfall));
-//        userInfoList.add(new UserInfo(getString(R.string.retirement_age), retirementAge, R.mipmap.ic_summary_screen_retirement));
-//        userInfoList.add(new UserInfo(getString(R.string.job_status), jobStatus, R.mipmap.ic_summary_screen_job_status));
-//        userInfoList.add(new UserInfo(getString(R.string.citizenship_status), citizenship, R.mipmap.ic_summary_screen_citizen));
-//        userInfoList.add(new UserInfo(getString(R.string.income), monthlyIncome, R.mipmap.ic_summary_screen_income));
-//
-//        //Recycler View Setup for UserInfo
-//        mUserInfoAdapter = new UserInfoAdapter(userInfoList);
-//        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
-//                getActivity().getApplicationContext());
-//        mSummaryRecyclerView.setLayoutManager(mSummaryLayoutManager);
-//        mSummaryRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        mSummaryRecyclerView.addItemDecoration(new DividerItemDecoration(
-//                context, LinearLayoutManager.VERTICAL));
-//        mSummaryRecyclerView.setAdapter(mUserInfoAdapter);
-//
-//        //Initialise Recycle view data for Summary Balance
-//        summaryBalanceList.add(new SummaryBalance(ScreenConstants.SUMMARY_BALANCE,
-//                String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-//                .format(Float.valueOf(content.get(KeyConstants.CONTENT_BALANCE)))),
-//                R.mipmap.ic_summary_screen_balance));
-//        summaryBalanceList.add(new SummaryBalance(ScreenConstants.SUMMARY_SHORTFALL,
-//                String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-//                .format(Float.valueOf(content.get(KeyConstants.CONTENT_SHORTFALL)))),
-//                R.mipmap.ic_summary_screen_shortfall));
-//
-//        //Recycler View Setup for Summary Balance
-//        mSummaryBalanceAdapter = new SummaryBalanceAdapter(summaryBalanceList);
-//        RecyclerView.LayoutManager mBalanceLayoutManager = new LinearLayoutManager(
-//                context, LinearLayoutManager.HORIZONTAL, false);
-//        mBalanceRecyclerView.setLayoutManager(mBalanceLayoutManager);
-//        mBalanceRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        mBalanceRecyclerView.addItemDecoration(new DividerItemDecoration(
-//                context, LinearLayoutManager.HORIZONTAL));
-//        mBalanceRecyclerView.setAdapter(mSummaryBalanceAdapter);
-//        mBalanceRecyclerView.addItemDecoration(new CirclePagerIndicatorDecoration());
-//        PagerSnapHelper snapHelper = new PagerSnapHelper();
-//        snapHelper.attachToRecyclerView(mBalanceRecyclerView);
-//
-//        //Initialise Recycle view data
-//        cpfContributionList.add(new CPFContribution(getString(R.string.cpf_ordinary_account),
-//                NumberFormat.getCurrencyInstance(Locale.US)
-//                        .format(Float.valueOf(content.get(KeyConstants.CONTENT_ORDINARY_ACCOUNT)))));
-//        cpfContributionList.add(new CPFContribution(getString(R.string.cpf_special_account),
-//                NumberFormat.getCurrencyInstance(Locale.US)
-//                        .format(Float.valueOf(content.get(KeyConstants.CONTENT_SPECIAL_ACCOUNT)))));
-//        cpfContributionList.add(new CPFContribution(getString(R.string.cpf_medisave_account),
-//                NumberFormat.getCurrencyInstance(Locale.US)
-//                        .format(Float.valueOf(content.get(KeyConstants.CONTENT_MEDISAVE_ACCOUNT)))));
-//
-//        //Recycler View Setup for CPF Contribution
-//        mCPFContributionAdapter = new CPFContributionAdapter(cpfContributionList);
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(
-//                getActivity().getApplicationContext());
-//        mCPFContributionRecyclerView.setLayoutManager(mLayoutManager);
-//        mCPFContributionRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        mCPFContributionRecyclerView.addItemDecoration(new DividerItemDecoration(
-//                context, LinearLayoutManager.VERTICAL));
-//        mCPFContributionRecyclerView.setAdapter(mCPFContributionAdapter);
+        mRecyclerView.setAdapter(sectionRecyclerAdapter);
         Log.d(TAG, "initData: out");
     }
 
@@ -280,6 +182,7 @@ public class SummaryFragment extends Fragment {
         sectionModels.clear();
         financialSummary.clear();
         detailsSummary.clear();
+        cpfContributions.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }
