@@ -1,12 +1,21 @@
 package com.example.android.graphapplication.model;
 
-public class CPFContribution {
-
+public class SummaryModel {
+    private int image;
     private String title, value;
 
-    public CPFContribution(String title, String value) {
+    public SummaryModel(int image, String title, String value) {
+        this.image = image;
         this.title = title;
         this.value = value;
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
     }
 
     public String getTitle() {
@@ -23,13 +32,5 @@ public class CPFContribution {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return "CPFContribution{" +
-                "title='" + title + '\'' +
-                ", value='" + value + '\'' +
-                '}';
     }
 }

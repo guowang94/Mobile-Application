@@ -123,11 +123,11 @@ public class EventsFragment extends Fragment {
         Log.i(TAG, "onCreateView: " + content);
 
         //Initialise Recycle view data for Events
-        final int eventCount = Integer.valueOf(content.get(KeyConstants.CONTENT_EVENT_COUNT));
-        for (int i = 0; i < eventCount; i++) {
-            int currentEvent = i + 1;
-            eventsList.add(new Events(content.get(KeyConstants.CONTENT_EVENT_NAME + currentEvent)));
-        }
+//        final int eventCount = Integer.valueOf(content.get(KeyConstants.CONTENT_EVENT_COUNT));
+//        for (int i = 0; i < eventCount; i++) {
+//            int currentEvent = i + 1;
+//            eventsList.add(new Events(content.get(KeyConstants.CONTENT_EVENT_NAME + currentEvent)));
+//        }
 
         //Recycler View Setup for Events
         mEventsAdapter = new EventsAdapter(eventsList);
@@ -166,13 +166,13 @@ public class EventsFragment extends Fragment {
                         // Write your code here to invoke YES event
                         mEventsAdapter.removeItem(position);
 
-                        //todo need to remove the data from the file content
-                        String count = String.valueOf(eventCount - 1);
-                        fileContent = fileContent.replace("EventCount:" + eventCount, "EventCount:" + count)
-                                .replace("EventName" + position, "EventName-1")
-                                .replace("EventType" + position, "EventType-1")
-                                .replace("YearOccurred" + position, "YearOccurred-1")
-                                .replace("EventDescription" + position, "EventDescription-1");
+//                        //todo need to remove the data from the file content
+//                        String count = String.valueOf(eventCount - 1);
+//                        fileContent = fileContent.replace("EventCount:" + eventCount, "EventCount:" + count)
+//                                .replace("EventName" + position, "EventName-1")
+//                                .replace("EventType" + position, "EventType-1")
+//                                .replace("YearOccurred" + position, "YearOccurred-1")
+//                                .replace("EventDescription" + position, "EventDescription-1");
                     }
                 });
 

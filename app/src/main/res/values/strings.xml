@@ -8,27 +8,36 @@
     <string name="financial_information">Financial Information</string>
     <string name="name">Name</string>
     <string name="age">Age</string>
-    <string name="expected_retirement_age">Expected Retirement Age</string>
-    <string name="expectancy">Expected to Live Age</string>
+    <string name="retirement_age">Retirement Age</string>
+    <string name="expectancy">Life Expectancy</string>
     <string name="self_employed">Self-Employed</string>
     <string name="employed">Employed</string>
     <string name="singaporean">Singaporean</string>
     <string name="foreigner_or_pr">Foreigner/PR</string>
-    <string name="gross_monthly_income">Gross Monthly Income</string>
+    <string name="income">Income</string>
     <string name="fixed_expenses">Fixed Expenses</string>
     <string name="variable_expenses">Variable Expenses</string>
-    <string name="current_assets">Current Assets</string>
-    <string name="graph_forecast">Graph Forecast</string>
-    
+    <string name="assets">Assets</string>
+    <string name="forecast">Forecast</string>
+    <string name="increment">Increment</string>
+    <string name="inflation_rate">Inflation Rate</string>
+
     <!--Summary Screen-->
+    <!--Section Header-->
+    <string name="financial_summary">Financial Summary</string>
+    <string name="details_summary">Details Summary</string>
+    <string name="cpf_contribution">CPF Contributions</string>
+    <!--label-->
+    <string name="total_shortfall">Total Shortfall</string>
+    <string name="balance_left_at_retirement">Balance Left at Retirement</string>
+    <string name="expenses_exceeded_income_age">Expenses exceeded Income Age</string>
+    <string name="inital_assets">Initial Assets</string>
     <string name="shortfall_age">ShortFall Age</string>
-    <string name="retirement_age">Retirement Age</string>
     <string name="job_status">Job Status</string>
     <string name="citizenship_status">Citizenship Status</string>
-    <string name="cpf_ordinary_account">Ordinary Account</string>
+    <string name="gross_monthly_income">Gross Monthly Income</string>
     <string name="cpf_special_account">Special Account</string>
     <string name="cpf_medisave_account">Medisave Account</string>
-    <string name="cpf_contribution">CPF Contributions</string>
 
     <!--Create Event Screen-->
     <string name="event_name">Event Name</string>
@@ -49,7 +58,7 @@
     <string name="action_apply_scenarios">Apply Scenarios</string>
     <string name="action_export">Export</string>
     <string name="save">Save</string>
-    
+
     <!--code string-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

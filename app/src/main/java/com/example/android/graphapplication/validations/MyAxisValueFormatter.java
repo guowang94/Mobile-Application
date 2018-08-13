@@ -18,11 +18,11 @@ public class MyAxisValueFormatter implements IAxisValueFormatter {
             return formattedValue.substring(0, formattedValue.length() - 11) + "M";
         } else if (value > -1000000 && value <= -1000) {
             return formattedValue.substring(0, formattedValue.length() - 7) + "K";
-        } else if (value > -1000 && value <= 1000) {
+        } else if (value >= -1000 && value < 1000) {
             return formattedValue.substring(0, formattedValue.length() - 3);
-        } else if (value > 1000 && value <= 1000000) {
+        } else if (value >= 1000 && value < 1000000) {
             return formattedValue.substring(0, formattedValue.length() - 7) + "K";
-        } else if (value > 1000000 && value <= 1000000000) {
+        } else if (value >= 1000000 && value < 1000000000) {
             return formattedValue.substring(0, formattedValue.length() - 11) + "M";
         } else {
             return formattedValue.substring(0, formattedValue.length() - 15) + "B";

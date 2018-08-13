@@ -20,7 +20,7 @@
 
         <include
             android:id="@+id/create_event_toolbar"
-            layout="@layout/toolbar_layout_white" />
+            layout="@layout/toolbar_layout_blue" />
 
         <View
             android:id="@+id/divider4"
@@ -38,7 +38,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/personal_information"
-            android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/create_event_toolbar" />
 
@@ -95,7 +94,7 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/expected_retirement_age"
+                android:hint="@string/retirement_age"
                 android:inputType="number"
                 android:text="55" />
         </android.support.design.widget.TextInputLayout>
@@ -119,55 +118,14 @@
         </android.support.design.widget.TextInputLayout>
 
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
-            android:id="@+id/employment_status_segmented_button"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="8dp"
-            android:elevation="2dp"
-            app:layout_constraintEnd_toEndOf="@+id/expectancy_input_layout"
-            app:layout_constraintStart_toStartOf="@+id/expectancy_input_layout"
-            app:layout_constraintTop_toBottomOf="@+id/expectancy_input_layout"
-            app:sbg_animateSelector="linearOutSlowIn"
-            app:sbg_animateSelectorDuration="1000"
-            app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/form_color"
-            app:sbg_borderSize="1dp"
-            app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/form_color">
-
-            <co.ceryle.segmentedbutton.SegmentedButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                app:sb_rippleColor="@color/colorPrimary"
-                app:sb_text="@string/self_employed"
-                app:sb_textColor="@color/form_color"
-                app:sb_textColor_onSelection="@color/white" />
-
-            <co.ceryle.segmentedbutton.SegmentedButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                app:sb_rippleColor="@color/colorPrimary"
-                app:sb_text="@string/employed"
-                app:sb_textColor="@color/form_color"
-                app:sb_textColor_onSelection="@color/white" />
-
-        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
-
-        <co.ceryle.segmentedbutton.SegmentedButtonGroup
             android:id="@+id/citizenship_segmented_button"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
             android:elevation="2dp"
-            app:layout_constraintEnd_toEndOf="@+id/employment_status_segmented_button"
-            app:layout_constraintStart_toStartOf="@+id/employment_status_segmented_button"
-            app:layout_constraintTop_toBottomOf="@+id/employment_status_segmented_button"
+            app:layout_constraintEnd_toEndOf="@+id/expectancy_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/expectancy_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/expectancy_input_layout"
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
@@ -200,6 +158,47 @@
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
 
+        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+            android:id="@+id/employment_status_segmented_button"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="@+id/citizenship_segmented_button"
+            app:layout_constraintStart_toStartOf="@+id/citizenship_segmented_button"
+            app:layout_constraintTop_toBottomOf="@+id/citizenship_segmented_button"
+            app:sbg_animateSelector="linearOutSlowIn"
+            app:sbg_animateSelectorDuration="1000"
+            app:sbg_backgroundColor="@color/white"
+            app:sbg_borderColor="@color/form_color"
+            app:sbg_borderSize="1dp"
+            app:sbg_radius="2dp"
+            app:sbg_selectorColor="@color/form_color">
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                app:sb_rippleColor="@color/colorPrimary"
+                app:sb_text="@string/employed"
+                app:sb_textColor="@color/form_color"
+                app:sb_textColor_onSelection="@color/white" />
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                app:sb_rippleColor="@color/colorPrimary"
+                app:sb_text="@string/self_employed"
+                app:sb_textColor="@color/form_color"
+                app:sb_textColor_onSelection="@color/white" />
+
+        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
@@ -207,12 +206,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/financial_information"
-            android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/citizenship_segmented_button" />
+            app:layout_constraintTop_toBottomOf="@+id/employment_status_segmented_button" />
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/gross_monthly_income_input_layout"
+            android:id="@+id/income_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -224,9 +222,27 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/gross_monthly_income"
+                android:hint="@string/income"
                 android:inputType="numberDecimal"
                 android:text="2800" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/increment_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/income_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/income_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/income_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/increment"
+                android:inputType="number"
+                android:text="10" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -235,9 +251,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColorHint="@color/form_color"
-            app:layout_constraintEnd_toEndOf="@+id/gross_monthly_income_input_layout"
-            app:layout_constraintStart_toStartOf="@+id/gross_monthly_income_input_layout"
-            app:layout_constraintTop_toBottomOf="@+id/gross_monthly_income_input_layout">
+            app:layout_constraintEnd_toEndOf="@+id/increment_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/increment_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/increment_input_layout">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
@@ -266,7 +282,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/current_assets_input_layout"
+            android:id="@+id/inflation_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -278,27 +294,45 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/current_assets"
+                android:hint="@string/inflation_rate"
+                android:inputType="number"
+                android:text="5" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/assets_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/form_color"
+            app:layout_constraintEnd_toEndOf="@+id/inflation_input_layout"
+            app:layout_constraintStart_toStartOf="@+id/inflation_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/inflation_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/assets"
                 android:inputType="numberDecimal"
                 android:text="10000" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/compute_button"
-            android:layout_width="match_parent"
             style="@style/form_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/compute_button"
-            android:text="@string/graph_forecast"
+            android:text="@string/forecast"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_assets_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/assets_input_layout"
             app:layout_constraintVertical_bias="0.0" />
 
     </android.support.constraint.ConstraintLayout>

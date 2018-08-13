@@ -1,6 +1,6 @@
 package com.example.android.graphapplication.fragment;
 
-import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,19 +20,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.DAOFile;
-import com.example.android.graphapplication.constants.KeyConstants;
+import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
+import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -42,22 +44,21 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class GraphFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String TAG = "GraphFragment";
     private ConstraintLayout mLayout;
-    private BarChart mChart;
+    private CombinedChart mChart;
     private Toolbar mToolbar;
     private TextView mToolbarTitle;
 
-    private String fileContent;
-    private HashMap<String, String> content;
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
+
+    private DBHelper mydb;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
         isViewLoaded = true;
+        mydb = new DBHelper(getActivity().getApplicationContext());
 
         if (isViewShown) {
             initData();
@@ -115,20 +117,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         Log.d(TAG, "initData: in");
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_GRAPH);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
-
-        //Get the content from internal storage file
-        Context context = getActivity().getApplicationContext();
-        fileContent = new DAOFile().readFile(context, KeyConstants.FILE_USER_INFO);
-        content = new DAOFile().splitFileContent(fileContent);
-        Log.i(TAG, "initData: " + content);
-
-        //if event count does not exist, make event count = 1
-        if (content.get(KeyConstants.CONTENT_EVENT_COUNT) == null) {
-            fileContent += "//" + KeyConstants.CONTENT_EVENT_COUNT + ":" + "0";
-        }
 
         mChart.setOnChartValueSelectedListener(this);
 
@@ -145,40 +135,54 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
-        BarEntry entry = (BarEntry) e;
-        String type = null;
+        Log.d(TAG, "onValueSelected: entry, " + e);
+        Log.d(TAG, "onValueSelected: highlight, " + h);
+        if (h.getStackIndex() != -1) {
+            BarEntry entry = (BarEntry) e;
+            String type = null;
 
-        if (entry.getYVals() != null) {
-            Log.i(TAG, "y values: " + entry.getY());
-            for (int i = 0; i < entry.getYVals().length; i++) {
-                Log.i(TAG, "y values at " + i + " index: " + entry.getYVals()[i]);
+            if (entry.getYVals() != null) {
+                Log.i(TAG, "y values: " + entry.getY());
+                for (int i = 0; i < entry.getYVals().length; i++) {
+                    Log.i(TAG, "y values at " + i + " index: " + entry.getYVals()[i]);
+                }
+                Log.i(TAG, "Selected stack index: " + h.getStackIndex());
+                Log.i("VAL SELECTED", "Value: " + entry.getYVals()[h.getStackIndex()]);
+
+                switch (h.getStackIndex()) {
+                    case 0:
+                        type = ", Expenses: ";
+                        break;
+
+                    case 1:
+                        type = ", Income: ";
+                        break;
+
+                    default:
+                        Log.i(TAG, "Index Value: " + h.getStackIndex() + ", type not available");
+                }
+
+                Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(entry.getX()) +
+                                type + DecimalFormat.getCurrencyInstance(Locale.US).format(entry.getYVals()[h.getStackIndex()]),
+                        Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Do nothing
+                    }
+                }).show();
+            } else {
+                Log.i("VAL SELECTED", "Value: " + entry.getY());
             }
-            Log.i(TAG, "Selected stack index: " + h.getStackIndex());
-            Log.i("VAL SELECTED", "Value: " + entry.getYVals()[h.getStackIndex()]);
-
-            switch (h.getStackIndex()) {
-                case 0:
-                    type = ", Income: ";
-                    break;
-
-                case 1:
-                    type = ", Assets: ";
-                    break;
-
-                default:
-                    Log.i(TAG, "Index Value: " + h.getStackIndex() + ", type not available");
-            }
-
-            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(entry.getX()) +
-                            type + DecimalFormat.getCurrencyInstance(Locale.US).format(entry.getYVals()[h.getStackIndex()]),
+        } else {
+            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(e.getX()) +
+                            ", Value: " + DecimalFormat.getCurrencyInstance(Locale.US).format(e.getY()),
                     Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // Do nothing
                 }
             }).show();
-        } else
-            Log.i("VAL SELECTED", "Value: " + entry.getY());
+        }
     }
 
     @Override
@@ -194,6 +198,70 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     }
 
     /**
+     * This method will show the graph
+     */
+    private void graphViewSetup() {
+
+        mChart.setDrawOrder(new CombinedChart.DrawOrder[]{
+                CombinedChart.DrawOrder.BAR, /*CombinedChart.DrawOrder.BAR, */CombinedChart.DrawOrder.LINE
+        });
+
+        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
+        rs.moveToFirst();
+
+        float assets = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INITIAL_ASSETS));
+        float monthlyIncome = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INCOME));
+        float fixedExpenses = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_FIXED_EXPENSES));
+        float variableExpenses = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_VARIABLE_EXPENSES));
+        int age = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
+        int retirementAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTED_RETIREMENT_AGE));
+        int expectancy = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
+        int increment = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_INCREMENT));
+        int inflation = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_INFLATION));
+
+        if (!rs.isClosed()) {
+            rs.close();
+        }
+
+        CombinedData data = getGraphData(assets, monthlyIncome, fixedExpenses,
+                variableExpenses, age, retirementAge, expectancy, increment, inflation);
+
+        mChart.getDescription().setEnabled(false);
+        mChart.setPinchZoom(true);
+
+        mChart.animateY(3000);
+        mChart.setDrawGridBackground(false);
+        //When false the value will be inside the bar graph but when set to true it will be outside of the graph
+        mChart.setDrawValueAboveBar(false);
+        //This method need to set as false for the onValueSelected() to work
+        mChart.setHighlightFullBarEnabled(false);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setAxisMinimum(age - 1);
+        xAxis.setAxisMaximum(expectancy + 1);
+
+        YAxis yAxis = mChart.getAxisLeft();
+        yAxis.setValueFormatter(new MyAxisValueFormatter());
+        yAxis.setCenterAxisLabels(true);
+        mChart.getAxisRight().setEnabled(false);
+
+        Legend legend = mChart.getLegend();
+        legend.setWordWrapEnabled(true);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setDrawInside(false);
+        legend.setFormSize(15f);
+        legend.setFormToTextSpace(5f);
+        legend.setXEntrySpace(6f);
+        legend.setTextSize(10f);
+
+        mChart.setData(data);
+        mChart.invalidate();
+    }
+
+    /**
      * This method will calculate and return the data for the graph
      *
      * @param assets           The current amount that the user has
@@ -203,19 +271,29 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      * @param age              The current age of the user
      * @param retirementAge    The age when the user stop working
      * @param expectancy       The age when the user is tired of living on earth
+     * @param increment
+     * @param inflation
      * @return ArrayList
      */
-    private ArrayList<BarEntry> getGraphData(float assets, float grossIncome, float fixedExpenses,
-                                             float variableExpenses, int age, int retirementAge, int expectancy) {
-        ArrayList<BarEntry> yVals = new ArrayList<>();
-        float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
+    private CombinedData getGraphData(float assets, float grossIncome, float fixedExpenses,
+                                      float variableExpenses, int age, int retirementAge,
+                                      int expectancy, int increment, int inflation) {
+        ArrayList<BarEntry> incomeBarEntries = new ArrayList<>();
+        ArrayList<BarEntry> expensesBarEntries = new ArrayList<>();
+        ArrayList<Entry> lineEntries = new ArrayList<>();
+
+        float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH))) * 0.8f;
         float firstYearExpenses = (fixedExpenses + variableExpenses) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
-        float annualIncome;
-        float annualExpenses = (fixedExpenses + variableExpenses) * 12;
+        float subsequentAnnualIncome = grossIncome * 12 * 0.8f;
+        float subsequentAnnualExpenses = (fixedExpenses + variableExpenses) * 12;
+        float annualIncome = 0f;
+        float annualExpenses = 0f;
         float cpfOrdinaryAccount = 0f;
         float cpfSpecialAccount = 0f;
         float cpfMedisaveAccount = 0f;
+        float balance = 0f;
         int shortfallAge = -1;
+        int expensesExceededIncomeAge = -1;
 
         for (int i = age; i < expectancy + 1; i++) {
             if (i < retirementAge + 1) {
@@ -223,9 +301,20 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 if (i == age) {
 //                    Log.i(TAG, "getGraphData: first year");
                     annualIncome = firstYearIncome * 0.8f;
-                } else {
+                    annualExpenses = firstYearExpenses;
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
+                } else if (i == age + 1) {
 //                    Log.i(TAG, "getGraphData: subsequent");
-                    annualIncome = (grossIncome * 12) * 0.8f;
+                    annualIncome = subsequentAnnualIncome * (100 + increment) / 100;
+                    annualExpenses = subsequentAnnualExpenses * (100 + inflation) / 100;
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
+                } else {
+                    annualIncome = annualIncome * (100 + increment) / 100;
+                    annualExpenses = annualExpenses * (100 + inflation) / 100;
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
                 }
 
                 float cpfContribution;
@@ -302,111 +391,133 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
                 //-------------Calculation for the graph---------------
 
-                if (i == age) {
-                    annualIncome -= firstYearExpenses;
-                } else {
-                    annualIncome -= annualExpenses;
+                float remainder = annualIncome - annualExpenses;
+
+                if (remainder < 0) {
+                    assets += remainder;
+//                    remainder = 0;
                 }
 
-                if (annualIncome < 0) {
-                    assets += annualIncome;
-                    annualIncome = 0;
-                }
+                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses, remainder}));
+//                incomeBarEntries.add(new BarEntry(i, new float[]{annualIncome}));
+//                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses}));
+                lineEntries.add(new Entry(i, assets));
 
-                yVals.add(new BarEntry(i, new float[]{annualIncome, assets}));
+                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
 
-                assets += annualIncome;
+                assets += remainder;
 
                 if (i == retirementAge) {
-                    fileContent = fileContent.concat("//" + KeyConstants.CONTENT_BALANCE + ":" + String.valueOf(assets));
+                    balance = assets;
                 }
 
             } else {
+                annualExpenses = annualExpenses * (100 + inflation) / 100;
                 assets -= annualExpenses;
-                yVals.add(new BarEntry(i, new float[]{0, assets}));
+                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses, 0}));
+//                incomeBarEntries.add(new BarEntry(i, new float[]{0}));
+//                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses}));
+                lineEntries.add(new Entry(i, assets));
+
+                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
             }
 
             if (assets < 0f) {
                 if (shortfallAge == -1) {
                     shortfallAge = i;
-                    fileContent = fileContent.concat("//" + KeyConstants.CONTENT_SHORTFALL_AGE + ":" + String.valueOf(shortfallAge));
+                }
+            }
+
+            if (annualExpenses > annualIncome) {
+                if (expensesExceededIncomeAge == -1) {
+                    expensesExceededIncomeAge = i;
                 }
             }
 
             if (i == expectancy) {
-                fileContent += "//" + KeyConstants.CONTENT_SHORTFALL + ":" + String.valueOf(assets) +
-                        "//" + KeyConstants.CONTENT_ORDINARY_ACCOUNT + ":" + String.valueOf(cpfOrdinaryAccount) +
-                        "//" + KeyConstants.CONTENT_SPECIAL_ACCOUNT + ":" + String.valueOf(cpfSpecialAccount) +
-                        "//" + KeyConstants.CONTENT_MEDISAVE_ACCOUNT + ":" + String.valueOf(cpfMedisaveAccount);
+                mydb.updateUser(cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount,
+                        balance, assets, shortfallAge, expensesExceededIncomeAge);
             }
         }
 
-        //Update the file data
-        new DAOFile().saveDate(fileContent, getActivity().getApplicationContext());
-
-        return yVals;
-    }
-
-    /**
-     * This method will show the graph
-     */
-    private void graphViewSetup() {
-        ArrayList<BarEntry> yVals1 = getGraphData(Float.valueOf(content.get(KeyConstants.CONTENT_CURRENT_ASSETS)),
-                Float.valueOf(content.get(KeyConstants.CONTENT_GROSS_MONTHLY_INCOME)),
-                Float.valueOf(content.get(KeyConstants.CONTENT_FIXED_EXPENSES)),
-                Float.valueOf(content.get(KeyConstants.CONTENT_VARIABLE_EXPENSES)),
-                Integer.valueOf(content.get(KeyConstants.CONTENT_AGE)),
-                Integer.valueOf(content.get(KeyConstants.CONTENT_RETIREMENT_AGE)),
-                Integer.valueOf(content.get(KeyConstants.CONTENT_EXPECTANCY)));
-
+        //----------- Bar Graph ------------
         //BarDataSet is similar to series
-        BarDataSet set1 = new BarDataSet(yVals1, null);
-        set1.setColors(getResources().getColor(R.color.incomeGraph), getResources().getColor(R.color.assetsGraph));
-        set1.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_INCOME, ScreenConstants.GRAPH_LEGEND_ASSETS});
+        BarDataSet barDataSet = new BarDataSet(expensesBarEntries, null);
+        barDataSet.setColors(getResources().getColor(R.color.expensesGraph), getResources().getColor(R.color.incomeGraph));
+        barDataSet.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_EXPENSES, ScreenConstants.GRAPH_LEGEND_INCOME});
 
         //values will appear on the graph
-        set1.setDrawValues(false);
+        barDataSet.setDrawValues(false);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
+        dataSets.add(barDataSet);
 
-        BarData data = new BarData(dataSets);
-        data.setValueFormatter(new MyValueFormatter());
-        data.setValueTextColor(Color.BLACK);
+        BarData barData = new BarData(dataSets);
+        barData.setValueFormatter(new MyValueFormatter());
+        barData.setValueTextColor(Color.BLACK);
+        //======================================end of working code==============================================
 
-        mChart.setFitBars(true);
-        mChart.getDescription().setEnabled(false);
-        // if more than 60 entries are displayed in the chart, no values will be drawn
-        mChart.setMaxVisibleValueCount(10);
-        mChart.setPinchZoom(true);
 
-        mChart.animateY(3000);
-        mChart.setDrawGridBackground(false);
-        //When false the value will be inside the bar graph but when set to true it will be outside of the graph
-        mChart.setDrawValueAboveBar(false);
-        //This method need to set as false for the onValueSelected() to work
-        mChart.setHighlightFullBarEnabled(false);
+        //TRYING TO DISPLAY 2 OVERLAP GRAPH (NOT WORKING AS IT IS ONLY DISPLAYING 1)
+//        //BarDataSet is similar to series
+//        BarDataSet incomeBarDataSet = new BarDataSet(incomeBarEntries, ScreenConstants.GRAPH_LEGEND_INCOME);
+//        incomeBarDataSet.setColors(getResources().getColor(R.color.incomeGraph));
+////        incomeBarDataSet.setLabel(ScreenConstants.GRAPH_LEGEND_INCOME);
+//
+//        //values will appear on the graph
+//        incomeBarDataSet.setDrawValues(false);
+//
+//        BarData incomeBarData = new BarData(incomeBarDataSet);
+//        incomeBarData.setValueFormatter(new MyValueFormatter());
+//        incomeBarData.setValueTextColor(Color.BLACK);
+//
+//        //BarDataSet is similar to series
+//        BarDataSet expensesBarDataSet = new BarDataSet(expensesBarEntries, ScreenConstants.GRAPH_LEGEND_EXPENSES);
+//        expensesBarDataSet.setColors(getResources().getColor(R.color.expensesGraph));
+////        incomeBarDataSet.setLabel(ScreenConstants.GRAPH_LEGEND_EXPENSES);
+//
+//        //values will appear on the graph
+//        expensesBarDataSet.setDrawValues(false);
+//
+//        BarData expensesBarData = new BarData(expensesBarDataSet);
+//        expensesBarData.setValueFormatter(new MyValueFormatter());
+//        expensesBarData.setValueTextColor(Color.BLACK);
 
-        XAxis xAxis = mChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
-        YAxis yAxis = mChart.getAxisLeft();
-        yAxis.setValueFormatter(new MyAxisValueFormatter());
-        yAxis.setCenterAxisLabels(true);
-        mChart.getAxisRight().setEnabled(false);
+        //THIS CODE TO DISPLAY 2 BAR GRAPH SIDE BY SIDE
+//        float groupSpace = 0.06f;
+//        float barSpace = 0.0f; // x2 dataset
+//        float barWidth = 0.45f; // x2 dataset
+//
+//        BarData barData = new BarData(incomeBarDataSet, expensesBarDataSet);
+//        barData.setValueFormatter(new MyValueFormatter());
+//        barData.setValueTextColor(Color.BLACK);
+//        barData.setBarWidth(barWidth);
+//        barData.groupBars(age, groupSpace, barSpace);
 
-        Legend legend = mChart.getLegend();
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        legend.setDrawInside(false);
-        legend.setFormSize(15f);
-        legend.setFormToTextSpace(5f);
-        legend.setXEntrySpace(6f);
-        legend.setTextSize(10f);
 
-        mChart.setData(data);
-        mChart.invalidate();
+
+        //------------- Line Graph ------------
+        LineDataSet lineDataSet = new LineDataSet(lineEntries, null);
+        lineDataSet.setLabel(ScreenConstants.GRAPH_LEGEND_ASSETS);
+        lineDataSet.setColor(getResources().getColor(R.color.purple));
+        lineDataSet.setLineWidth(2.5f);
+        lineDataSet.setCircleColor(getResources().getColor(R.color.purple));
+        lineDataSet.setCircleRadius(1f);
+        lineDataSet.setFillColor(getResources().getColor(R.color.purple));
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setDrawValues(false);
+
+        lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        LineData lineData = new LineData();
+        lineData.addDataSet(lineDataSet);
+
+        CombinedData combinedData = new CombinedData();
+        combinedData.setData(barData);
+//        combinedData.setData(expensesBarData);
+        combinedData.setData(lineData);
+
+        return combinedData;
     }
 
     /**

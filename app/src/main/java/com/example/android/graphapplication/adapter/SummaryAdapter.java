@@ -10,55 +10,55 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.UserInfo;
+import com.example.android.graphapplication.model.SummaryModel;
 
 import java.util.List;
 
-public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.MyViewHolder> {
+public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHolder> {
 
-    private static final String TAG = "UserInfoAdapter";
-    private List<UserInfo> userInfoList;
+    private static final String TAG = "SummaryAdapter";
+    private List<SummaryModel> summaryModelList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
         private TextView mValue;
-        private ImageView mImage;
+        private ImageView mImageView;
 
         MyViewHolder(View view) {
             super(view);
 
             mTitle = view.findViewById(R.id.title);
             mValue = view.findViewById(R.id.value);
-            mImage = view.findViewById(R.id.imageView);
-
+            mImageView = view.findViewById(R.id.imageView);
         }
+
     }
 
-    public UserInfoAdapter(List<UserInfo> userInfoList) {
-        this.userInfoList = userInfoList;
+    public SummaryAdapter(List<SummaryModel> summaryModelList) {
+        this.summaryModelList = summaryModelList;
     }
 
     @Override
     @NonNull
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_row_user_info, parent, false);
-
+                .inflate(R.layout.list_row_summary, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SummaryAdapter.MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        UserInfo userInfo = userInfoList.get(position);
-        holder.mImage.setImageResource(userInfo.getImage());
-        holder.mTitle.setText(userInfo.getTitle());
-        holder.mValue.setText(userInfo.getValue());
+        SummaryModel summaryModel = this.summaryModelList.get(position);
+        Log.i(TAG, "onBindViewHolder: " + summaryModel.toString());
+        holder.mTitle.setText(summaryModel.getTitle());
+        holder.mValue.setText(summaryModel.getValue());
+        holder.mImageView.setImageResource(summaryModel.getImage());
     }
 
     @Override
     public int getItemCount() {
-        return userInfoList.size();
+        return summaryModelList.size();
     }
 }

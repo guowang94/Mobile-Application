@@ -9,7 +9,7 @@
         android:id="@+id/graph_toolbar"
         layout="@layout/toolbar_layout_blue" />
 
-    <com.github.mikephil.charting.charts.BarChart
+    <com.github.mikephil.charting.charts.CombinedChart
         android:id="@+id/stack_bar_graph"
         android:layout_width="0dp"
         android:layout_height="0dp"
