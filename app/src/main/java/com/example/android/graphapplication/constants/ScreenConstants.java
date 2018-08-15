@@ -27,6 +27,7 @@ public interface ScreenConstants {
     String TOOLBAR_TITLE_PLANS = "Plans";
     String TOOLBAR_TITLE_MILESTONES = "Milestones";
     String TOOLBAR_TITLE_ENTER_USER_DETAILS = "Enter User Details";
+    String TOOLBAR_TITLE_SCENARIO = "Add Scenarios";
 
     //Graph Legend
     String GRAPH_LEGEND_ASSETS = "Total Assets";

@@ -28,7 +28,7 @@ import java.util.Calendar;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
-public class EventActivity extends AppCompatActivity implements
+public class MilestoneActivity extends AppCompatActivity implements
         LabelledSpinner.OnItemChosenListener {
 
     private static final String TAG = "EventActivity";

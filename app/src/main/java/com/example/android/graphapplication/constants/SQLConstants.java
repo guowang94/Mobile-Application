@@ -5,6 +5,7 @@ public interface SQLConstants {
     String DATABASE_NAME = "GraphDB.db";
     String USER_TABLE = "user";
     String EVENT_TABLE = "event";
+    String MILESTONE_TABLE = "milestone";
 
     String USER_TABLE_ID = "id";
     String USER_TABLE_NAME = "name";
@@ -37,6 +38,16 @@ public interface SQLConstants {
     String EVENT_TABLE_AMOUNT = "amount";
     String EVENT_TABLE_DURATION = "duration";
     String EVENT_TABLE_COST_PER_MONTH = "cost_per_month";
+
+    String MILESTONE_TABLE_MILESTONE_ID = "id";
+    String MILESTONE_TABLE_MILESTONE_NAME = "milestone_name";
+    String MILESTONE_TABLE_MILESTONE_TYPE = "milestone_type";
+    String MILESTONE_TABLE_MILESTONE_YEAR = "milestone_year";
+    String MILESTONE_TABLE_MILESTONE_DESCRIPTION = "milestone_description";
+    String MILESTONE_TABLE_MILESTONE_STATUS = "milestone_status";
+    String MILESTONE_TABLE_AMOUNT = "amount";
+    String MILESTONE_TABLE_DURATION = "duration";
+    String MILESTONE_TABLE_COST_PER_MONTH = "cost_per_month";
 
     //SQL Queries
     String CREATE_USER_TABLE = "CREATE TABLE "
@@ -75,8 +86,22 @@ public interface SQLConstants {
             + EVENT_TABLE_DURATION + " INTEGER DEFAULT 0,"
             + EVENT_TABLE_COST_PER_MONTH + " FLOAT DEFAULT 0.0);";
 
+    String CREATE_MILESTONE_TABLE = "CREATE TABLE "
+            + MILESTONE_TABLE + " ("
+            + MILESTONE_TABLE_MILESTONE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + MILESTONE_TABLE_MILESTONE_NAME + " TEXT NOT NULL, "
+            + MILESTONE_TABLE_MILESTONE_TYPE + " TEXT NOT NULL, "
+            + MILESTONE_TABLE_MILESTONE_YEAR + " TEXT NOT NULL, "
+            + MILESTONE_TABLE_MILESTONE_DESCRIPTION + " TEXT ,"
+            + MILESTONE_TABLE_MILESTONE_STATUS + " TEXT NOT NULL, "
+            + MILESTONE_TABLE_AMOUNT + " FLOAT DEFAULT 0.0, "
+            + MILESTONE_TABLE_DURATION + " INTEGER DEFAULT 0,"
+            + MILESTONE_TABLE_COST_PER_MONTH + " FLOAT DEFAULT 0.0);";
+
     String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + USER_TABLE;
     String DROP_EVENT_TABLE = "DROP TABLE IF EXISTS " + EVENT_TABLE;
+    String DROP_MILESTONE_TABLE = "DROP TABLE IF EXISTS " + MILESTONE_TABLE;
     String DELETE_USER_TABLE = "DELETE FROM "+ USER_TABLE;
     String DELETE_EVENT_TABLE = "DELETE FROM "+ EVENT_TABLE;
+    String DELETE_MILESTONE_TABLE = "DELETE FROM "+ MILESTONE_TABLE;
 }

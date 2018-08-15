@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.Events;
+import com.example.android.graphapplication.model.CommonModel;
 
 import java.util.List;
 
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHolder> {
+public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHolder> {
 
-    private static final String TAG = "EventsAdapter";
-    private List<Events> events;
+    private static final String TAG = "CommonAdapter";
+    private List<CommonModel> events;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
@@ -29,13 +29,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHold
 
     }
 
-    public EventsAdapter(List<Events> events) {
+    public CommonAdapter(List<CommonModel> events) {
         this.events = events;
     }
 
     @Override
     @NonNull
-    public EventsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CommonAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row_event, parent, false);
 
@@ -43,12 +43,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventsAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CommonAdapter.MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        Events events = this.events.get(position);
-        Log.i(TAG, "onBindViewHolder: " + events.toString());
-        holder.mTitle.setText(events.getTitle());
+        CommonModel commonModel = this.events.get(position);
+        Log.i(TAG, "onBindViewHolder: " + commonModel.toString());
+        holder.mTitle.setText(commonModel.getTitle());
     }
 
     @Override
@@ -63,7 +63,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHold
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(Events item, int position) {
+    public void restoreItem(CommonModel item, int position) {
         events.add(position, item);
         // notify item added by position
         notifyItemInserted(position);

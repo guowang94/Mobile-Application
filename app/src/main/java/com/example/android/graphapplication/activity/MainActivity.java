@@ -15,7 +15,7 @@ import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.fragment.EventsFragment;
 import com.example.android.graphapplication.fragment.GraphFragment;
-import com.example.android.graphapplication.fragment.MileStonesFragment;
+import com.example.android.graphapplication.fragment.MilestoneFragment;
 import com.example.android.graphapplication.fragment.PlansFragment;
 import com.example.android.graphapplication.fragment.SummaryFragment;
 
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new GraphFragment(), ScreenConstants.TOOLBAR_TITLE_GRAPH);
         adapter.addFragment(new EventsFragment(), ScreenConstants.TOOLBAR_TITLE_EVENTS);
-        adapter.addFragment(new MileStonesFragment(), ScreenConstants.TOOLBAR_TITLE_MILESTONES);
+        adapter.addFragment(new MilestoneFragment(), ScreenConstants.TOOLBAR_TITLE_MILESTONES);
         adapter.addFragment(new PlansFragment(), ScreenConstants.TOOLBAR_TITLE_PLANS);
         adapter.addFragment(new SummaryFragment(), ScreenConstants.TOOLBAR_TITLE_SUMMARY);
         mViewPager.setAdapter(adapter);

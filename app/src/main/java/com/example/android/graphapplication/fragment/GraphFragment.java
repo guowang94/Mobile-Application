@@ -1,5 +1,6 @@
 package com.example.android.graphapplication.fragment;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.activity.ScenarioActivity;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
@@ -175,7 +177,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             }
         } else {
             Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(e.getX()) +
-                            ", Value: " + DecimalFormat.getCurrencyInstance(Locale.US).format(e.getY()),
+                            ", Assets: " + DecimalFormat.getCurrencyInstance(Locale.US).format(e.getY()),
                     Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -278,8 +280,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private CombinedData getGraphData(float assets, float grossIncome, float fixedExpenses,
                                       float variableExpenses, int age, int retirementAge,
                                       int expectancy, int increment, int inflation) {
-        ArrayList<BarEntry> incomeBarEntries = new ArrayList<>();
-        ArrayList<BarEntry> expensesBarEntries = new ArrayList<>();
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<Entry> lineEntries = new ArrayList<>();
 
         float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH))) * 0.8f;
@@ -395,12 +396,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
                 if (remainder < 0) {
                     assets += remainder;
-//                    remainder = 0;
+                    remainder = 0;
                 }
 
-                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses, remainder}));
-//                incomeBarEntries.add(new BarEntry(i, new float[]{annualIncome}));
-//                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses}));
+                barEntries.add(new BarEntry(i, new float[]{annualExpenses, remainder}));
                 lineEntries.add(new Entry(i, assets));
 
                 Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
@@ -414,9 +413,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             } else {
                 annualExpenses = annualExpenses * (100 + inflation) / 100;
                 assets -= annualExpenses;
-                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses, 0}));
-//                incomeBarEntries.add(new BarEntry(i, new float[]{0}));
-//                expensesBarEntries.add(new BarEntry(i, new float[]{annualExpenses}));
+                barEntries.add(new BarEntry(i, new float[]{annualExpenses, 0}));
                 lineEntries.add(new Entry(i, assets));
 
                 Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
@@ -442,7 +439,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         //----------- Bar Graph ------------
         //BarDataSet is similar to series
-        BarDataSet barDataSet = new BarDataSet(expensesBarEntries, null);
+        BarDataSet barDataSet = new BarDataSet(barEntries, null);
         barDataSet.setColors(getResources().getColor(R.color.expensesGraph), getResources().getColor(R.color.incomeGraph));
         barDataSet.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_EXPENSES, ScreenConstants.GRAPH_LEGEND_INCOME});
 
@@ -455,51 +452,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         BarData barData = new BarData(dataSets);
         barData.setValueFormatter(new MyValueFormatter());
         barData.setValueTextColor(Color.BLACK);
-        //======================================end of working code==============================================
-
-
-        //TRYING TO DISPLAY 2 OVERLAP GRAPH (NOT WORKING AS IT IS ONLY DISPLAYING 1)
-//        //BarDataSet is similar to series
-//        BarDataSet incomeBarDataSet = new BarDataSet(incomeBarEntries, ScreenConstants.GRAPH_LEGEND_INCOME);
-//        incomeBarDataSet.setColors(getResources().getColor(R.color.incomeGraph));
-////        incomeBarDataSet.setLabel(ScreenConstants.GRAPH_LEGEND_INCOME);
-//
-//        //values will appear on the graph
-//        incomeBarDataSet.setDrawValues(false);
-//
-//        BarData incomeBarData = new BarData(incomeBarDataSet);
-//        incomeBarData.setValueFormatter(new MyValueFormatter());
-//        incomeBarData.setValueTextColor(Color.BLACK);
-//
-//        //BarDataSet is similar to series
-//        BarDataSet expensesBarDataSet = new BarDataSet(expensesBarEntries, ScreenConstants.GRAPH_LEGEND_EXPENSES);
-//        expensesBarDataSet.setColors(getResources().getColor(R.color.expensesGraph));
-////        incomeBarDataSet.setLabel(ScreenConstants.GRAPH_LEGEND_EXPENSES);
-//
-//        //values will appear on the graph
-//        expensesBarDataSet.setDrawValues(false);
-//
-//        BarData expensesBarData = new BarData(expensesBarDataSet);
-//        expensesBarData.setValueFormatter(new MyValueFormatter());
-//        expensesBarData.setValueTextColor(Color.BLACK);
-
-
-        //THIS CODE TO DISPLAY 2 BAR GRAPH SIDE BY SIDE
-//        float groupSpace = 0.06f;
-//        float barSpace = 0.0f; // x2 dataset
-//        float barWidth = 0.45f; // x2 dataset
-//
-//        BarData barData = new BarData(incomeBarDataSet, expensesBarDataSet);
-//        barData.setValueFormatter(new MyValueFormatter());
-//        barData.setValueTextColor(Color.BLACK);
-//        barData.setBarWidth(barWidth);
-//        barData.groupBars(age, groupSpace, barSpace);
-
-
 
         //------------- Line Graph ------------
-        LineDataSet lineDataSet = new LineDataSet(lineEntries, null);
-        lineDataSet.setLabel(ScreenConstants.GRAPH_LEGEND_ASSETS);
+        LineDataSet lineDataSet = new LineDataSet(lineEntries, ScreenConstants.GRAPH_LEGEND_ASSETS);
         lineDataSet.setColor(getResources().getColor(R.color.purple));
         lineDataSet.setLineWidth(2.5f);
         lineDataSet.setCircleColor(getResources().getColor(R.color.purple));
@@ -514,7 +469,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         CombinedData combinedData = new CombinedData();
         combinedData.setData(barData);
-//        combinedData.setData(expensesBarData);
         combinedData.setData(lineData);
 
         return combinedData;
@@ -542,12 +496,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_apply_scenarios:
-                Snackbar.make(mLayout, "Apply Scenarios", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Do nothing
-                    }
-                }).show();
+                startActivity(new Intent(getContext(), ScenarioActivity.class));
                 break;
 
             case R.id.action_export:

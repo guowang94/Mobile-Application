@@ -19,11 +19,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.adapter.SectionRecyclerAdapter;
+import com.example.android.graphapplication.adapter.SummarySectionAdapter;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.model.SectionModel;
+import com.example.android.graphapplication.model.SummarySectionModel;
 import com.example.android.graphapplication.model.SummaryModel;
 
 import java.text.NumberFormat;
@@ -38,7 +38,7 @@ public class SummaryFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TextView mToolbarTitle;
 
-    private List<SectionModel> sectionModels = new ArrayList<>();
+    private List<SummarySectionModel> summarySectionModels = new ArrayList<>();
     private List<SummaryModel> financialSummary = new ArrayList<>();
     private List<SummaryModel> detailsSummary = new ArrayList<>();
     private List<SummaryModel> cpfContributions = new ArrayList<>();
@@ -143,7 +143,7 @@ public class SummaryFragment extends Fragment {
         financialSummary.add(new SummaryModel(R.mipmap.ic_summary_balance, getString(R.string.balance_left_at_retirement), balance));
         financialSummary.add(new SummaryModel(R.mipmap.ic_summary_expenses_exceeded_income, getString(R.string.expenses_exceeded_income_age), expensesExceededIncomeAge));
         financialSummary.add(new SummaryModel(R.mipmap.ic_summary_initial_assets, getString(R.string.inital_assets), initialAssets));
-        sectionModels.add(new SectionModel(getString(R.string.financial_summary), financialSummary));
+        summarySectionModels.add(new SummarySectionModel(getString(R.string.financial_summary), financialSummary));
 
         detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_name, getString(R.string.name), name));
         detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_age, getString(R.string.age), age));
@@ -152,21 +152,21 @@ public class SummaryFragment extends Fragment {
         detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_jobstatus, getString(R.string.job_status), jobStatus));
         detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_citizenship, getString(R.string.citizenship_status), citizenship));
         detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_income, getString(R.string.gross_monthly_income), monthlyIncome));
-        sectionModels.add(new SectionModel(getString(R.string.details_summary), detailsSummary));
+        summarySectionModels.add(new SummarySectionModel(getString(R.string.details_summary), detailsSummary));
 
         cpfContributions.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_special_account), specialAccount));
         cpfContributions.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_medisave_account), medisaveAccount));
-        sectionModels.add(new SectionModel(getString(R.string.cpf_contribution), cpfContributions));
+        summarySectionModels.add(new SummarySectionModel(getString(R.string.cpf_contribution), cpfContributions));
 
-        //Recycler View Setup for UserInfo
-        SectionRecyclerAdapter sectionRecyclerAdapter = new SectionRecyclerAdapter(context, sectionModels);
-        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
-                getActivity().getApplicationContext());
+        //Recycler View Setup
+        SummarySectionAdapter summarySectionAdapter = new SummarySectionAdapter(
+                context, summarySectionModels);
+        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mSummaryLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 context, LinearLayoutManager.VERTICAL));
-        mRecyclerView.setAdapter(sectionRecyclerAdapter);
+        mRecyclerView.setAdapter(summarySectionAdapter);
         Log.d(TAG, "initData: out");
     }
 
@@ -176,10 +176,7 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-//        userInfoList.clear();
-//        summaryBalanceList.clear();
-//        cpfContributionList.clear();
-        sectionModels.clear();
+        summarySectionModels.clear();
         financialSummary.clear();
         detailsSummary.clear();
         cpfContributions.clear();

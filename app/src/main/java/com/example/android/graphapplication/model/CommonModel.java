@@ -1,10 +1,10 @@
 package com.example.android.graphapplication.model;
 
-public class Events {
+public class CommonModel {
 
     private String title;
 
-    public Events(String title) {
+    public CommonModel(String title) {
         this.title = title;
     }
 
@@ -18,7 +18,7 @@ public class Events {
 
     @Override
     public String toString() {
-        return "Events{" +
+        return "CommonModel{" +
                 "title='" + title + '\'' +
                 '}';
     }

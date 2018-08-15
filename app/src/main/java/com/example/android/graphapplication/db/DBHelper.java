@@ -6,11 +6,14 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -23,6 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(SQLConstants.CREATE_USER_TABLE);
         db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
+        db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
     }
 
     @Override
@@ -30,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(SQLConstants.DROP_USER_TABLE);
         db.execSQL(SQLConstants.DROP_EVENT_TABLE);
+        db.execSQL(SQLConstants.DROP_MILESTONE_TABLE);
         onCreate(db);
     }
 
@@ -110,6 +115,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @param eventName
      * @param eventType
+     * @param eventYear
      * @param eventDescription
      * @param eventStatus
      * @param amount
@@ -117,12 +123,13 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param costPerMonth
      * @return boolean
      */
-    public boolean insertEvent(String eventName, String eventType, String eventDescription,
+    public boolean insertEvent(String eventName, String eventType, String eventYear, String eventDescription,
                                String eventStatus, float amount, int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_NAME, eventName);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_TYPE, eventType);
+        contentValues.put(SQLConstants.EVENT_TABLE_EVENT_YEAR, eventYear);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION, eventDescription);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_STATUS, eventStatus);
         if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
@@ -138,9 +145,9 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * This method will update Event details
      *
-     * @param eventID
      * @param eventName
      * @param eventType
+     * @param eventYear
      * @param eventDescription
      * @param eventStatus
      * @param amount
@@ -148,12 +155,14 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param costPerMonth
      * @return boolean
      */
-    public boolean updateEvent(int eventID, String eventName, String eventType, String eventDescription,
-                               String eventStatus, float amount, int duration, float costPerMonth) {
+    public boolean updateEvent(int eventID, String eventName, String eventType, String eventYear,
+                               String eventDescription, String eventStatus, float amount,
+                               int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_NAME, eventName);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_TYPE, eventType);
+        contentValues.put(SQLConstants.EVENT_TABLE_EVENT_YEAR, eventYear);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION, eventDescription);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_STATUS, eventStatus);
         if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
@@ -181,6 +190,132 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method to get all records
+     *
+     * @return List
+     */
+    public List<HashMap<String, String>> getAllEvent() {
+        List<HashMap<String, String>> eventsList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.EVENT_TABLE, null);
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+            HashMap<String, String> event = new HashMap<>();
+            event.put(SQLConstants.EVENT_TABLE_EVENT_ID,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_ID))));
+            event.put(SQLConstants.EVENT_TABLE_EVENT_NAME,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            eventsList.add(event);
+            res.moveToNext();
+        }
+        return eventsList;
+    }
+    /**
+     * This method will insert data into Milestone Table
+     *
+     * @param milestoneName
+     * @param milestoneType
+     * @param milestoneYear
+     * @param milestoneDescription
+     * @param milestoneStatus
+     * @param amount
+     * @param duration
+     * @param costPerMonth
+     * @return boolean
+     */
+    public boolean insertMilestone(String milestoneName, String milestoneType, String milestoneYear, String milestoneDescription,
+                               String milestoneStatus, float amount, int duration, float costPerMonth) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME, milestoneName);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE, milestoneType);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR, milestoneYear);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION, milestoneDescription);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS, milestoneStatus);
+        if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
+            contentValues.put(SQLConstants.MILESTONE_TABLE_AMOUNT, amount);
+        } else {
+            contentValues.put(SQLConstants.MILESTONE_TABLE_DURATION, duration);
+            contentValues.put(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH, costPerMonth);
+        }
+        db.insert(SQLConstants.MILESTONE_TABLE, null, contentValues);
+        return true;
+    }
+
+    /**
+     * This method will update Milestone details
+     *
+     * @param milestoneName
+     * @param milestoneType
+     * @param milestoneYear
+     * @param milestoneDescription
+     * @param milestoneStatus
+     * @param amount
+     * @param duration
+     * @param costPerMonth
+     * @return boolean
+     */
+    public boolean updateMilestone(int milestoneID, String milestoneName, String milestoneType, String milestoneYear,
+                               String milestoneDescription, String milestoneStatus, float amount,
+                               int duration, float costPerMonth) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME, milestoneName);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE, milestoneType);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR, milestoneYear);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION, milestoneDescription);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS, milestoneStatus);
+        if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
+            contentValues.put(SQLConstants.MILESTONE_TABLE_AMOUNT, amount);
+        } else {
+            contentValues.put(SQLConstants.MILESTONE_TABLE_DURATION, duration);
+            contentValues.put(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH, costPerMonth);
+        }
+        db.update(SQLConstants.MILESTONE_TABLE, contentValues,
+                SQLConstants.MILESTONE_TABLE_MILESTONE_ID + " = ? ",
+                new String[]{String.valueOf(milestoneID)});
+        return true;
+    }
+
+    /**
+     * This method to delete Milestone record
+     *
+     * @param id
+     * @return
+     */
+    public Integer deleteMilestone(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(SQLConstants.MILESTONE_TABLE, "id = ? ",
+                new String[]{String.valueOf(id)});
+    }
+
+    /**
+     * This method to get all records
+     *
+     * @return List
+     */
+    public List<HashMap<String, String>> getAllMilestone() {
+        List<HashMap<String, String>> milestonesList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.MILESTONE_TABLE, null);
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+            HashMap<String, String> milestone = new HashMap<>();
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_ID,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            milestonesList.add(milestone);
+            res.moveToNext();
+        }
+        return milestonesList;
+    }
+
+    /**
      * This method to return number of rows in the table
      *
      * @return int
@@ -205,49 +340,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method to get all records
-     *
-     * @return ArrayList
-     */
-    public ArrayList<String> getAllEvent() {
-        ArrayList<String> array_list = new ArrayList<>();
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.EVENT_TABLE, null);
-        res.moveToFirst();
-
-        while (!res.isAfterLast()) {
-            array_list.add(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
-            res.moveToNext();
-        }
-        return array_list;
-    }
-
-    /**
-     * This method to get all records
-     *
-     * @return ArrayList
-     */
-    public ArrayList<String> getAllUser() {
-        ArrayList<String> array_list = new ArrayList<>();
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.USER_TABLE, null);
-        res.moveToFirst();
-
-        while (!res.isAfterLast()) {
-            array_list.add(res.getString(res.getColumnIndex(SQLConstants.USER_TABLE_ID)));
-            res.moveToNext();
-        }
-        return array_list;
-    }
-
-    /**
      * This method to delete all records
      */
     public void deleteAllRecords() {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
         db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
     }
 }

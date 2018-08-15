@@ -3,12 +3,9 @@ package com.example.android.graphapplication.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,16 +37,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EventsFragment extends Fragment {
+public class MilestoneFragment extends Fragment {
 
-    private static final String TAG = "EventsFragment";
-    private RecyclerView mEventsRecyclerView;
+    private static final String TAG = "MilestoneFragment";
+    private RecyclerView mMilestonesRecyclerView;
     private Toolbar mToolbar;
     private TextView mToolbarTitle;
-    private ConstraintLayout mLayout;
 
-    private CommonAdapter mEventsAdapter;
-    private List<CommonModel> eventsModelList = new ArrayList<>();
+    private CommonAdapter mMilestonesAdapter;
+    private List<CommonModel> milestonesModelList = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -68,12 +64,11 @@ public class EventsFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: in");
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_milestone, container, false);
 
-        mEventsRecyclerView = view.findViewById(R.id.milestone_recycler_view);
+        mMilestonesRecyclerView = view.findViewById(R.id.milestone_recycler_view);
         mToolbar = view.findViewById(R.id.event_toolbar);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
-        mLayout = view.findViewById(R.id.constraint_layout);
 
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
@@ -112,37 +107,37 @@ public class EventsFragment extends Fragment {
     private void initData() {
         Log.d(TAG, "initData: in");
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);
+        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_MILESTONES);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         final Context context = getActivity().getApplicationContext();
 
-        final List<HashMap<String, String>> eventsList = mydb.getAllEvent();
-        for (HashMap<String, String> event : eventsList) {
-            this.eventsModelList.add(new CommonModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+        final List<HashMap<String, String>> milestoneList = mydb.getAllMilestone();
+        for (HashMap<String, String> milestone : milestoneList) {
+            this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE)));
         }
 
         //Recycler View Setup for CommonModel
-        mEventsAdapter = new CommonAdapter(this.eventsModelList);
+        mMilestonesAdapter = new CommonAdapter(this.milestonesModelList);
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
-        mEventsRecyclerView.setLayoutManager(mSummaryLayoutManager);
-        mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mEventsRecyclerView.addItemDecoration(new DividerItemDecoration(
+        mMilestonesRecyclerView.setLayoutManager(mSummaryLayoutManager);
+        mMilestonesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mMilestonesRecyclerView.addItemDecoration(new DividerItemDecoration(
                 context, LinearLayoutManager.VERTICAL));
-        mEventsRecyclerView.setAdapter(mEventsAdapter);
+        mMilestonesRecyclerView.setAdapter(mMilestonesAdapter);
 
         //Create on item touch listener
-        mEventsRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(
-                context, mEventsRecyclerView, new RecyclerViewTouchListener.ClickListener() {
+        mMilestonesRecyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(
+                context, mMilestonesRecyclerView, new RecyclerViewTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: event ID, " + eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID));
+                Log.d(TAG, "onClick: event ID, " + milestoneList.get(position).get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID));
                 startActivity(new Intent(getActivity().getApplicationContext(), EventActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, "Edit")
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
-                                Integer.valueOf(eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID))));
+                                Integer.valueOf(milestoneList.get(position).get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
             }
 
             @Override
@@ -159,8 +154,8 @@ public class EventsFragment extends Fragment {
                 alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
-                        mEventsAdapter.removeItem(position);
-                        mydb.deleteEvent(Integer.valueOf(eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID)));
+                        mMilestonesAdapter.removeItem(position);
+                        mydb.deleteEvent(Integer.valueOf(milestoneList.get(position).get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID)));
                     }
                 });
 
@@ -182,7 +177,7 @@ public class EventsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        eventsModelList.clear();
+        milestonesModelList.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }

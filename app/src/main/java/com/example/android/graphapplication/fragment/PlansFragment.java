@@ -55,12 +55,12 @@ public class PlansFragment extends Fragment {
         content = splitFileContent(fileContent);
         Log.i(TAG, "initData: " + content);
 
-        //Initialise Recycle view data for Events
-//        eventsList.add(new Events(content.get(CONTENT_EVENT_TITLE)));
-        eventsList.add(new Events("Testing"));
+        //Initialise Recycle view data for CommonModel
+//        eventsList.add(new CommonModel(content.get(CONTENT_EVENT_TITLE)));
+        eventsList.add(new CommonModel("Testing"));
 
-        //Recycler View Setup for Events
-        mEventsAdapter = new EventsAdapter(eventsList);
+        //Recycler View Setup for CommonModel
+        mEventsAdapter = new CommonAdapter(eventsList);
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mEventsRecyclerView.setLayoutManager(mSummaryLayoutManager);
         mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
