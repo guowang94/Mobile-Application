@@ -15,7 +15,7 @@ import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.fragment.EventsFragment;
 import com.example.android.graphapplication.fragment.GraphFragment;
-import com.example.android.graphapplication.fragment.MileStonesFragment;
+import com.example.android.graphapplication.fragment.MilestoneFragment;
 import com.example.android.graphapplication.fragment.PlansFragment;
 import com.example.android.graphapplication.fragment.SummaryFragment;
 
@@ -51,64 +51,84 @@ public class MainActivity extends AppCompatActivity {
      * This method will setup the TabLayout
      */
     private void setupTabIcons() {
+        mTabLayout.getTabAt(0).setCustomView(getCustomTab(0));
+        mTabLayout.getTabAt(1).setCustomView(getCustomTab(1));
+        mTabLayout.getTabAt(2).setCustomView(getCustomTab(2));
+        mTabLayout.getTabAt(3).setCustomView(getCustomTab(3));
+        mTabLayout.getTabAt(4).setCustomView(getCustomTab(4));
+    }
+
+    /**
+     * This method will return custom tab
+     * @param position
+     * @return Custom Tab
+     */
+    private TextView getCustomTab(int position) {
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
-        Log.d(TAG, "setupTabIcons: width, " + width);
 
-        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(
-                R.layout.custom_tab, mTabLayout, false);
-        tabOne.setText(ScreenConstants.NAV_GRAPH);
-        tabOne.setWidth(width / 5);
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_nav_bar_chart, 0, 0);
-        tabOne.setCompoundDrawablePadding(8);
-        mTabLayout.getTabAt(0).setCustomView(tabOne);
+        TextView tab;
 
-        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(
-                R.layout.custom_tab, mTabLayout, false);
-        tabTwo.setText(ScreenConstants.NAV_EVENTS);
-        tabTwo.setWidth(width / 5);
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_nav_event, 0, 0);
-        tabTwo.setCompoundDrawablePadding(8);
-        mTabLayout.getTabAt(1).setCustomView(tabTwo);
-
-        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(
-                R.layout.custom_tab, mTabLayout, false);
-        tabThree.setText(ScreenConstants.NAV_MILESTONES);
-        tabThree.setWidth(width / 5);
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_nav_milestone, 0, 0);
-        tabThree.setCompoundDrawablePadding(8);
-        mTabLayout.getTabAt(2).setCustomView(tabThree);
-
-        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(
-                R.layout.custom_tab, mTabLayout, false);
-        tabFour.setText(ScreenConstants.NAV_PLANS);
-        tabFour.setWidth(width / 5);
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_nav_plans, 0, 0);
-        tabFour.setCompoundDrawablePadding(8);
-        mTabLayout.getTabAt(3).setCustomView(tabFour);
-
-        TextView tabFive = (TextView) LayoutInflater.from(this).inflate(
-                R.layout.custom_tab, mTabLayout, false);
-        tabFive.setText(ScreenConstants.NAV_SUMMARY);
-        tabFive.setWidth(width / 5);
-        tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_nav_summary, 0, 0);
-        tabFive.setCompoundDrawablePadding(8);
-        mTabLayout.getTabAt(4).setCustomView(tabFive);
+        switch (position) {
+            case 0:
+                tab = (TextView) LayoutInflater.from(this).inflate(
+                        R.layout.custom_tab, mTabLayout, false);
+                tab.setText(ScreenConstants.NAV_GRAPH);
+                tab.setWidth(width / 5);
+                tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_graph_selector, 0, 0);
+                tab.setCompoundDrawablePadding(8);
+                return tab;
+            case 1:
+                tab = (TextView) LayoutInflater.from(this).inflate(
+                        R.layout.custom_tab, mTabLayout, false);
+                tab.setText(ScreenConstants.NAV_EVENTS);
+                tab.setWidth(width / 5);
+                tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_event_selector, 0, 0);
+                tab.setCompoundDrawablePadding(8);
+                return tab;
+            case 2:
+                tab = (TextView) LayoutInflater.from(this).inflate(
+                        R.layout.custom_tab, mTabLayout, false);
+                tab.setText(ScreenConstants.NAV_MILESTONES);
+                tab.setWidth(width / 5);
+                tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_milestone_selector, 0, 0);
+                tab.setCompoundDrawablePadding(8);
+                return tab;
+            case 3:
+                tab = (TextView) LayoutInflater.from(this).inflate(
+                        R.layout.custom_tab, mTabLayout, false);
+                tab.setText(ScreenConstants.NAV_PLANS);
+                tab.setWidth(width / 5);
+                tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_plans_selector, 0, 0);
+                tab.setCompoundDrawablePadding(8);
+                return tab;
+            case 4:
+                tab = (TextView) LayoutInflater.from(this).inflate(
+                        R.layout.custom_tab, mTabLayout, false);
+                tab.setText(ScreenConstants.NAV_SUMMARY);
+                tab.setWidth(width / 5);
+                tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_summary_selector, 0, 0);
+                tab.setCompoundDrawablePadding(8);
+                return tab;
+            default:
+                return null;
+        }
     }
 
     /**
      * This method wil setup ViewPager
      *
-     * @param viewPager is the parent view for the fragment
+     * @param mViewPager is the parent view for the fragment
      */
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(ViewPager mViewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new GraphFragment(), ScreenConstants.TOOLBAR_TITLE_GRAPH);
         adapter.addFragment(new EventsFragment(), ScreenConstants.TOOLBAR_TITLE_EVENTS);
-        adapter.addFragment(new MileStonesFragment(), ScreenConstants.TOOLBAR_TITLE_MILESTONES);
+        adapter.addFragment(new MilestoneFragment(), ScreenConstants.TOOLBAR_TITLE_MILESTONES);
         adapter.addFragment(new PlansFragment(), ScreenConstants.TOOLBAR_TITLE_PLANS);
         adapter.addFragment(new SummaryFragment(), ScreenConstants.TOOLBAR_TITLE_SUMMARY);
-        viewPager.setAdapter(adapter);
+        mViewPager.setAdapter(adapter);
     }
 }
