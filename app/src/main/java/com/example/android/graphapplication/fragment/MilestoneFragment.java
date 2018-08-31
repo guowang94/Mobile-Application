@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.RecyclerViewTouchListener;
 import com.example.android.graphapplication.activity.EventActivity;
+import com.example.android.graphapplication.activity.MilestoneActivity;
 import com.example.android.graphapplication.adapter.CommonAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
@@ -43,6 +44,7 @@ public class MilestoneFragment extends Fragment {
     private RecyclerView mMilestonesRecyclerView;
     private Toolbar mToolbar;
     private TextView mToolbarTitle;
+    private TextView mEmptyRecyclerTextView;
 
     private CommonAdapter mMilestonesAdapter;
     private List<CommonModel> milestonesModelList = new ArrayList<>();
@@ -67,8 +69,9 @@ public class MilestoneFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_milestone, container, false);
 
         mMilestonesRecyclerView = view.findViewById(R.id.milestone_recycler_view);
-        mToolbar = view.findViewById(R.id.event_toolbar);
+        mToolbar = view.findViewById(R.id.milestone_toolbar);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
+        mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
@@ -114,14 +117,24 @@ public class MilestoneFragment extends Fragment {
 
         final List<HashMap<String, String>> milestoneList = mydb.getAllMilestone();
         for (HashMap<String, String> milestone : milestoneList) {
-            this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE)));
+            this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+        }
+
+        for (int i = 0; i < milestonesModelList.size();i++) {
+            Log.d(TAG, "initData: TESTING: " + milestonesModelList.get(i).getTitle());
+        }
+
+        if (milestonesModelList.size() == 0) {
+            mEmptyRecyclerTextView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
         //Recycler View Setup for CommonModel
         mMilestonesAdapter = new CommonAdapter(this.milestonesModelList);
-        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
-        mMilestonesRecyclerView.setLayoutManager(mSummaryLayoutManager);
+        mMilestonesRecyclerView.setLayoutManager(layoutManager);
         mMilestonesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mMilestonesRecyclerView.addItemDecoration(new DividerItemDecoration(
                 context, LinearLayoutManager.VERTICAL));
@@ -133,11 +146,13 @@ public class MilestoneFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: event ID, " + milestoneList.get(position).get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID));
-                startActivity(new Intent(getActivity().getApplicationContext(), EventActivity.class)
+                Log.d(TAG, "onClick: event ID, " + milestoneList.get(position)
+                        .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID));
+                startActivity(new Intent(getActivity().getApplicationContext(), MilestoneActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, "Edit")
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
-                                Integer.valueOf(milestoneList.get(position).get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
+                                Integer.valueOf(milestoneList.get(position)
+                                        .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
             }
 
             @Override
@@ -155,7 +170,8 @@ public class MilestoneFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
                         mMilestonesAdapter.removeItem(position);
-                        mydb.deleteEvent(Integer.valueOf(milestoneList.get(position).get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID)));
+                        mydb.deleteMilestone(Integer.valueOf(milestoneList.get(position)
+                                .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID)));
                     }
                 });
 
@@ -205,8 +221,8 @@ public class MilestoneFragment extends Fragment {
         switch (menuItem.getItemId()) {
             case R.id.add_event:
                 startActivity(new Intent(getActivity().getApplicationContext(),
-                        EventActivity.class).putExtra(
-                        KeyConstants.INTENT_KEY_ACTION, "Create"));
+                        MilestoneActivity.class).putExtra(
+                        KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_CREATE));
                 break;
             default:
                 Log.i(TAG, "onOptionsItemSelected: In default");

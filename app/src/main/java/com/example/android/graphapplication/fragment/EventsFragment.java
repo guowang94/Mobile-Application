@@ -120,18 +120,16 @@ public class EventsFragment extends Fragment {
         }
 
         if (eventsModelList.size() == 0) {
-            Log.d(TAG, "initData: if");
             mEmptyRecyclerTextView.setVisibility(View.VISIBLE);
         } else {
-            Log.d(TAG, "initData: else");
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
         //Recycler View Setup for CommonModel
         mEventsAdapter = new CommonAdapter(this.eventsModelList);
-        RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
-        mEventsRecyclerView.setLayoutManager(mSummaryLayoutManager);
+        mEventsRecyclerView.setLayoutManager(layoutManager);
         mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mEventsRecyclerView.addItemDecoration(new DividerItemDecoration(
                 context, LinearLayoutManager.VERTICAL));
@@ -143,11 +141,13 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: event ID, " + eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID));
+                Log.d(TAG, "onClick: event ID, " + eventsList.get(position)
+                        .get(SQLConstants.EVENT_TABLE_EVENT_ID));
                 startActivity(new Intent(context, EventActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_EDIT)
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
-                                Integer.valueOf(eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID))));
+                                Integer.valueOf(eventsList.get(position)
+                                        .get(SQLConstants.EVENT_TABLE_EVENT_ID))));
             }
 
             @Override
@@ -164,7 +164,8 @@ public class EventsFragment extends Fragment {
                 alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
-                        mydb.deleteEvent(Integer.valueOf(eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID)));
+                        mydb.deleteEvent(Integer.valueOf(eventsList.get(position)
+                                .get(SQLConstants.EVENT_TABLE_EVENT_ID)));
                         mEventsAdapter.removeItem(position);
                     }
                 });

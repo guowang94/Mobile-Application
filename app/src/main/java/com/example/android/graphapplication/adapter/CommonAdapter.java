@@ -16,7 +16,7 @@ import java.util.List;
 public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHolder> {
 
     private static final String TAG = "CommonAdapter";
-    private List<CommonModel> events;
+    private List<CommonModel> commonModels;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
@@ -29,8 +29,8 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHold
 
     }
 
-    public CommonAdapter(List<CommonModel> events) {
-        this.events = events;
+    public CommonAdapter(List<CommonModel> commonModels) {
+        this.commonModels = commonModels;
     }
 
     @Override
@@ -46,18 +46,18 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHold
     public void onBindViewHolder(@NonNull CommonAdapter.MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        CommonModel commonModel = this.events.get(position);
+        CommonModel commonModel = this.commonModels.get(position);
         Log.i(TAG, "onBindViewHolder: " + commonModel.toString());
         holder.mTitle.setText(commonModel.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return commonModels.size();
     }
 
     public void removeItem(int position) {
-        events.remove(position);
+        commonModels.remove(position);
         // notify the item removed by position to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
         notifyItemRemoved(position);

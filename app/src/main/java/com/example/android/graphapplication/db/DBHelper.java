@@ -30,10 +30,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQLConstants.DROP_USER_TABLE);
-        db.execSQL(SQLConstants.DROP_EVENT_TABLE);
-        db.execSQL(SQLConstants.DROP_MILESTONE_TABLE);
-        onCreate(db);
+        switch (oldVersion) {
+            case 1:
+                //add new table. db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
+        }
     }
 
     /**
@@ -296,6 +296,22 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method to update Milestone IsSelected status
+     * @param milestoneID
+     * @param isSelected
+     * @return
+     */
+    public boolean updateMilestoneIsSelectedStatus(String milestoneID, int isSelected) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.MILESTONE_TABLE_IS_SELECTED, isSelected);
+        db.update(SQLConstants.MILESTONE_TABLE, contentValues,
+                SQLConstants.MILESTONE_TABLE_MILESTONE_ID + " = ? ",
+                new String[]{milestoneID});
+        return true;
+    }
+
+    /**
      * This method to delete Milestone record
      *
      * @param id
@@ -325,6 +341,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
             milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME,
                     res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            milestone.put(SQLConstants.MILESTONE_TABLE_IS_SELECTED,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_IS_SELECTED)));
             milestonesList.add(milestone);
             res.moveToNext();
         }
