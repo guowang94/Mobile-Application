@@ -19,7 +19,12 @@ public class ScenarioAdapter extends RecyclerView.Adapter<ScenarioAdapter.MyView
     private static final String TAG = "ScenarioAdapter";
     private List<ScenarioModel> scenarioModelList;
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    public ScenarioAdapter(List<ScenarioModel> scenarioModelList) {
+        this.scenarioModelList = scenarioModelList;
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
         private TextView mTitle;
         private ImageView mImageView;
 
@@ -29,33 +34,33 @@ public class ScenarioAdapter extends RecyclerView.Adapter<ScenarioAdapter.MyView
             mTitle = view.findViewById(R.id.title);
             mImageView = view.findViewById(R.id.imageView);
         }
-
-    }
-
-    public ScenarioAdapter(List<ScenarioModel> scenarioModelList) {
-        this.scenarioModelList = scenarioModelList;
     }
 
     @Override
     @NonNull
-    public ScenarioAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row_scenario, parent, false);
-        return new ScenarioAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ScenarioAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        ScenarioModel scenarioModel = this.scenarioModelList.get(position);
+        final ScenarioModel scenarioModel = this.scenarioModelList.get(position);
+
         Log.i(TAG, "onBindViewHolder: " + scenarioModel.toString());
         holder.mTitle.setText(scenarioModel.getTitle());
-        if (scenarioModel.isSelected()) {
-            holder.mImageView.setVisibility(View.VISIBLE);
-        } else {
-            holder.mImageView.setVisibility(View.INVISIBLE);
-        }
+        holder.mImageView.setVisibility(scenarioModel.isSelected() ? View.VISIBLE : View.INVISIBLE);
+
+        holder.mTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scenarioModel.setSelected(!scenarioModel.isSelected());
+                holder.mImageView.setVisibility(scenarioModel.isSelected() ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
     }
 
     @Override

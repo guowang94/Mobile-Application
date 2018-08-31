@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.activity.ScenarioActivity;
+import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
@@ -46,6 +47,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class GraphFragment extends Fragment implements OnChartValueSelectedListener {
@@ -59,6 +61,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
+    private String graphStatus = null;
 
     private DBHelper mydb;
 
@@ -88,6 +91,13 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         if (isViewShown) {
             initData();
             isDataLoaded = true;
+        }
+
+        if (getArguments() != null) {
+            Log.d(TAG, "onCreateView: " + getArguments().getString(KeyConstants.INTENT_KEY_ACTION));
+            graphStatus = getArguments().getString(KeyConstants.INTENT_KEY_ACTION);
+            Log.d(TAG, "onCreateView: TESTING: " + graphStatus);
+            //todo if graphstatus == applied scenario, then call edit graph method
         }
 
         Log.d(TAG, "onCreateView: out");
@@ -164,8 +174,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         Log.i(TAG, "Index Value: " + h.getStackIndex() + ", type not available");
                 }
 
-                Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(entry.getX()) +
-                                type + DecimalFormat.getCurrencyInstance(Locale.US).format(entry.getYVals()[h.getStackIndex()]),
+                Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                .format(entry.getX()) + type +
+                                DecimalFormat.getCurrencyInstance(Locale.US)
+                                        .format(entry.getYVals()[h.getStackIndex()]),
                         Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -189,7 +201,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
     @Override
     public void onNothingSelected() {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -197,6 +208,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         super.onPause();
         isDataLoaded = false;
         isViewLoaded = false;
+        graphStatus = null;
     }
 
     /**
@@ -205,7 +217,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private void graphViewSetup() {
 
         mChart.setDrawOrder(new CombinedChart.DrawOrder[]{
-                CombinedChart.DrawOrder.BAR, /*CombinedChart.DrawOrder.BAR, */CombinedChart.DrawOrder.LINE
+                CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
         });
 
         Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
@@ -225,8 +237,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             rs.close();
         }
 
-        CombinedData data = getGraphData(assets, monthlyIncome, fixedExpenses,
-                variableExpenses, age, retirementAge, expectancy, increment, inflation);
+        CombinedData data = null;
+        //todo test this to see if the graph status is working properly
+        if (graphStatus != null && KeyConstants.INTENT_KEY_VALUE_APPLIED_SCENARIO.equals(graphStatus))
+            data = editGraphData(assets, monthlyIncome, fixedExpenses, variableExpenses, age,
+                    retirementAge, expectancy, increment, inflation);
+        else
+            data = getGraphData(assets, monthlyIncome, fixedExpenses, variableExpenses, age,
+                    retirementAge, expectancy, increment, inflation);
 
         mChart.getDescription().setEnabled(false);
         mChart.setPinchZoom(true);
@@ -278,8 +296,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      * @return ArrayList
      */
     private CombinedData getGraphData(float assets, float grossIncome, float fixedExpenses,
-                                      float variableExpenses, int age, int retirementAge,
-                                      int expectancy, int increment, int inflation) {
+                                       float variableExpenses, int age, int retirementAge,
+                                       int expectancy, int increment, int inflation) {
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<Entry> lineEntries = new ArrayList<>();
 
@@ -289,10 +307,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         float subsequentAnnualExpenses = (fixedExpenses + variableExpenses) * 12;
         float annualIncome = 0f;
         float annualExpenses = 0f;
+        float balance = 0f;
         float cpfOrdinaryAccount = 0f;
         float cpfSpecialAccount = 0f;
         float cpfMedisaveAccount = 0f;
-        float balance = 0f;
         int shortfallAge = -1;
         int expensesExceededIncomeAge = -1;
 
@@ -318,77 +336,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
                 }
 
-                float cpfContribution;
-
-                //----------------Calculation for CPF Contribution %------------------
-
-                if (i <= 55) {
-                    cpfContribution = annualIncome * 0.37f;
-                    if (cpfContribution > 2200 * 12) {
-                        cpfContribution = 2200 * 12;
-                    }
-                } else if (i <= 60) {
-                    cpfContribution = annualIncome * 0.26f;
-                    if (cpfContribution > 1560 * 12) {
-                        cpfContribution = 1560 * 12;
-                    }
-                } else if (i <= 65) {
-                    cpfContribution = annualIncome * 0.165f;
-                    if (cpfContribution > 990 * 12) {
-                        cpfContribution = 990 * 12;
-                    }
-                } else {
-                    cpfContribution = annualIncome * 0.125f;
-                    if (cpfContribution > 750 * 12) {
-                        cpfContribution = 750 * 12;
-                    }
-                }
-
-                //----------------Calculation for CPF distribution-------------------
-
-                if (i < 35) {
-//                    Log.i(TAG, "getGraphData: under 35, " + i);
-                    cpfOrdinaryAccount += cpfContribution * 0.6217;
-                    cpfSpecialAccount += cpfContribution * 0.2162;
-                    cpfMedisaveAccount += cpfContribution * 0.1621;
-
-                } else if (i <= 45) {
-//                    Log.i(TAG, "getGraphData: 35 to 45, " + i);
-                    cpfOrdinaryAccount += cpfContribution * 0.5677;
-                    cpfSpecialAccount += cpfContribution * 0.1891;
-                    cpfMedisaveAccount += cpfContribution * 0.2432;
-
-                } else if (i <= 50) {
-//                    Log.i(TAG, "getGraphData: 46 to 50, " + i);
-                    cpfOrdinaryAccount += cpfContribution * 0.5136;
-                    cpfSpecialAccount += cpfContribution * 0.2162;
-                    cpfMedisaveAccount += cpfContribution * 0.2702;
-
-                } else if (i <= 55) {
-//                    Log.i(TAG, "getGraphData: 51 to 55, " + i);
-                    cpfOrdinaryAccount += cpfContribution * 0.4055;
-                    cpfSpecialAccount += cpfContribution * 0.3108;
-                    cpfMedisaveAccount += cpfContribution * 0.2837;
-
-                } else if (i <= 60) {
-//                    Log.i(TAG, "getGraphData: 56 to 60, " + i);
-                    cpfOrdinaryAccount += cpfContribution * 0.4616;
-                    cpfSpecialAccount += cpfContribution * 0.1346;
-                    cpfMedisaveAccount += cpfContribution * 0.4038;
-
-                } else if (i <= 65) {
-//                    Log.i(TAG, "getGraphData: 61 to 65, " + i);
-                    cpfOrdinaryAccount += cpfContribution * 0.2122;
-                    cpfSpecialAccount += cpfContribution * 0.1515;
-                    cpfMedisaveAccount += cpfContribution * 0.6363;
-
-                } else {
-//                    Log.i(TAG, "getGraphData: above 65, " + i);
-                    cpfOrdinaryAccount += cpfContribution * 0.08;
-                    cpfSpecialAccount += cpfContribution * 0.08;
-                    cpfMedisaveAccount += cpfContribution * 0.84;
-
-                }
+                List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, i),
+                        cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount, i);
+                cpfOrdinaryAccount = cpfDistribution.get(0);
+                cpfSpecialAccount = cpfDistribution.get(1);
+                cpfMedisaveAccount = cpfDistribution.get(2);
 
                 //-------------Calculation for the graph---------------
 
@@ -440,8 +392,143 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         //----------- Bar Graph ------------
         //BarDataSet is similar to series
         BarDataSet barDataSet = new BarDataSet(barEntries, null);
-        barDataSet.setColors(getResources().getColor(R.color.expensesGraph), getResources().getColor(R.color.incomeGraph));
-        barDataSet.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_EXPENSES, ScreenConstants.GRAPH_LEGEND_INCOME});
+        barDataSet.setColors(getResources().getColor(R.color.expensesGraph),
+                getResources().getColor(R.color.incomeGraph));
+        barDataSet.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_EXPENSES,
+                ScreenConstants.GRAPH_LEGEND_INCOME});
+
+        //values will appear on the graph
+        barDataSet.setDrawValues(false);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(barDataSet);
+
+        BarData barData = new BarData(dataSets);
+        barData.setValueFormatter(new MyValueFormatter());
+        barData.setValueTextColor(Color.BLACK);
+
+        //------------- Line Graph ------------
+        LineDataSet lineDataSet = new LineDataSet(lineEntries, ScreenConstants.GRAPH_LEGEND_ASSETS);
+        lineDataSet.setColor(getResources().getColor(R.color.purple));
+        lineDataSet.setLineWidth(2.5f);
+        lineDataSet.setCircleColor(getResources().getColor(R.color.purple));
+        lineDataSet.setCircleRadius(1f);
+        lineDataSet.setFillColor(getResources().getColor(R.color.purple));
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setDrawValues(false);
+
+        lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        LineData lineData = new LineData();
+        lineData.addDataSet(lineDataSet);
+
+        CombinedData combinedData = new CombinedData();
+        combinedData.setData(barData);
+        combinedData.setData(lineData);
+
+        return combinedData;
+    }
+
+    private CombinedData editGraphData(float assets, float grossIncome, float fixedExpenses,
+                                      float variableExpenses, int age, int retirementAge,
+                                      int expectancy, int increment, int inflation) {
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        ArrayList<Entry> lineEntries = new ArrayList<>();
+
+        float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH))) * 0.8f;
+        float firstYearExpenses = (fixedExpenses + variableExpenses) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
+        float subsequentAnnualIncome = grossIncome * 12 * 0.8f;
+        float subsequentAnnualExpenses = (fixedExpenses + variableExpenses) * 12;
+        float annualIncome = 0f;
+        float annualExpenses = 0f;
+        float balance = 0f;
+        float cpfOrdinaryAccount = 0f;
+        float cpfSpecialAccount = 0f;
+        float cpfMedisaveAccount = 0f;
+        int shortfallAge = -1;
+        int expensesExceededIncomeAge = -1;
+
+        for (int i = age; i < expectancy + 1; i++) {
+            if (i < retirementAge + 1) {
+
+                if (i == age) {
+//                    Log.i(TAG, "getGraphData: first year");
+                    annualIncome = firstYearIncome * 0.8f;
+                    annualExpenses = firstYearExpenses;
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
+                } else if (i == age + 1) {
+//                    Log.i(TAG, "getGraphData: subsequent");
+                    annualIncome = subsequentAnnualIncome * (100 + increment) / 100;
+                    annualExpenses = subsequentAnnualExpenses * (100 + inflation) / 100;
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
+                } else {
+                    annualIncome = annualIncome * (100 + increment) / 100;
+                    annualExpenses = annualExpenses * (100 + inflation) / 100;
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
+                }
+
+                List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, i),
+                        cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount, i);
+                cpfOrdinaryAccount = cpfDistribution.get(0);
+                cpfSpecialAccount = cpfDistribution.get(1);
+                cpfMedisaveAccount = cpfDistribution.get(2);
+
+                //-------------Calculation for the graph---------------
+
+                float remainder = annualIncome - annualExpenses;
+
+                if (remainder < 0) {
+                    assets += remainder;
+                    remainder = 0;
+                }
+
+                barEntries.add(new BarEntry(i, new float[]{annualExpenses, remainder}));
+                lineEntries.add(new Entry(i, assets));
+
+                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
+
+                assets += remainder;
+
+                if (i == retirementAge) {
+                    balance = assets;
+                }
+
+            } else {
+                annualExpenses = annualExpenses * (100 + inflation) / 100;
+                assets -= annualExpenses;
+                barEntries.add(new BarEntry(i, new float[]{annualExpenses, 99990}));
+                lineEntries.add(new Entry(i, assets));
+
+                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
+            }
+
+            if (assets < 0f) {
+                if (shortfallAge == -1) {
+                    shortfallAge = i;
+                }
+            }
+
+            if (annualExpenses > annualIncome) {
+                if (expensesExceededIncomeAge == -1) {
+                    expensesExceededIncomeAge = i;
+                }
+            }
+
+            if (i == expectancy) {
+                mydb.updateUser(cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount,
+                        balance, assets, shortfallAge, expensesExceededIncomeAge);
+            }
+        }
+
+        //----------- Bar Graph ------------
+        //BarDataSet is similar to series
+        BarDataSet barDataSet = new BarDataSet(barEntries, null);
+        barDataSet.setColors(getResources().getColor(R.color.expensesGraph),
+                getResources().getColor(R.color.incomeGraph));
+        barDataSet.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_EXPENSES,
+                ScreenConstants.GRAPH_LEGEND_INCOME});
 
         //values will appear on the graph
         barDataSet.setDrawValues(false);
@@ -475,6 +562,93 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     }
 
     /**
+     * this method will get the CPF Contribution
+     * @param annualIncome
+     * @param i current index
+     * @return float
+     */
+    public float getCPFContribution(float annualIncome, int i) {
+        float cpfContribution;
+        if (i <= 55) {
+            cpfContribution = annualIncome * 0.37f;
+            if (cpfContribution > 2200 * 12) {
+                cpfContribution = 2200 * 12;
+            }
+        } else if (i <= 60) {
+            cpfContribution = annualIncome * 0.26f;
+            if (cpfContribution > 1560 * 12) {
+                cpfContribution = 1560 * 12;
+            }
+        } else if (i <= 65) {
+            cpfContribution = annualIncome * 0.165f;
+            if (cpfContribution > 990 * 12) {
+                cpfContribution = 990 * 12;
+            }
+        } else {
+            cpfContribution = annualIncome * 0.125f;
+            if (cpfContribution > 750 * 12) {
+                cpfContribution = 750 * 12;
+            }
+        }
+        return cpfContribution;
+    }
+
+    /**
+     * This method to get CPF Distribution
+     * @param cpfContribution
+     * @param cpfOrdinaryAccount
+     * @param cpfSpecialAccount
+     * @param cpfMedisaveAccount
+     * @param i current index
+     * @return List of float values
+     */
+    public List<Float> getCPFDistribution(float cpfContribution, float cpfOrdinaryAccount,
+                                          float cpfSpecialAccount, float cpfMedisaveAccount, int i) {
+        List<Float> cpfDistribution = new ArrayList<>();
+        if (i < 35) {
+            cpfOrdinaryAccount += cpfContribution * 0.6217;
+            cpfSpecialAccount += cpfContribution * 0.2162;
+            cpfMedisaveAccount += cpfContribution * 0.1621;
+
+        } else if (i <= 45) {
+            cpfOrdinaryAccount += cpfContribution * 0.5677;
+            cpfSpecialAccount += cpfContribution * 0.1891;
+            cpfMedisaveAccount += cpfContribution * 0.2432;
+
+        } else if (i <= 50) {
+            cpfOrdinaryAccount += cpfContribution * 0.5136;
+            cpfSpecialAccount += cpfContribution * 0.2162;
+            cpfMedisaveAccount += cpfContribution * 0.2702;
+
+        } else if (i <= 55) {
+            cpfOrdinaryAccount += cpfContribution * 0.4055;
+            cpfSpecialAccount += cpfContribution * 0.3108;
+            cpfMedisaveAccount += cpfContribution * 0.2837;
+
+        } else if (i <= 60) {
+            cpfOrdinaryAccount += cpfContribution * 0.4616;
+            cpfSpecialAccount += cpfContribution * 0.1346;
+            cpfMedisaveAccount += cpfContribution * 0.4038;
+
+        } else if (i <= 65) {
+            cpfOrdinaryAccount += cpfContribution * 0.2122;
+            cpfSpecialAccount += cpfContribution * 0.1515;
+            cpfMedisaveAccount += cpfContribution * 0.6363;
+
+        } else {
+            cpfOrdinaryAccount += cpfContribution * 0.08;
+            cpfSpecialAccount += cpfContribution * 0.08;
+            cpfMedisaveAccount += cpfContribution * 0.84;
+
+        }
+
+        cpfDistribution.add(cpfOrdinaryAccount);
+        cpfDistribution.add(cpfSpecialAccount);
+        cpfDistribution.add(cpfMedisaveAccount);
+        return cpfDistribution;
+    }
+
+    /**
      * This method will create the more option in the action bar
      *
      * @param menu     store all the menu items
@@ -498,7 +672,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             case R.id.action_apply_scenarios:
                 startActivity(new Intent(getContext(), ScenarioActivity.class));
                 break;
-
             case R.id.action_export:
                 Snackbar.make(mLayout, "Export", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
                     @Override

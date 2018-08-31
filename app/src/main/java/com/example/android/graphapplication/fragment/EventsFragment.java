@@ -3,12 +3,9 @@ package com.example.android.graphapplication.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +43,7 @@ public class EventsFragment extends Fragment {
     private RecyclerView mEventsRecyclerView;
     private Toolbar mToolbar;
     private TextView mToolbarTitle;
-    private ConstraintLayout mLayout;
+    private TextView mEmptyRecyclerTextView;
 
     private CommonAdapter mEventsAdapter;
     private List<CommonModel> eventsModelList = new ArrayList<>();
@@ -73,7 +70,7 @@ public class EventsFragment extends Fragment {
         mEventsRecyclerView = view.findViewById(R.id.milestone_recycler_view);
         mToolbar = view.findViewById(R.id.event_toolbar);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
-        mLayout = view.findViewById(R.id.constraint_layout);
+        mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
@@ -122,6 +119,14 @@ public class EventsFragment extends Fragment {
             this.eventsModelList.add(new CommonModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME)));
         }
 
+        if (eventsModelList.size() == 0) {
+            Log.d(TAG, "initData: if");
+            mEmptyRecyclerTextView.setVisibility(View.VISIBLE);
+        } else {
+            Log.d(TAG, "initData: else");
+            mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
+        }
+
         //Recycler View Setup for CommonModel
         mEventsAdapter = new CommonAdapter(this.eventsModelList);
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
@@ -139,8 +144,8 @@ public class EventsFragment extends Fragment {
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
                 Log.d(TAG, "onClick: event ID, " + eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID));
-                startActivity(new Intent(getActivity().getApplicationContext(), EventActivity.class)
-                        .putExtra(KeyConstants.INTENT_KEY_ACTION, "Edit")
+                startActivity(new Intent(context, EventActivity.class)
+                        .putExtra(KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_EDIT)
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
                                 Integer.valueOf(eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID))));
             }
@@ -159,8 +164,8 @@ public class EventsFragment extends Fragment {
                 alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
-                        mEventsAdapter.removeItem(position);
                         mydb.deleteEvent(Integer.valueOf(eventsList.get(position).get(SQLConstants.EVENT_TABLE_EVENT_ID)));
+                        mEventsAdapter.removeItem(position);
                     }
                 });
 
@@ -195,7 +200,7 @@ public class EventsFragment extends Fragment {
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.plus_fragment_menu, menu);
+        inflater.inflate(R.menu.plus_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -211,7 +216,7 @@ public class EventsFragment extends Fragment {
             case R.id.add_event:
                 startActivity(new Intent(getActivity().getApplicationContext(),
                         EventActivity.class).putExtra(
-                        KeyConstants.INTENT_KEY_ACTION, "Create"));
+                        KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_CREATE));
                 break;
             default:
                 Log.i(TAG, "onOptionsItemSelected: In default");

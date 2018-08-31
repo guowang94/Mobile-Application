@@ -23,7 +23,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
         db.execSQL(SQLConstants.CREATE_USER_TABLE);
         db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
         db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
@@ -31,7 +30,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO Auto-generated method stub
         db.execSQL(SQLConstants.DROP_USER_TABLE);
         db.execSQL(SQLConstants.DROP_EVENT_TABLE);
         db.execSQL(SQLConstants.DROP_MILESTONE_TABLE);
@@ -178,6 +176,22 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method to update Event IsSelected status
+     * @param eventID
+     * @param isSelected
+     * @return
+     */
+    public boolean updateEventIsSelectedStatus(String eventID, int isSelected) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.EVENT_TABLE_IS_SELECTED, isSelected);
+        db.update(SQLConstants.EVENT_TABLE, contentValues,
+                SQLConstants.EVENT_TABLE_EVENT_ID + " = ? ",
+                new String[]{eventID});
+        return true;
+    }
+
+    /**
      * This method to delete Event record
      *
      * @param id
@@ -207,6 +221,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_ID))));
             event.put(SQLConstants.EVENT_TABLE_EVENT_NAME,
                     res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            event.put(SQLConstants.EVENT_TABLE_IS_SELECTED,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_IS_SELECTED)));
             eventsList.add(event);
             res.moveToNext();
         }
@@ -345,7 +361,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteAllRecords() {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
-        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
-        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+//        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+//        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
     }
 }

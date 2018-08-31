@@ -35,6 +35,18 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             if (getIntent() != null) {
+
+                if (getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION) != null &&
+                        getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION).equals("Edit")) {
+                    Log.d(TAG, "onCreate: testing in main activity");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KeyConstants.INTENT_KEY_ACTION, "Edit");
+
+                    GraphFragment graphFragment = new GraphFragment();
+                    graphFragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.viewpager, graphFragment).commit();
+                }
+
                 mViewPager.setCurrentItem(getIntent()
                         .getIntExtra(KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 0));
             }
@@ -60,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This method will return custom tab
+     *
      * @param position
      * @return Custom Tab
      */
