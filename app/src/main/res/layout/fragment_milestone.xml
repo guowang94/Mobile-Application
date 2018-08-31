@@ -10,7 +10,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <include
-        android:id="@+id/event_toolbar"
+        android:id="@+id/milestone_toolbar"
         layout="@layout/toolbar_layout_transparent" />
 
     <android.support.v4.widget.NestedScrollView
@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/milestone_toolbar">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout"
@@ -41,6 +41,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/empty_recycler_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/milestone_empty_recycler"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                app:layout_constraintVertical_bias="0.4" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/milestone_recycler_view"

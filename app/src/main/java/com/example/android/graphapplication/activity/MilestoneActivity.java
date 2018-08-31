@@ -31,14 +31,14 @@ import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 public class MilestoneActivity extends AppCompatActivity implements
         LabelledSpinner.OnItemChosenListener {
 
-    private static final String TAG = "EventActivity";
+    private static final String TAG = "MilestoneActivity";
 
     private Toolbar mToolbar;
-    private TextInputLayout mEventNameInputLayout;
-    private LabelledSpinner mEventTypeSpinner;
-    private LabelledSpinner mYearSpinner;
-    private TextInputLayout mEventDescriptionInputLayout;
-    private SegmentedButtonGroup mEventStatusSegmentedButton;
+    private TextInputLayout mMilestoneNameInputLayout;
+    private LabelledSpinner mMilestoneTypeSpinner;
+    private LabelledSpinner mAgeSpinner;
+    private TextInputLayout mMilestoneDescriptionInputLayout;
+    private SegmentedButtonGroup mMilestoneStatusSegmentedButton;
     private TextView mToolbarTitle;
     private ConstraintLayout mLayout;
     private TextInputLayout mAmountInputLayout;
@@ -49,25 +49,25 @@ public class MilestoneActivity extends AppCompatActivity implements
     private EditText mDurationEditText;
     private DBHelper mydb;
 
-    private String eventTypeSpinnerValue;
-    private String yearSpinnerValue;
-    private String eventAction;
-    private int currentEventID;
-    private String yearRange[];
+    private String milestoneTypeSpinnerValue;
+    private String ageSpinnerValue;
+    private String milestoneAction;
+    private int currentMilestoneID;
+    private String ageRange[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_event);
+        setContentView(R.layout.activity_create_milestone);
         //TODO need to add validation for all the fields (Low Priority)
 
-        mToolbar = findViewById(R.id.create_event_toolbar);
-        mEventNameInputLayout = findViewById(R.id.name_input_layout);
-        mEventTypeSpinner = findViewById(R.id.event_type_spinner);
-        mYearSpinner = findViewById(R.id.age_spinner);
-        mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
-        mEventStatusSegmentedButton = findViewById(R.id.event_status_segmented_button);
+        mToolbar = findViewById(R.id.create_milestone_toolbar);
+        mMilestoneNameInputLayout = findViewById(R.id.name_input_layout);
+        mMilestoneTypeSpinner = findViewById(R.id.milestone_type_spinner);
+        mAgeSpinner = findViewById(R.id.age_spinner);
+        mMilestoneDescriptionInputLayout = findViewById(R.id.description_input_layout);
+        mMilestoneStatusSegmentedButton = findViewById(R.id.milestone_status_segmented_button);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
         mAmountInputLayout = new TextInputLayout(this);
@@ -80,10 +80,10 @@ public class MilestoneActivity extends AppCompatActivity implements
         mydb = new DBHelper(getApplicationContext());
 
         if (getIntent() != null) {
-            eventAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
-            currentEventID = getIntent().getIntExtra(
+            milestoneAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
+            currentMilestoneID = getIntent().getIntExtra(
                     KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION, -1);
-            Log.d(TAG, "onCreate: displayData, " + currentEventID);
+            Log.d(TAG, "onCreate: displayData, " + currentMilestoneID);
         }
 
         initData();
@@ -98,15 +98,15 @@ public class MilestoneActivity extends AppCompatActivity implements
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();
-        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);
+        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_MILESTONES);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         // Enable the top left button
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        drawTextInputLayout(mEventStatusSegmentedButton.getPosition());
+        drawTextInputLayout(mMilestoneStatusSegmentedButton.getPosition());
 
-        mEventStatusSegmentedButton.setOnPositionChangedListener(
+        mMilestoneStatusSegmentedButton.setOnPositionChangedListener(
                 new SegmentedButtonGroup.OnPositionChangedListener() {
                     @Override
                     public void onPositionChanged(int position) {
@@ -115,8 +115,8 @@ public class MilestoneActivity extends AppCompatActivity implements
                     }
                 });
 
-        mEventTypeSpinner.setItemsArray(R.array.event_type_array);
-        mEventTypeSpinner.setOnItemChosenListener(this);
+        mMilestoneTypeSpinner.setItemsArray(R.array.milestone_type_array);
+        mMilestoneTypeSpinner.setOnItemChosenListener(this);
 
         Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
         rs.moveToFirst();
@@ -128,70 +128,69 @@ public class MilestoneActivity extends AppCompatActivity implements
             rs.close();
         }
 
-        //Create year range
-        yearRange = new String[expectancyAge - currentAge + 1];
-        int startYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = 0; i < yearRange.length; i++) {
-            yearRange[i] = startYear + "";
-            startYear++;
+        //Create age range
+        ageRange = new String[expectancyAge - currentAge + 1];
+        for (int i = 0; i < ageRange.length; i++) {
+            ageRange[i] = currentAge + "";
+            currentAge++;
         }
-        mYearSpinner.setItemsArray(yearRange);
-        mYearSpinner.setOnItemChosenListener(this);
+        mAgeSpinner.setItemsArray(ageRange);
+        mAgeSpinner.setOnItemChosenListener(this);
 
-        //If the Event Action is edit, then it will display previous data
+        //If the Milestone Action is edit, then it will display previous data
         displayData();
         Log.d(TAG, "initData: out");
     }
 
     /**
-     * This method will display previous values of the event
+     * This method will display previous values of the milestone
      */
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        if ("Edit".equalsIgnoreCase(eventAction) && currentEventID != -1) {
-            Cursor rs = mydb.getData(SQLConstants.EVENT_TABLE, currentEventID);
+        if ("Edit".equalsIgnoreCase(milestoneAction) && currentMilestoneID != -1) {
+            Cursor rs = mydb.getData(SQLConstants.MILESTONE_TABLE, currentMilestoneID);
             rs.moveToFirst();
 
-            String eventName = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME));
-            String eventType = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE));
-            String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_YEAR));
-            String description = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION));
-            String eventStatus = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS));
-            String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
-            String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
-            String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_COST_PER_MONTH)));
+            String milestoneName = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME));
+            String milestoneType = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE));
+            String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR));
+            String description = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION));
+            String milestoneStatus = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS));
+            String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
+            String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
+            String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH)));
 
             if (!rs.isClosed()) {
                 rs.close();
             }
 
-            Log.d(TAG, "displayData: " + eventName);
+            Log.d(TAG, "displayData: " + milestoneName);
 
-            mEventNameInputLayout.getEditText().setText(eventName);
+            mMilestoneNameInputLayout.getEditText().setText(milestoneName);
 
-            String[] eventArray = getResources().getStringArray(R.array.event_type_array);
-            for (int i = 0; i < eventArray.length; i++) {
-                if (eventArray[i].equalsIgnoreCase(eventType)) {
-                    mEventTypeSpinner.setSelection(i);
+            String[] milestoneArray = getResources().getStringArray(R.array.milestone_type_array);
+            for (int i = 0; i < milestoneArray.length; i++) {
+                if (milestoneArray[i].equalsIgnoreCase(milestoneType)) {
+                    mMilestoneTypeSpinner.setSelection(i);
                 }
             }
 
-            for (int i = 0; i < yearRange.length; i++) {
-                if (yearRange[i].equalsIgnoreCase(yearOccurred)) {
-                    mYearSpinner.setSelection(i);
+            for (int i = 0; i < ageRange.length; i++) {
+                if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
+                    mAgeSpinner.setSelection(i);
                 }
             }
 
             if (description != null && !description.equalsIgnoreCase("")) {
-                mEventDescriptionInputLayout.getEditText().setText(description);
+                mMilestoneDescriptionInputLayout.getEditText().setText(description);
             }
 
-            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equalsIgnoreCase(eventStatus)) {
-                mEventStatusSegmentedButton.setPosition(0);
+            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equalsIgnoreCase(milestoneStatus)) {
+                mMilestoneStatusSegmentedButton.setPosition(0);
                 mAmountInputLayout.getEditText().setText(amount);
             } else {
-                mEventStatusSegmentedButton.setPosition(1);
+                mMilestoneStatusSegmentedButton.setPosition(1);
                 mDurationInputLayout.getEditText().setText(duration);
                 mCostInputLayout.getEditText().setText(cost);
             }
@@ -218,8 +217,9 @@ public class MilestoneActivity extends AppCompatActivity implements
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
             mAmountInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            if (mAmountEditText.getParent() == null)
+            if (mAmountEditText.getParent() == null) {
                 mAmountInputLayout.addView(mAmountEditText);
+            }
             mLayout.addView(mAmountInputLayout);
 
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
@@ -231,11 +231,11 @@ public class MilestoneActivity extends AppCompatActivity implements
             constraintSet.clone(mLayout);
 
             constraintSet.connect(mAmountInputLayout.getId(), ConstraintSet.TOP,
-                    mEventStatusSegmentedButton.getId(), ConstraintSet.BOTTOM, 16);
+                    mMilestoneStatusSegmentedButton.getId(), ConstraintSet.BOTTOM, 16);
             constraintSet.connect(mAmountInputLayout.getId(), ConstraintSet.START,
-                    mEventStatusSegmentedButton.getId(), ConstraintSet.START, 0);
+                    mMilestoneStatusSegmentedButton.getId(), ConstraintSet.START, 0);
             constraintSet.connect(mAmountInputLayout.getId(), ConstraintSet.END,
-                    mEventStatusSegmentedButton.getId(), ConstraintSet.END, 0);
+                    mMilestoneStatusSegmentedButton.getId(), ConstraintSet.END, 0);
 
             constraintSet.applyTo(mLayout);
         } else {
@@ -246,15 +246,17 @@ public class MilestoneActivity extends AppCompatActivity implements
             mDurationInputLayout.setHint(getResources().getString(R.string.duration));
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            if (mDurationEditText.getParent() == null)
+            if (mDurationEditText.getParent() == null) {
                 mDurationInputLayout.addView(mDurationEditText);
+            }
             mLayout.addView(mDurationInputLayout);
 
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            if (mCostEditText.getParent() == null)
+            if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
+            }
             mLayout.addView(mCostInputLayout);
 
             mDurationInputLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
@@ -268,11 +270,11 @@ public class MilestoneActivity extends AppCompatActivity implements
             constraintSet.clone(mLayout);
 
             constraintSet.connect(mDurationInputLayout.getId(), ConstraintSet.TOP,
-                    mEventStatusSegmentedButton.getId(), ConstraintSet.BOTTOM, 16);
+                    mMilestoneStatusSegmentedButton.getId(), ConstraintSet.BOTTOM, 16);
             constraintSet.connect(mDurationInputLayout.getId(), ConstraintSet.START,
-                    mEventStatusSegmentedButton.getId(), ConstraintSet.START, 0);
+                    mMilestoneStatusSegmentedButton.getId(), ConstraintSet.START, 0);
             constraintSet.connect(mDurationInputLayout.getId(), ConstraintSet.END,
-                    mEventStatusSegmentedButton.getId(), ConstraintSet.END, 0);
+                    mMilestoneStatusSegmentedButton.getId(), ConstraintSet.END, 0);
 
             constraintSet.connect(mCostInputLayout.getId(), ConstraintSet.TOP,
                     mDurationInputLayout.getId(), ConstraintSet.BOTTOM, 16);
@@ -289,23 +291,23 @@ public class MilestoneActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class).putExtra(
-                KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 1));
+                KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 2));
     }
 
     @Override
     public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView,
                              View itemView, int position, long id) {
         switch (labelledSpinner.getId()) {
-            case R.id.event_type_spinner:
-                Log.i(TAG, "onItemChosen: " + mEventTypeSpinner.getSpinner()
+            case R.id.milestone_type_spinner:
+                Log.i(TAG, "onItemChosen: " + mMilestoneTypeSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
-                eventTypeSpinnerValue = mEventTypeSpinner.getSpinner()
+                milestoneTypeSpinnerValue = mMilestoneTypeSpinner.getSpinner()
                         .getItemAtPosition(position).toString();
                 break;
             case R.id.age_spinner:
-                Log.i(TAG, "onItemChosen: " + mYearSpinner.getSpinner()
+                Log.i(TAG, "onItemChosen: " + mAgeSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
-                yearSpinnerValue = mYearSpinner.getSpinner().getItemAtPosition(position).toString();
+                ageSpinnerValue = mAgeSpinner.getSpinner().getItemAtPosition(position).toString();
                 break;
 
             default:
@@ -340,43 +342,43 @@ public class MilestoneActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.save:
-                String description = mEventDescriptionInputLayout.getEditText().getText().toString();
-                String eventStatus = mEventStatusSegmentedButton.getPosition() == 0 ?
+                String description = mMilestoneDescriptionInputLayout.getEditText().getText().toString();
+                String milestoneStatus = mMilestoneStatusSegmentedButton.getPosition() == 0 ?
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
                 float amount = 0f;
                 int duration = 0;
                 float costPerMonth = 0f;
 
-                if ("Create".equalsIgnoreCase(eventAction)) {
+                if ("Create".equalsIgnoreCase(milestoneAction)) {
 
-                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
+                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
                         amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
                     } else {
                         duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
                         costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
                     }
 
-                    mydb.insertEvent(mEventNameInputLayout.getEditText().getText().toString(),
-                            eventTypeSpinnerValue, yearSpinnerValue, description, eventStatus,
+                    mydb.insertMilestone(mMilestoneNameInputLayout.getEditText().getText().toString(),
+                            milestoneTypeSpinnerValue, ageSpinnerValue, description, milestoneStatus,
                             amount, duration, costPerMonth);
 
-                } else if ("Edit".equalsIgnoreCase(eventAction)){
+                } else if ("Edit".equalsIgnoreCase(milestoneAction)){
 
-                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
+                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
                         amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
                     } else {
                         duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
                         costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
                     }
 
-                    mydb.updateEvent(currentEventID, mEventNameInputLayout.getEditText().getText().toString(),
-                            eventTypeSpinnerValue, yearSpinnerValue, description, eventStatus,
+                    mydb.updateMilestone(currentMilestoneID, mMilestoneNameInputLayout.getEditText().getText().toString(),
+                            milestoneTypeSpinnerValue, ageSpinnerValue, description, milestoneStatus,
                             amount, duration, costPerMonth);
                 }
 
                 startActivity(new Intent(this, MainActivity.class).putExtra(
-                        KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 1));
+                        KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 2));
                 break;
             case android.R.id.home:
                 onBackPressed();

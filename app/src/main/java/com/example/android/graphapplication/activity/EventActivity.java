@@ -128,7 +128,7 @@ public class EventActivity extends AppCompatActivity implements
             rs.close();
         }
 
-        //Create year range
+        //Create age range
         ageRange = new String[expectancyAge - currentAge + 1];
         for (int i = 0; i < ageRange.length; i++) {
             ageRange[i] = currentAge + "";
@@ -246,15 +246,17 @@ public class EventActivity extends AppCompatActivity implements
             mDurationInputLayout.setHint(getResources().getString(R.string.duration));
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            if (mDurationEditText.getParent() == null)
+            if (mDurationEditText.getParent() == null) {
                 mDurationInputLayout.addView(mDurationEditText);
+            }
             mLayout.addView(mDurationInputLayout);
 
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            if (mCostEditText.getParent() == null)
+            if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
+            }
             mLayout.addView(mCostInputLayout);
 
             mDurationInputLayout.setLayoutParams(new ConstraintLayout.LayoutParams(

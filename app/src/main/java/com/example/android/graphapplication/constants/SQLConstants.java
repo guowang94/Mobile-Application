@@ -49,6 +49,7 @@ public interface SQLConstants {
     String MILESTONE_TABLE_AMOUNT = "amount";
     String MILESTONE_TABLE_DURATION = "duration";
     String MILESTONE_TABLE_COST_PER_MONTH = "cost_per_month";
+    String MILESTONE_TABLE_IS_SELECTED = "is_selected";
 
     //SQL Queries
     String CREATE_USER_TABLE = "CREATE TABLE "
@@ -98,7 +99,8 @@ public interface SQLConstants {
             + MILESTONE_TABLE_MILESTONE_STATUS + " TEXT NOT NULL, "
             + MILESTONE_TABLE_AMOUNT + " FLOAT DEFAULT 0.0, "
             + MILESTONE_TABLE_DURATION + " INTEGER DEFAULT 0,"
-            + MILESTONE_TABLE_COST_PER_MONTH + " FLOAT DEFAULT 0.0);";
+            + MILESTONE_TABLE_COST_PER_MONTH + " FLOAT DEFAULT 0.0,"
+            + MILESTONE_TABLE_IS_SELECTED + " INTEGER DEFAULT 0);";
 
     String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + USER_TABLE;
     String DROP_EVENT_TABLE = "DROP TABLE IF EXISTS " + EVENT_TABLE;
