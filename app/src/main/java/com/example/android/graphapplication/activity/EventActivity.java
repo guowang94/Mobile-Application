@@ -36,7 +36,7 @@ public class EventActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private TextInputLayout mEventNameInputLayout;
     private LabelledSpinner mEventTypeSpinner;
-    private LabelledSpinner mYearSpinner;
+    private LabelledSpinner mAgeSpinner;
     private TextInputLayout mEventDescriptionInputLayout;
     private SegmentedButtonGroup mEventStatusSegmentedButton;
     private TextView mToolbarTitle;
@@ -53,7 +53,7 @@ public class EventActivity extends AppCompatActivity implements
     private String yearSpinnerValue;
     private String eventAction;
     private int currentEventID;
-    private String yearRange[];
+    private String ageRange[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class EventActivity extends AppCompatActivity implements
         mToolbar = findViewById(R.id.create_event_toolbar);
         mEventNameInputLayout = findViewById(R.id.name_input_layout);
         mEventTypeSpinner = findViewById(R.id.event_type_spinner);
-        mYearSpinner = findViewById(R.id.year_spinner);
+        mAgeSpinner = findViewById(R.id.age_spinner);
         mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
         mEventStatusSegmentedButton = findViewById(R.id.event_status_segmented_button);
         mToolbarTitle = findViewById(R.id.toolbar_title);
@@ -129,14 +129,13 @@ public class EventActivity extends AppCompatActivity implements
         }
 
         //Create year range
-        yearRange = new String[expectancyAge - currentAge + 1];
-        int startYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = 0; i < yearRange.length; i++) {
-            yearRange[i] = startYear + "";
-            startYear++;
+        ageRange = new String[expectancyAge - currentAge + 1];
+        for (int i = 0; i < ageRange.length; i++) {
+            ageRange[i] = currentAge + "";
+            currentAge++;
         }
-        mYearSpinner.setItemsArray(yearRange);
-        mYearSpinner.setOnItemChosenListener(this);
+        mAgeSpinner.setItemsArray(ageRange);
+        mAgeSpinner.setOnItemChosenListener(this);
 
         //If the Event Action is edit, then it will display previous data
         displayData();
@@ -149,7 +148,7 @@ public class EventActivity extends AppCompatActivity implements
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        if ("Edit".equalsIgnoreCase(eventAction) && currentEventID != -1) {
+        if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction) && currentEventID != -1) {
             Cursor rs = mydb.getData(SQLConstants.EVENT_TABLE, currentEventID);
             rs.moveToFirst();
 
@@ -177,9 +176,9 @@ public class EventActivity extends AppCompatActivity implements
                 }
             }
 
-            for (int i = 0; i < yearRange.length; i++) {
-                if (yearRange[i].equalsIgnoreCase(yearOccurred)) {
-                    mYearSpinner.setSelection(i);
+            for (int i = 0; i < ageRange.length; i++) {
+                if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
+                    mAgeSpinner.setSelection(i);
                 }
             }
 
@@ -218,8 +217,9 @@ public class EventActivity extends AppCompatActivity implements
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
             mAmountInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            if (mAmountEditText.getParent() == null)
+            if (mAmountEditText.getParent() == null) {
                 mAmountInputLayout.addView(mAmountEditText);
+            }
             mLayout.addView(mAmountInputLayout);
 
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
@@ -250,7 +250,7 @@ public class EventActivity extends AppCompatActivity implements
                 mDurationInputLayout.addView(mDurationEditText);
             mLayout.addView(mDurationInputLayout);
 
-            mCostInputLayout.setHint(getResources().getString(R.string.cost_per_month));
+            mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             if (mCostEditText.getParent() == null)
@@ -288,7 +288,7 @@ public class EventActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, MainActivity.class).putExtra(
+        startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(
                 KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 1));
     }
 
@@ -302,10 +302,10 @@ public class EventActivity extends AppCompatActivity implements
                 eventTypeSpinnerValue = mEventTypeSpinner.getSpinner()
                         .getItemAtPosition(position).toString();
                 break;
-            case R.id.year_spinner:
-                Log.i(TAG, "onItemChosen: " + mYearSpinner.getSpinner()
+            case R.id.age_spinner:
+                Log.i(TAG, "onItemChosen: " + mAgeSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
-                yearSpinnerValue = mYearSpinner.getSpinner().getItemAtPosition(position).toString();
+                yearSpinnerValue = mAgeSpinner.getSpinner().getItemAtPosition(position).toString();
                 break;
 
             default:
@@ -326,7 +326,7 @@ public class EventActivity extends AppCompatActivity implements
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_event_menu, menu);
+        getMenuInflater().inflate(R.menu.save_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -348,7 +348,7 @@ public class EventActivity extends AppCompatActivity implements
                 int duration = 0;
                 float costPerMonth = 0f;
 
-                if ("Create".equalsIgnoreCase(eventAction)) {
+                if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
 
                     if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
                         amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
@@ -361,7 +361,7 @@ public class EventActivity extends AppCompatActivity implements
                             eventTypeSpinnerValue, yearSpinnerValue, description, eventStatus,
                             amount, duration, costPerMonth);
 
-                } else if ("Edit".equalsIgnoreCase(eventAction)){
+                } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)){
 
                     if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
                         amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
@@ -375,7 +375,7 @@ public class EventActivity extends AppCompatActivity implements
                             amount, duration, costPerMonth);
                 }
 
-                startActivity(new Intent(this, MainActivity.class).putExtra(
+                startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(
                         KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 1));
                 break;
             case android.R.id.home:

@@ -42,13 +42,14 @@
     <!--Create Event Screen-->
     <string name="event_name">Event Name</string>
     <string name="event_type">Event Type</string>
-    <string name="year_occurred">Year Occurred</string>
+    <string name="age_occurred">Age Occurred</string>
     <string name="event_description">Event Description(Optional)</string>
     <string name="one_time">One-Time</string>
     <string name="recurring">Recurring</string>
     <string name="amount">Amount</string>
-    <string name="duration">Duration (in Months)</string>
-    <string name="cost_per_month">Cost Per Month</string>
+    <string name="duration">Duration (in Year)</string>
+    <string name="cost_per_year">Cost Per Year</string>
+    <string name="empty_recycler">Tap on \'+\' to add new Event</string>
 
     <!--List Row-->
     <string name="right_nav_icon">Right Nav icon</string>

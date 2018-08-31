@@ -62,10 +62,4 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHold
         // NOTE: don't call notifyDataSetChanged()
         notifyItemRemoved(position);
     }
-
-    public void restoreItem(CommonModel item, int position) {
-        events.add(position, item);
-        // notify item added by position
-        notifyItemInserted(position);
-    }
 }

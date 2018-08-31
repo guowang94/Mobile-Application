@@ -1,24 +1,29 @@
 package com.example.android.graphapplication.adapter;
 
 import android.content.Context;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.model.ScenarioModel;
 import com.example.android.graphapplication.model.ScenarioSectionModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSectionAdapter.MyViewHolder> {
 
     private Context context;
     private List<ScenarioSectionModel> scenarioSectionModelList;
-
+    private ScenarioAdapter scenarioAdapter;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
@@ -56,12 +61,16 @@ public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSection
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.mRecyclerView.setLayoutManager(linearLayoutManager);
         holder.mRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
-        ScenarioAdapter scenarioAdapter = new ScenarioAdapter(scenarioSectionModel.getScenarioModelList());
+        scenarioAdapter = new ScenarioAdapter(scenarioSectionModel.getScenarioModelList());
         holder.mRecyclerView.setAdapter(scenarioAdapter);
     }
 
     @Override
     public int getItemCount() {
         return scenarioSectionModelList.size();
+    }
+
+    public List<ScenarioSectionModel> getAllScenario() {
+        return scenarioSectionModelList;
     }
 }

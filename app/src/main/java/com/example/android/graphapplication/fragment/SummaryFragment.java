@@ -138,6 +138,7 @@ public class SummaryFragment extends Fragment {
         }
 
         shortfallAge = shortfallAge.equals("-1") ? "N/A" : shortfallAge;
+        expensesExceededIncomeAge = expensesExceededIncomeAge.equals("-1") ? "N/A" : expensesExceededIncomeAge;
 
         financialSummary.add(new SummaryModel(R.mipmap.ic_summary_total_shortfall, getString(R.string.total_shortfall), shortfall));
         financialSummary.add(new SummaryModel(R.mipmap.ic_summary_balance, getString(R.string.balance_left_at_retirement), balance));
@@ -164,8 +165,6 @@ public class SummaryFragment extends Fragment {
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mSummaryLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(
-                context, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(summarySectionAdapter);
         Log.d(TAG, "initData: out");
     }

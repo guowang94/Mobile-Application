@@ -65,7 +65,7 @@ public class MilestoneActivity extends AppCompatActivity implements
         mToolbar = findViewById(R.id.create_event_toolbar);
         mEventNameInputLayout = findViewById(R.id.name_input_layout);
         mEventTypeSpinner = findViewById(R.id.event_type_spinner);
-        mYearSpinner = findViewById(R.id.year_spinner);
+        mYearSpinner = findViewById(R.id.age_spinner);
         mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
         mEventStatusSegmentedButton = findViewById(R.id.event_status_segmented_button);
         mToolbarTitle = findViewById(R.id.toolbar_title);
@@ -250,7 +250,7 @@ public class MilestoneActivity extends AppCompatActivity implements
                 mDurationInputLayout.addView(mDurationEditText);
             mLayout.addView(mDurationInputLayout);
 
-            mCostInputLayout.setHint(getResources().getString(R.string.cost_per_month));
+            mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             if (mCostEditText.getParent() == null)
@@ -302,7 +302,7 @@ public class MilestoneActivity extends AppCompatActivity implements
                 eventTypeSpinnerValue = mEventTypeSpinner.getSpinner()
                         .getItemAtPosition(position).toString();
                 break;
-            case R.id.year_spinner:
+            case R.id.age_spinner:
                 Log.i(TAG, "onItemChosen: " + mYearSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
                 yearSpinnerValue = mYearSpinner.getSpinner().getItemAtPosition(position).toString();
@@ -326,7 +326,7 @@ public class MilestoneActivity extends AppCompatActivity implements
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_event_menu, menu);
+        getMenuInflater().inflate(R.menu.save_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
