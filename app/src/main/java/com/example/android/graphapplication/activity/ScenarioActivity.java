@@ -41,8 +41,10 @@ public class ScenarioActivity extends AppCompatActivity {
 
     private List<ScenarioSectionModel> scenarioSectionModelList = new ArrayList<>();
     private List<ScenarioModel> eventsModelList = new ArrayList<>();
+    private List<ScenarioModel> milestonesModelList = new ArrayList<>();
     private ScenarioSectionAdapter scenarioSectionAdapter;
     private List<HashMap<String, String>> eventsList;
+    private List<HashMap<String, String>> milestonesList;
 
     private DBHelper mydb;
 
@@ -81,9 +83,20 @@ public class ScenarioActivity extends AppCompatActivity {
                     Integer.valueOf(event.get(SQLConstants.EVENT_TABLE_IS_SELECTED)) == 1));
         }
 
+        milestonesList = mydb.getAllMilestone();
+        for (HashMap<String, String> milestone : milestonesList) {
+            milestonesModelList.add(new ScenarioModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
+                    Integer.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_IS_SELECTED)) == 1));
+        }
+
         if (eventsModelList.size() > 0) {
             scenarioSectionModelList.add(new ScenarioSectionModel(
                     ScreenConstants.TOOLBAR_TITLE_EVENTS, eventsModelList));
+        }
+
+        if (milestonesModelList.size() > 0) {
+            scenarioSectionModelList.add(new ScenarioSectionModel(
+                    ScreenConstants.TOOLBAR_TITLE_MILESTONES, milestonesModelList));
         }
 
         if (scenarioSectionModelList.size() > 0) {
