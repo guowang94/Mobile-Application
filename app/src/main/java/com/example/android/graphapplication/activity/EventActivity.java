@@ -24,8 +24,6 @@ import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.satsuware.usefulviews.LabelledSpinner;
 
-import java.util.Calendar;
-
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 public class EventActivity extends AppCompatActivity implements
@@ -98,7 +96,7 @@ public class EventActivity extends AppCompatActivity implements
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();
-        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);
+        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ADD_EVENT);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         // Enable the top left button
@@ -137,8 +135,9 @@ public class EventActivity extends AppCompatActivity implements
         mAgeSpinner.setItemsArray(ageRange);
         mAgeSpinner.setOnItemChosenListener(this);
 
-        //If the Event Action is edit, then it will display previous data
-        displayData();
+        if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction) && currentEventID != -1) {
+            displayData();
+        }
         Log.d(TAG, "initData: out");
     }
 
@@ -148,52 +147,50 @@ public class EventActivity extends AppCompatActivity implements
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction) && currentEventID != -1) {
-            Cursor rs = mydb.getData(SQLConstants.EVENT_TABLE, currentEventID);
-            rs.moveToFirst();
+        Cursor rs = mydb.getData(SQLConstants.EVENT_TABLE, currentEventID);
+        rs.moveToFirst();
 
-            String eventName = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME));
-            String eventType = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE));
-            String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_YEAR));
-            String description = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION));
-            String eventStatus = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS));
-            String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
-            String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
-            String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_COST_PER_MONTH)));
+        String eventName = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME));
+        String eventType = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE));
+        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_YEAR));
+        String description = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION));
+        String eventStatus = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS));
+        String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
+        String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
+        String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_COST_PER_MONTH)));
 
-            if (!rs.isClosed()) {
-                rs.close();
+        if (!rs.isClosed()) {
+            rs.close();
+        }
+
+        Log.d(TAG, "displayData: " + eventName);
+
+        mEventNameInputLayout.getEditText().setText(eventName);
+
+        String[] eventArray = getResources().getStringArray(R.array.event_type_array);
+        for (int i = 0; i < eventArray.length; i++) {
+            if (eventArray[i].equalsIgnoreCase(eventType)) {
+                mEventTypeSpinner.setSelection(i);
             }
+        }
 
-            Log.d(TAG, "displayData: " + eventName);
-
-            mEventNameInputLayout.getEditText().setText(eventName);
-
-            String[] eventArray = getResources().getStringArray(R.array.event_type_array);
-            for (int i = 0; i < eventArray.length; i++) {
-                if (eventArray[i].equalsIgnoreCase(eventType)) {
-                    mEventTypeSpinner.setSelection(i);
-                }
+        for (int i = 0; i < ageRange.length; i++) {
+            if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
+                mAgeSpinner.setSelection(i);
             }
+        }
 
-            for (int i = 0; i < ageRange.length; i++) {
-                if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
-                    mAgeSpinner.setSelection(i);
-                }
-            }
+        if (description != null && !description.equalsIgnoreCase("")) {
+            mEventDescriptionInputLayout.getEditText().setText(description);
+        }
 
-            if (description != null && !description.equalsIgnoreCase("")) {
-                mEventDescriptionInputLayout.getEditText().setText(description);
-            }
-
-            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equalsIgnoreCase(eventStatus)) {
-                mEventStatusSegmentedButton.setPosition(0);
-                mAmountInputLayout.getEditText().setText(amount);
-            } else {
-                mEventStatusSegmentedButton.setPosition(1);
-                mDurationInputLayout.getEditText().setText(duration);
-                mCostInputLayout.getEditText().setText(cost);
-            }
+        if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equalsIgnoreCase(eventStatus)) {
+            mEventStatusSegmentedButton.setPosition(0);
+            mAmountInputLayout.getEditText().setText(amount);
+        } else {
+            mEventStatusSegmentedButton.setPosition(1);
+            mDurationInputLayout.getEditText().setText(duration);
+            mCostInputLayout.getEditText().setText(cost);
         }
         Log.d(TAG, "displayData: out");
     }
@@ -342,6 +339,7 @@ public class EventActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.save:
+                String eventName = mEventNameInputLayout.getEditText().getText().toString();
                 String description = mEventDescriptionInputLayout.getEditText().getText().toString();
                 String eventStatus = mEventStatusSegmentedButton.getPosition() == 0 ?
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
@@ -350,31 +348,22 @@ public class EventActivity extends AppCompatActivity implements
                 int duration = 0;
                 float costPerMonth = 0f;
 
+                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
+                    amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
+                } else {
+                    duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
+                    costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
+                }
+
                 if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
 
-                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
-                        amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
-                    } else {
-                        duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
-                        costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
-                    }
+                    mydb.insertEvent(eventName, eventTypeSpinnerValue, yearSpinnerValue, description,
+                            eventStatus, amount, duration, costPerMonth);
 
-                    mydb.insertEvent(mEventNameInputLayout.getEditText().getText().toString(),
-                            eventTypeSpinnerValue, yearSpinnerValue, description, eventStatus,
-                            amount, duration, costPerMonth);
+                } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)) {
 
-                } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)){
-
-                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
-                        amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
-                    } else {
-                        duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
-                        costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
-                    }
-
-                    mydb.updateEvent(currentEventID, mEventNameInputLayout.getEditText().getText().toString(),
-                            eventTypeSpinnerValue, yearSpinnerValue, description, eventStatus,
-                            amount, duration, costPerMonth);
+                    mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, yearSpinnerValue,
+                            description, eventStatus, amount, duration, costPerMonth);
                 }
 
                 startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(

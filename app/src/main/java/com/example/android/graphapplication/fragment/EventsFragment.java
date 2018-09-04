@@ -67,7 +67,7 @@ public class EventsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_events, container, false);
 
-        mEventsRecyclerView = view.findViewById(R.id.milestone_recycler_view);
+        mEventsRecyclerView = view.findViewById(R.id.event_recycler_view);
         mToolbar = view.findViewById(R.id.event_toolbar);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);

@@ -146,7 +146,7 @@ public class MilestoneFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: event ID, " + milestoneList.get(position)
+                Log.d(TAG, "onClick: milestone ID, " + milestoneList.get(position)
                         .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID));
                 startActivity(new Intent(getActivity().getApplicationContext(), MilestoneActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, "Edit")

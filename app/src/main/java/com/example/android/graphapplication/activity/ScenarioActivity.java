@@ -42,9 +42,11 @@ public class ScenarioActivity extends AppCompatActivity {
     private List<ScenarioSectionModel> scenarioSectionModelList = new ArrayList<>();
     private List<ScenarioModel> eventsModelList = new ArrayList<>();
     private List<ScenarioModel> milestonesModelList = new ArrayList<>();
+    private List<ScenarioModel> plansModelList = new ArrayList<>();
     private ScenarioSectionAdapter scenarioSectionAdapter;
     private List<HashMap<String, String>> eventsList;
     private List<HashMap<String, String>> milestonesList;
+    private List<HashMap<String, String>> plansList;
 
     private DBHelper mydb;
 
@@ -89,6 +91,12 @@ public class ScenarioActivity extends AppCompatActivity {
                     Integer.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_IS_SELECTED)) == 1));
         }
 
+        plansList = mydb.getAllPlan();
+        for (HashMap<String, String> plan : plansList) {
+            plansModelList.add(new ScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
+                    Integer.valueOf(plan.get(SQLConstants.PLAN_TABLE_IS_SELECTED)) == 1));
+        }
+
         if (eventsModelList.size() > 0) {
             scenarioSectionModelList.add(new ScenarioSectionModel(
                     ScreenConstants.TOOLBAR_TITLE_EVENTS, eventsModelList));
@@ -97,6 +105,11 @@ public class ScenarioActivity extends AppCompatActivity {
         if (milestonesModelList.size() > 0) {
             scenarioSectionModelList.add(new ScenarioSectionModel(
                     ScreenConstants.TOOLBAR_TITLE_MILESTONES, milestonesModelList));
+        }
+
+        if (plansModelList.size() > 0) {
+            scenarioSectionModelList.add(new ScenarioSectionModel(
+                    ScreenConstants.TOOLBAR_TITLE_PLANS, plansModelList));
         }
 
         if (scenarioSectionModelList.size() > 0) {
@@ -139,6 +152,7 @@ public class ScenarioActivity extends AppCompatActivity {
                 if (scenarioSectionAdapter.getAllScenario().size() > 0) {
                     for (ScenarioSectionModel scenarioSectionModel : scenarioSectionAdapter.getAllScenario()) {
                         Log.d(TAG, "onOptionsItemSelected: " + scenarioSectionModel.getTitle());
+
                         if (ScreenConstants.TOOLBAR_TITLE_EVENTS.equals(scenarioSectionModel.getTitle())) {
                             for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
                                 //Commented code is to print the value of the adapter
@@ -148,6 +162,26 @@ public class ScenarioActivity extends AppCompatActivity {
 
                                 mydb.updateEventIsSelectedStatus(eventsList.get(i)
                                                 .get(SQLConstants.EVENT_TABLE_EVENT_ID),
+                                        scenarioSectionModel.getScenarioModelList().get(i).isSelected()
+                                                ? 1 : 0);
+                            }
+                        }
+
+                        if (ScreenConstants.TOOLBAR_TITLE_MILESTONES.equals(scenarioSectionModel.getTitle())) {
+                            for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
+
+                                mydb.updateMilestoneIsSelectedStatus(milestonesList.get(i)
+                                                .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID),
+                                        scenarioSectionModel.getScenarioModelList().get(i).isSelected()
+                                                ? 1 : 0);
+                            }
+                        }
+
+                        if (ScreenConstants.TOOLBAR_TITLE_PLANS.equals(scenarioSectionModel.getTitle())) {
+                            for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
+
+                                mydb.updatePlanIsSelectedStatus(plansList.get(i)
+                                                .get(SQLConstants.PLAN_TABLE_PLAN_ID),
                                         scenarioSectionModel.getScenarioModelList().get(i).isSelected()
                                                 ? 1 : 0);
                             }

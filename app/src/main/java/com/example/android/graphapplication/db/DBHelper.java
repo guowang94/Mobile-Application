@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
@@ -26,13 +25,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQLConstants.CREATE_USER_TABLE);
         db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
         db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
+        db.execSQL(SQLConstants.CREATE_PLAN_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
-                //add new table. db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
+                //do nothing
         }
     }
 
@@ -51,7 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param assets
      * @param increment
      * @param inflation
-     * @return boolean
+     * @return true
      */
     public boolean insertUser(String name, int age, int expectedRetirementAge, int expectancy,
                               String jobStatus, String citizenship, float monthlyIncome,
@@ -86,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param assets
      * @param shortfallAge
      * @param expensesExceededIncomeAge
-     * @return boolean
+     * @return true
      */
     public boolean updateUser(float ordinaryAccount, float specialAccount, float medisaveAccount,
                               float balance, float assets, int shortfallAge, int expensesExceededIncomeAge) {
@@ -119,7 +119,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount
      * @param duration
      * @param costPerMonth
-     * @return boolean
+     * @return true
      */
     public boolean insertEvent(String eventName, String eventType, String eventYear, String eventDescription,
                                String eventStatus, float amount, int duration, float costPerMonth) {
@@ -143,6 +143,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * This method will update Event details
      *
+     * @param eventID
      * @param eventName
      * @param eventType
      * @param eventYear
@@ -151,7 +152,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount
      * @param duration
      * @param costPerMonth
-     * @return boolean
+     * @return true
      */
     public boolean updateEvent(int eventID, String eventName, String eventType, String eventYear,
                                String eventDescription, String eventStatus, float amount,
@@ -177,9 +178,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /**
      * This method to update Event IsSelected status
+     *
      * @param eventID
      * @param isSelected
-     * @return
+     * @return true
      */
     public boolean updateEventIsSelectedStatus(String eventID, int isSelected) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -195,7 +197,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * This method to delete Event record
      *
      * @param id
-     * @return
+     * @return number of rows deleted
      */
     public Integer deleteEvent(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -206,7 +208,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * This method to get all records
      *
-     * @return List
+     * @return list of events
      */
     public List<HashMap<String, String>> getAllEvent() {
         List<HashMap<String, String>> eventsList = new ArrayList<>();
@@ -228,6 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return eventsList;
     }
+
     /**
      * This method will insert data into Milestone Table
      *
@@ -239,10 +242,10 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount
      * @param duration
      * @param costPerMonth
-     * @return boolean
+     * @return true
      */
     public boolean insertMilestone(String milestoneName, String milestoneType, String milestoneYear, String milestoneDescription,
-                               String milestoneStatus, float amount, int duration, float costPerMonth) {
+                                   String milestoneStatus, float amount, int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME, milestoneName);
@@ -263,6 +266,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * This method will update Milestone details
      *
+     * @param milestoneID
      * @param milestoneName
      * @param milestoneType
      * @param milestoneYear
@@ -271,11 +275,11 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount
      * @param duration
      * @param costPerMonth
-     * @return boolean
+     * @return true
      */
     public boolean updateMilestone(int milestoneID, String milestoneName, String milestoneType, String milestoneYear,
-                               String milestoneDescription, String milestoneStatus, float amount,
-                               int duration, float costPerMonth) {
+                                   String milestoneDescription, String milestoneStatus, float amount,
+                                   int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME, milestoneName);
@@ -297,9 +301,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /**
      * This method to update Milestone IsSelected status
+     *
      * @param milestoneID
      * @param isSelected
-     * @return
+     * @return true
      */
     public boolean updateMilestoneIsSelectedStatus(String milestoneID, int isSelected) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -315,7 +320,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * This method to delete Milestone record
      *
      * @param id
-     * @return
+     * @return number of rows deleted
      */
     public Integer deleteMilestone(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -326,7 +331,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * This method to get all records
      *
-     * @return List
+     * @return list of Milestones
      */
     public List<HashMap<String, String>> getAllMilestone() {
         List<HashMap<String, String>> milestonesList = new ArrayList<>();
@@ -350,9 +355,141 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method will insert data into Plan Table
+     *
+     * @param planName
+     * @param planType
+     * @param paymentType
+     * @param premiumStartAge
+     * @param paymentAmount
+     * @param planDuration
+     * @param payoutAge
+     * @param payoutAmount
+     * @param payoutDuration
+     * @param planStatus
+     * @return true
+     */
+    public boolean insertPlan(String planName, String planType, String paymentType, int premiumStartAge,
+                              float paymentAmount, int planDuration, int payoutAge, float payoutAmount,
+                              int payoutDuration, String planStatus) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.PLAN_TABLE_PLAN_NAME, planName);
+        contentValues.put(SQLConstants.PLAN_TABLE_PLAN_TYPE, planType);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE, paymentType);
+        contentValues.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE, premiumStartAge);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT, paymentAmount);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE, payoutAge);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT, payoutAmount);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION, payoutDuration);
+        contentValues.put(SQLConstants.PLAN_TABLE_PLAN_STATUS, planStatus);
+
+        if (planDuration != -1) {
+            contentValues.put(SQLConstants.PLAN_TABLE_PLAN_DURATION, planDuration);
+        }
+        db.insert(SQLConstants.PLAN_TABLE, null, contentValues);
+        return true;
+    }
+
+    /**
+     * This method will update Plan details
+     *
+     * @param planID
+     * @param planName
+     * @param planType
+     * @param paymentType
+     * @param premiumStartAge
+     * @param paymentAmount
+     * @param planDuration
+     * @param payoutAge
+     * @param payoutAmount
+     * @param payoutDuration
+     * @param planStatus
+     * @return true
+     */
+    public boolean updatePlan(int planID, String planName, String planType, String paymentType,
+                              int premiumStartAge, float paymentAmount, int planDuration,
+                              int payoutAge, float payoutAmount, int payoutDuration, String planStatus) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.PLAN_TABLE_PLAN_NAME, planName);
+        contentValues.put(SQLConstants.PLAN_TABLE_PLAN_TYPE, planType);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE, paymentType);
+        contentValues.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE, premiumStartAge);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT, paymentAmount);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE, payoutAge);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT, payoutAmount);
+        contentValues.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION, payoutDuration);
+        contentValues.put(SQLConstants.PLAN_TABLE_PLAN_STATUS, planStatus);
+
+        if (planDuration != -1) {
+            contentValues.put(SQLConstants.PLAN_TABLE_PLAN_DURATION, planDuration);
+        }
+        db.update(SQLConstants.PLAN_TABLE, contentValues,
+                SQLConstants.PLAN_TABLE_PLAN_ID + " = ? ",
+                new String[]{String.valueOf(planID)});
+        return true;
+    }
+
+    /**
+     * This method to update Plan IsSelected status
+     *
+     * @param planID
+     * @param isSelected
+     * @return true
+     */
+    public boolean updatePlanIsSelectedStatus(String planID, int isSelected) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.PLAN_TABLE_IS_SELECTED, isSelected);
+        db.update(SQLConstants.PLAN_TABLE, contentValues,
+                SQLConstants.PLAN_TABLE_PLAN_ID + " = ? ",
+                new String[]{planID});
+        return true;
+    }
+
+    /**
+     * This method to delete Plan record
+     *
+     * @param id
+     * @return number of rows deleted
+     */
+    public Integer deletePlan(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(SQLConstants.PLAN_TABLE, "id = ? ",
+                new String[]{String.valueOf(id)});
+    }
+
+    /**
+     * This method to get all records
+     *
+     * @return list of Plans
+     */
+    public List<HashMap<String, String>> getAllPlan() {
+        List<HashMap<String, String>> plansList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.PLAN_TABLE, null);
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+            HashMap<String, String> plan = new HashMap<>();
+            plan.put(SQLConstants.PLAN_TABLE_PLAN_ID,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_ID))));
+            plan.put(SQLConstants.PLAN_TABLE_PLAN_NAME,
+                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            plan.put(SQLConstants.PLAN_TABLE_IS_SELECTED,
+                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_IS_SELECTED)));
+            plansList.add(plan);
+            res.moveToNext();
+        }
+        return plansList;
+    }
+
+    /**
      * This method to return number of rows in the table
      *
-     * @return int
+     * @return number of rows
      */
     public int numberOfRows(String tableName) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -381,5 +518,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
 //        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
 //        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+//        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
     }
 }
