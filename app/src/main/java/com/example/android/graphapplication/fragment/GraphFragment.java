@@ -249,7 +249,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mChart.getDescription().setEnabled(false);
         mChart.setPinchZoom(true);
 
-        mChart.animateY(3000);
+        //fixme commented animation code because the graph is lagging
+//        mChart.animateY(3000);
         mChart.setDrawGridBackground(false);
         //When false the value will be inside the bar graph but when set to true it will be outside of the graph
         mChart.setDrawValueAboveBar(false);

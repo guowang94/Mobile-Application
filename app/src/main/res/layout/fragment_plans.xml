@@ -12,7 +12,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <include
-        android:id="@+id/event_toolbar"
+        android:id="@+id/plans_toolbar"
         layout="@layout/toolbar_layout_transparent" />
 
     <android.support.v4.widget.NestedScrollView
@@ -23,8 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_toolbar"
-        tools:context=".fragment.EventsFragment">
+        app:layout_constraintTop_toBottomOf="@+id/plans_toolbar">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout"
@@ -49,7 +48,7 @@
                 android:id="@+id/empty_recycler_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/event_empty_recycler"
+                android:text="@string/plan_empty_recycler"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -60,7 +59,7 @@
                 app:layout_constraintVertical_bias="0.4" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/event_recycler_view"
+                android:id="@+id/plans_recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"

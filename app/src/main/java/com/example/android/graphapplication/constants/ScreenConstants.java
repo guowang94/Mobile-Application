@@ -12,6 +12,8 @@ public interface ScreenConstants {
     String SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR = "Foreigner/PR";
     String SEGMENTED_BUTTON_VALUE_ONE_TIME = "One-Time";
     String SEGMENTED_BUTTON_VALUE_RECURRING = "Recurring";
+    String SEGMENTED_BUTTON_VALUE_EXISTING_PLAN = "Existing Plan";
+    String SEGMENTED_BUTTON_VALUE_NON_EXISTING_PLAN = "Non-Existing Plan";
 
     //Navigation Fields name
     String NAV_PLANS = "Plans";
@@ -28,6 +30,9 @@ public interface ScreenConstants {
     String TOOLBAR_TITLE_MILESTONES = "Milestones";
     String TOOLBAR_TITLE_ENTER_USER_DETAILS = "Enter User Details";
     String TOOLBAR_TITLE_SCENARIO = "Add Scenarios";
+    String TOOLBAR_TITLE_ADD_EVENT = "Add Event";
+    String TOOLBAR_TITLE_ADD_MILESTONE = "Add Milestone";
+    String TOOLBAR_TITLE_ADD_PLAN = "Add Plan";
 
     //Graph Legend
     String GRAPH_LEGEND_ASSETS = "Total Assets";

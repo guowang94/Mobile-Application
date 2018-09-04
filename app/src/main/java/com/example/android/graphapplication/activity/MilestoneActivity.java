@@ -24,8 +24,6 @@ import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.satsuware.usefulviews.LabelledSpinner;
 
-import java.util.Calendar;
-
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 public class MilestoneActivity extends AppCompatActivity implements
@@ -98,7 +96,7 @@ public class MilestoneActivity extends AppCompatActivity implements
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();
-        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_MILESTONES);
+        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ADD_MILESTONE);
         mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         // Enable the top left button
@@ -137,8 +135,9 @@ public class MilestoneActivity extends AppCompatActivity implements
         mAgeSpinner.setItemsArray(ageRange);
         mAgeSpinner.setOnItemChosenListener(this);
 
-        //If the Milestone Action is edit, then it will display previous data
-        displayData();
+        if ("Edit".equalsIgnoreCase(milestoneAction) && currentMilestoneID != -1) {
+            displayData();
+        }
         Log.d(TAG, "initData: out");
     }
 
@@ -148,52 +147,50 @@ public class MilestoneActivity extends AppCompatActivity implements
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        if ("Edit".equalsIgnoreCase(milestoneAction) && currentMilestoneID != -1) {
-            Cursor rs = mydb.getData(SQLConstants.MILESTONE_TABLE, currentMilestoneID);
-            rs.moveToFirst();
+        Cursor rs = mydb.getData(SQLConstants.MILESTONE_TABLE, currentMilestoneID);
+        rs.moveToFirst();
 
-            String milestoneName = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME));
-            String milestoneType = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE));
-            String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR));
-            String description = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION));
-            String milestoneStatus = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS));
-            String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
-            String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
-            String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH)));
+        String milestoneName = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME));
+        String milestoneType = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE));
+        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR));
+        String description = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION));
+        String milestoneStatus = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS));
+        String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
+        String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
+        String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH)));
 
-            if (!rs.isClosed()) {
-                rs.close();
+        if (!rs.isClosed()) {
+            rs.close();
+        }
+
+        Log.d(TAG, "displayData: " + milestoneName);
+
+        mMilestoneNameInputLayout.getEditText().setText(milestoneName);
+
+        String[] milestoneArray = getResources().getStringArray(R.array.milestone_type_array);
+        for (int i = 0; i < milestoneArray.length; i++) {
+            if (milestoneArray[i].equalsIgnoreCase(milestoneType)) {
+                mMilestoneTypeSpinner.setSelection(i);
             }
+        }
 
-            Log.d(TAG, "displayData: " + milestoneName);
-
-            mMilestoneNameInputLayout.getEditText().setText(milestoneName);
-
-            String[] milestoneArray = getResources().getStringArray(R.array.milestone_type_array);
-            for (int i = 0; i < milestoneArray.length; i++) {
-                if (milestoneArray[i].equalsIgnoreCase(milestoneType)) {
-                    mMilestoneTypeSpinner.setSelection(i);
-                }
+        for (int i = 0; i < ageRange.length; i++) {
+            if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
+                mAgeSpinner.setSelection(i);
             }
+        }
 
-            for (int i = 0; i < ageRange.length; i++) {
-                if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
-                    mAgeSpinner.setSelection(i);
-                }
-            }
+        if (description != null && !description.equalsIgnoreCase("")) {
+            mMilestoneDescriptionInputLayout.getEditText().setText(description);
+        }
 
-            if (description != null && !description.equalsIgnoreCase("")) {
-                mMilestoneDescriptionInputLayout.getEditText().setText(description);
-            }
-
-            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equalsIgnoreCase(milestoneStatus)) {
-                mMilestoneStatusSegmentedButton.setPosition(0);
-                mAmountInputLayout.getEditText().setText(amount);
-            } else {
-                mMilestoneStatusSegmentedButton.setPosition(1);
-                mDurationInputLayout.getEditText().setText(duration);
-                mCostInputLayout.getEditText().setText(cost);
-            }
+        if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equalsIgnoreCase(milestoneStatus)) {
+            mMilestoneStatusSegmentedButton.setPosition(0);
+            mAmountInputLayout.getEditText().setText(amount);
+        } else {
+            mMilestoneStatusSegmentedButton.setPosition(1);
+            mDurationInputLayout.getEditText().setText(duration);
+            mCostInputLayout.getEditText().setText(cost);
         }
         Log.d(TAG, "displayData: out");
     }
@@ -342,6 +339,7 @@ public class MilestoneActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.save:
+                String milestoneName = mMilestoneNameInputLayout.getEditText().getText().toString();
                 String description = mMilestoneDescriptionInputLayout.getEditText().getText().toString();
                 String milestoneStatus = mMilestoneStatusSegmentedButton.getPosition() == 0 ?
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
@@ -350,31 +348,22 @@ public class MilestoneActivity extends AppCompatActivity implements
                 int duration = 0;
                 float costPerMonth = 0f;
 
+                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
+                    amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
+                } else {
+                    duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
+                    costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
+                }
+
                 if ("Create".equalsIgnoreCase(milestoneAction)) {
 
-                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
-                        amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
-                    } else {
-                        duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
-                        costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
-                    }
+                    mydb.insertMilestone(milestoneName, milestoneTypeSpinnerValue, ageSpinnerValue,
+                            description, milestoneStatus, amount, duration, costPerMonth);
 
-                    mydb.insertMilestone(mMilestoneNameInputLayout.getEditText().getText().toString(),
-                            milestoneTypeSpinnerValue, ageSpinnerValue, description, milestoneStatus,
-                            amount, duration, costPerMonth);
+                } else if ("Edit".equalsIgnoreCase(milestoneAction)) {
 
-                } else if ("Edit".equalsIgnoreCase(milestoneAction)){
-
-                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
-                        amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
-                    } else {
-                        duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
-                        costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
-                    }
-
-                    mydb.updateMilestone(currentMilestoneID, mMilestoneNameInputLayout.getEditText().getText().toString(),
-                            milestoneTypeSpinnerValue, ageSpinnerValue, description, milestoneStatus,
-                            amount, duration, costPerMonth);
+                    mydb.updateMilestone(currentMilestoneID, milestoneName, milestoneTypeSpinnerValue,
+                            ageSpinnerValue, description, milestoneStatus, amount, duration, costPerMonth);
                 }
 
                 startActivity(new Intent(this, MainActivity.class).putExtra(

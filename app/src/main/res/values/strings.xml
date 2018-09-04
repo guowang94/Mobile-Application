@@ -54,6 +54,19 @@
     <string name="cost_per_year">Cost Per Year</string>
     <string name="event_empty_recycler">Tap on \'+\' to add new Event</string>
     <string name="milestone_empty_recycler">Tap on \'+\' to add new Milestone</string>
+    <string name="plan_empty_recycler">Tap on \'+\' to add new Plan</string>
+
+    <!--Create Plan Screen-->
+    <string name="plan_name">Plan Name</string>
+    <string name="plan_type">Plan Type</string>
+    <string name="premium_start_age">Premium Start Age</string>
+    <string name="payment_amount">Payment Amount</string>
+    <string name="plan_duration">Plan Duration</string>
+    <string name="payout_age">Payout Age</string>
+    <string name="payout_amount">Payout Amount</string>
+    <string name="payout_duration">Payout Duration</string>
+    <string name="existing_plan">Existing Plan</string>
+    <string name="non_existing_plan">Non-Existing Plan</string>
 
     <!--List Row-->
     <string name="right_nav_icon">Right Nav icon</string>

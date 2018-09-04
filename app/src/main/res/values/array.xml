@@ -12,5 +12,16 @@
         <item>"House"</item>
         <item>"Education"</item>
     </array>
+
+    <array name="plan_type_array">
+        <item>Death</item>
+        <item>Total Permanent Disability(TPD)</item>
+        <item>Accident</item>
+        <item>Critical Illness</item>
+        <item>Disability</item>
+        <item>Hospitalisation</item>
+        <item>Investment</item>
+        <item>Savings</item>
+    </array>
 </resources>
 
