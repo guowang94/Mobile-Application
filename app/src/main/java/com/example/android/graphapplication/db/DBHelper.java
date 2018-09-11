@@ -113,7 +113,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @param eventName
      * @param eventType
-     * @param eventYear
+     * @param eventAge
      * @param eventDescription
      * @param eventStatus
      * @param amount
@@ -121,20 +121,20 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param costPerMonth
      * @return true
      */
-    public boolean insertEvent(String eventName, String eventType, String eventYear, String eventDescription,
+    public boolean insertEvent(String eventName, String eventType, String eventAge, String eventDescription,
                                String eventStatus, float amount, int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_NAME, eventName);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_TYPE, eventType);
-        contentValues.put(SQLConstants.EVENT_TABLE_EVENT_YEAR, eventYear);
+        contentValues.put(SQLConstants.EVENT_TABLE_EVENT_AGE, eventAge);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION, eventDescription);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_STATUS, eventStatus);
         if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
             contentValues.put(SQLConstants.EVENT_TABLE_AMOUNT, amount);
         } else {
             contentValues.put(SQLConstants.EVENT_TABLE_DURATION, duration);
-            contentValues.put(SQLConstants.EVENT_TABLE_COST_PER_MONTH, costPerMonth);
+            contentValues.put(SQLConstants.EVENT_TABLE_COST_PER_YEAR, costPerMonth);
         }
         db.insert(SQLConstants.EVENT_TABLE, null, contentValues);
         return true;
@@ -146,7 +146,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param eventID
      * @param eventName
      * @param eventType
-     * @param eventYear
+     * @param eventAge
      * @param eventDescription
      * @param eventStatus
      * @param amount
@@ -154,21 +154,21 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param costPerMonth
      * @return true
      */
-    public boolean updateEvent(int eventID, String eventName, String eventType, String eventYear,
+    public boolean updateEvent(int eventID, String eventName, String eventType, String eventAge,
                                String eventDescription, String eventStatus, float amount,
                                int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_NAME, eventName);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_TYPE, eventType);
-        contentValues.put(SQLConstants.EVENT_TABLE_EVENT_YEAR, eventYear);
+        contentValues.put(SQLConstants.EVENT_TABLE_EVENT_AGE, eventAge);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION, eventDescription);
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_STATUS, eventStatus);
         if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
             contentValues.put(SQLConstants.EVENT_TABLE_AMOUNT, amount);
         } else {
             contentValues.put(SQLConstants.EVENT_TABLE_DURATION, duration);
-            contentValues.put(SQLConstants.EVENT_TABLE_COST_PER_MONTH, costPerMonth);
+            contentValues.put(SQLConstants.EVENT_TABLE_COST_PER_YEAR, costPerMonth);
         }
         db.update(SQLConstants.EVENT_TABLE, contentValues,
                 SQLConstants.EVENT_TABLE_EVENT_ID + " = ? ",
@@ -223,6 +223,53 @@ public class DBHelper extends SQLiteOpenHelper {
                     String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_ID))));
             event.put(SQLConstants.EVENT_TABLE_EVENT_NAME,
                     res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            event.put(SQLConstants.EVENT_TABLE_EVENT_AGE,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+            event.put(SQLConstants.EVENT_TABLE_EVENT_STATUS,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
+            event.put(SQLConstants.EVENT_TABLE_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT))));
+            event.put(SQLConstants.EVENT_TABLE_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION))));
+            event.put(SQLConstants.EVENT_TABLE_COST_PER_YEAR,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_COST_PER_YEAR))));
+            event.put(SQLConstants.EVENT_TABLE_IS_SELECTED,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_IS_SELECTED)));
+            eventsList.add(event);
+            res.moveToNext();
+        }
+        return eventsList;
+    }
+
+    /**
+     * This method to get all selected event
+     *
+     * @return list of selected event
+     */
+    public List<HashMap<String, String>> getAllSelectedEvent() {
+        List<HashMap<String, String>> eventsList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.EVENT_TABLE +
+                " WHERE " + SQLConstants.EVENT_TABLE_IS_SELECTED + " = 1", null);
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+            HashMap<String, String> event = new HashMap<>();
+            event.put(SQLConstants.EVENT_TABLE_EVENT_ID,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_ID))));
+            event.put(SQLConstants.EVENT_TABLE_EVENT_NAME,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            event.put(SQLConstants.EVENT_TABLE_EVENT_AGE,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+            event.put(SQLConstants.EVENT_TABLE_EVENT_STATUS,
+                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
+            event.put(SQLConstants.EVENT_TABLE_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT))));
+            event.put(SQLConstants.EVENT_TABLE_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION))));
+            event.put(SQLConstants.EVENT_TABLE_COST_PER_YEAR,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_COST_PER_YEAR))));
             event.put(SQLConstants.EVENT_TABLE_IS_SELECTED,
                     res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_IS_SELECTED)));
             eventsList.add(event);
@@ -236,7 +283,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @param milestoneName
      * @param milestoneType
-     * @param milestoneYear
+     * @param milestoneAge
      * @param milestoneDescription
      * @param milestoneStatus
      * @param amount
@@ -244,20 +291,20 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param costPerMonth
      * @return true
      */
-    public boolean insertMilestone(String milestoneName, String milestoneType, String milestoneYear, String milestoneDescription,
+    public boolean insertMilestone(String milestoneName, String milestoneType, String milestoneAge, String milestoneDescription,
                                    String milestoneStatus, float amount, int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME, milestoneName);
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE, milestoneType);
-        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR, milestoneYear);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE, milestoneAge);
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION, milestoneDescription);
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS, milestoneStatus);
         if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
             contentValues.put(SQLConstants.MILESTONE_TABLE_AMOUNT, amount);
         } else {
             contentValues.put(SQLConstants.MILESTONE_TABLE_DURATION, duration);
-            contentValues.put(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH, costPerMonth);
+            contentValues.put(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR, costPerMonth);
         }
         db.insert(SQLConstants.MILESTONE_TABLE, null, contentValues);
         return true;
@@ -269,7 +316,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param milestoneID
      * @param milestoneName
      * @param milestoneType
-     * @param milestoneYear
+     * @param milestoneAge
      * @param milestoneDescription
      * @param milestoneStatus
      * @param amount
@@ -277,21 +324,21 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param costPerMonth
      * @return true
      */
-    public boolean updateMilestone(int milestoneID, String milestoneName, String milestoneType, String milestoneYear,
+    public boolean updateMilestone(int milestoneID, String milestoneName, String milestoneType, String milestoneAge,
                                    String milestoneDescription, String milestoneStatus, float amount,
                                    int duration, float costPerMonth) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME, milestoneName);
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE, milestoneType);
-        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR, milestoneYear);
+        contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE, milestoneAge);
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION, milestoneDescription);
         contentValues.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS, milestoneStatus);
         if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
             contentValues.put(SQLConstants.MILESTONE_TABLE_AMOUNT, amount);
         } else {
             contentValues.put(SQLConstants.MILESTONE_TABLE_DURATION, duration);
-            contentValues.put(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH, costPerMonth);
+            contentValues.put(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR, costPerMonth);
         }
         db.update(SQLConstants.MILESTONE_TABLE, contentValues,
                 SQLConstants.MILESTONE_TABLE_MILESTONE_ID + " = ? ",
@@ -346,6 +393,53 @@ public class DBHelper extends SQLiteOpenHelper {
                     String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
             milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME,
                     res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
+            milestone.put(SQLConstants.MILESTONE_TABLE_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT))));
+            milestone.put(SQLConstants.MILESTONE_TABLE_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION))));
+            milestone.put(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR))));
+            milestone.put(SQLConstants.MILESTONE_TABLE_IS_SELECTED,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_IS_SELECTED)));
+            milestonesList.add(milestone);
+            res.moveToNext();
+        }
+        return milestonesList;
+    }
+
+    /**
+     * This method to get all selected milestone
+     *
+     * @return list of selected milestone
+     */
+    public List<HashMap<String, String>> getAllSelectedMilestone() {
+        List<HashMap<String, String>> milestonesList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.MILESTONE_TABLE +
+                " WHERE " + SQLConstants.MILESTONE_TABLE_IS_SELECTED + " = 1", null);
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+            HashMap<String, String> milestone = new HashMap<>();
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_ID,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
+            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS,
+                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
+            milestone.put(SQLConstants.MILESTONE_TABLE_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT))));
+            milestone.put(SQLConstants.MILESTONE_TABLE_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION))));
+            milestone.put(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR))));
             milestone.put(SQLConstants.MILESTONE_TABLE_IS_SELECTED,
                     res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_IS_SELECTED)));
             milestonesList.add(milestone);
@@ -478,6 +572,61 @@ public class DBHelper extends SQLiteOpenHelper {
                     String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_ID))));
             plan.put(SQLConstants.PLAN_TABLE_PLAN_NAME,
                     res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE,
+                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
+            plan.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
+            plan.put(SQLConstants.PLAN_TABLE_PLAN_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT))));
+            plan.put(SQLConstants.PLAN_TABLE_IS_SELECTED,
+                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_IS_SELECTED)));
+            plansList.add(plan);
+            res.moveToNext();
+        }
+        return plansList;
+    }
+
+    /**
+     * This method to get all selected plan
+     *
+     * @return list of selected plan
+     */
+    public List<HashMap<String, String>> getAllSelectedPlan() {
+        List<HashMap<String, String>> plansList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + SQLConstants.PLAN_TABLE +
+                " WHERE " + SQLConstants.PLAN_TABLE_IS_SELECTED + " = 1", null);
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+            HashMap<String, String> plan = new HashMap<>();
+            plan.put(SQLConstants.PLAN_TABLE_PLAN_ID,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_ID))));
+            plan.put(SQLConstants.PLAN_TABLE_PLAN_NAME,
+                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE,
+                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
+            plan.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
+            plan.put(SQLConstants.PLAN_TABLE_PLAN_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION,
+                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
+            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT,
+                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT))));
             plan.put(SQLConstants.PLAN_TABLE_IS_SELECTED,
                     res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_IS_SELECTED)));
             plansList.add(plan);

@@ -120,10 +120,6 @@ public class MilestoneFragment extends Fragment {
             this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
         }
 
-        for (int i = 0; i < milestonesModelList.size();i++) {
-            Log.d(TAG, "initData: TESTING: " + milestonesModelList.get(i).getTitle());
-        }
-
         if (milestonesModelList.size() == 0) {
             mEmptyRecyclerTextView.setVisibility(View.VISIBLE);
         } else {

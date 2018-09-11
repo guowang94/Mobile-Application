@@ -33,23 +33,23 @@ public interface SQLConstants {
     String EVENT_TABLE_EVENT_ID = "id";
     String EVENT_TABLE_EVENT_NAME = "event_name";
     String EVENT_TABLE_EVENT_TYPE = "event_type";
-    String EVENT_TABLE_EVENT_YEAR = "event_year";
+    String EVENT_TABLE_EVENT_AGE = "event_age";
     String EVENT_TABLE_EVENT_DESCRIPTION = "event_description";
     String EVENT_TABLE_EVENT_STATUS = "event_status";
     String EVENT_TABLE_AMOUNT = "amount";
     String EVENT_TABLE_DURATION = "duration";
-    String EVENT_TABLE_COST_PER_MONTH = "cost_per_month";
+    String EVENT_TABLE_COST_PER_YEAR = "cost_per_year";
     String EVENT_TABLE_IS_SELECTED = "is_selected";
 
     String MILESTONE_TABLE_MILESTONE_ID = "id";
     String MILESTONE_TABLE_MILESTONE_NAME = "milestone_name";
     String MILESTONE_TABLE_MILESTONE_TYPE = "milestone_type";
-    String MILESTONE_TABLE_MILESTONE_YEAR = "milestone_year";
+    String MILESTONE_TABLE_MILESTONE_AGE = "milestone_age";
     String MILESTONE_TABLE_MILESTONE_DESCRIPTION = "milestone_description";
     String MILESTONE_TABLE_MILESTONE_STATUS = "milestone_status";
     String MILESTONE_TABLE_AMOUNT = "amount";
     String MILESTONE_TABLE_DURATION = "duration";
-    String MILESTONE_TABLE_COST_PER_MONTH = "cost_per_month";
+    String MILESTONE_TABLE_COST_PER_YEAR = "cost_per_year";
     String MILESTONE_TABLE_IS_SELECTED = "is_selected";
 
     String PLAN_TABLE_PLAN_ID = "id";
@@ -95,12 +95,12 @@ public interface SQLConstants {
             + EVENT_TABLE_EVENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + EVENT_TABLE_EVENT_NAME + " TEXT NOT NULL, "
             + EVENT_TABLE_EVENT_TYPE + " TEXT NOT NULL, "
-            + EVENT_TABLE_EVENT_YEAR + " TEXT NOT NULL, "
+            + EVENT_TABLE_EVENT_AGE + " TEXT NOT NULL, "
             + EVENT_TABLE_EVENT_DESCRIPTION + " TEXT , "
             + EVENT_TABLE_EVENT_STATUS + " TEXT NOT NULL, "
             + EVENT_TABLE_AMOUNT + " FLOAT DEFAULT 0.0, "
-            + EVENT_TABLE_DURATION + " INTEGER DEFAULT 0, "
-            + EVENT_TABLE_COST_PER_MONTH + " FLOAT DEFAULT 0.0, "
+            + EVENT_TABLE_DURATION + " INTEGER DEFAULT 1, "
+            + EVENT_TABLE_COST_PER_YEAR + " FLOAT DEFAULT 0.0, "
             + EVENT_TABLE_IS_SELECTED + " INTEGER DEFAULT 0);";
 
     String CREATE_MILESTONE_TABLE = "CREATE TABLE "
@@ -108,12 +108,12 @@ public interface SQLConstants {
             + MILESTONE_TABLE_MILESTONE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + MILESTONE_TABLE_MILESTONE_NAME + " TEXT NOT NULL, "
             + MILESTONE_TABLE_MILESTONE_TYPE + " TEXT NOT NULL, "
-            + MILESTONE_TABLE_MILESTONE_YEAR + " TEXT NOT NULL, "
+            + MILESTONE_TABLE_MILESTONE_AGE + " TEXT NOT NULL, "
             + MILESTONE_TABLE_MILESTONE_DESCRIPTION + " TEXT , "
             + MILESTONE_TABLE_MILESTONE_STATUS + " TEXT NOT NULL, "
             + MILESTONE_TABLE_AMOUNT + " FLOAT DEFAULT 0.0, "
-            + MILESTONE_TABLE_DURATION + " INTEGER DEFAULT 0, "
-            + MILESTONE_TABLE_COST_PER_MONTH + " FLOAT DEFAULT 0.0, "
+            + MILESTONE_TABLE_DURATION + " INTEGER DEFAULT 1, "
+            + MILESTONE_TABLE_COST_PER_YEAR + " FLOAT DEFAULT 0.0, "
             + MILESTONE_TABLE_IS_SELECTED + " INTEGER DEFAULT 0);";
 
     String CREATE_PLAN_TABLE = "CREATE TABLE "
@@ -124,7 +124,7 @@ public interface SQLConstants {
             + PLAN_TABLE_PAYMENT_TYPE + " TEXT NOT NULL, "
             + PLAN_TABLE_PREMIUM_START_AGE + " INTEGER NOT NULL, "
             + PLAN_TABLE_PAYMENT_AMOUNT + " FLOAT NOT NULL, "
-            + PLAN_TABLE_PLAN_DURATION + " INTEGER DEFAULT 0, "
+            + PLAN_TABLE_PLAN_DURATION + " INTEGER DEFAULT 1, "
             + PLAN_TABLE_PAYOUT_AGE + " INTEGER NOT NULL, "
             + PLAN_TABLE_PAYOUT_DURATION + " INTEGER NOT NULL, "
             + PLAN_TABLE_PAYOUT_AMOUNT + " FLOAT NOT NULL, "

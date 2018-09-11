@@ -47,6 +47,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,7 +62,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
-    private String graphStatus = null;
+
+    private List<HashMap<String, String>> eventList;
+    private List<HashMap<String, String>> milestoneList;
+    private List<HashMap<String, String>> planList;
 
     private DBHelper mydb;
 
@@ -93,13 +97,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             isDataLoaded = true;
         }
 
-        if (getArguments() != null) {
-            Log.d(TAG, "onCreateView: " + getArguments().getString(KeyConstants.INTENT_KEY_ACTION));
-            graphStatus = getArguments().getString(KeyConstants.INTENT_KEY_ACTION);
-            Log.d(TAG, "onCreateView: TESTING: " + graphStatus);
-            //todo if graphstatus == applied scenario, then call edit graph method
-        }
-
         Log.d(TAG, "onCreateView: out");
         return view;
     }
@@ -119,7 +116,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         } else {
             isViewShown = false;
         }
-        Log.d(TAG, "setUserVisibleHint: out");
+        Log.d(TAG, "setUserVisibleHint: out, isViewShown: " + isViewShown +
+                ", isViewLoaded: " + isViewLoaded + ", isDataLoaded: " + isDataLoaded);
     }
 
     /**
@@ -208,14 +206,13 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         super.onPause();
         isDataLoaded = false;
         isViewLoaded = false;
-        graphStatus = null;
     }
 
     /**
      * This method will show the graph
      */
     private void graphViewSetup() {
-
+        Log.d(TAG, "graphViewSetup: in");
         mChart.setDrawOrder(new CombinedChart.DrawOrder[]{
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
         });
@@ -237,20 +234,17 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             rs.close();
         }
 
-        CombinedData data = null;
-        //todo test this to see if the graph status is working properly
-        if (graphStatus != null && KeyConstants.INTENT_KEY_VALUE_APPLIED_SCENARIO.equals(graphStatus))
-            data = editGraphData(assets, monthlyIncome, fixedExpenses, variableExpenses, age,
-                    retirementAge, expectancy, increment, inflation);
-        else
-            data = getGraphData(assets, monthlyIncome, fixedExpenses, variableExpenses, age,
-                    retirementAge, expectancy, increment, inflation);
+        CombinedData data;
+        eventList = mydb.getAllSelectedEvent();
+        milestoneList = mydb.getAllSelectedMilestone();
+        planList = mydb.getAllSelectedPlan();
+
+        data = getGraphData(assets, monthlyIncome, fixedExpenses, variableExpenses, age,
+                retirementAge, expectancy, increment, inflation);
 
         mChart.getDescription().setEnabled(false);
         mChart.setPinchZoom(true);
 
-        //fixme commented animation code because the graph is lagging
-//        mChart.animateY(3000);
         mChart.setDrawGridBackground(false);
         //When false the value will be inside the bar graph but when set to true it will be outside of the graph
         mChart.setDrawValueAboveBar(false);
@@ -280,6 +274,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         mChart.setData(data);
         mChart.invalidate();
+        Log.d(TAG, "graphViewSetup: out");
     }
 
     /**
@@ -294,144 +289,12 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      * @param expectancy       The age when the user is tired of living on earth
      * @param increment
      * @param inflation
-     * @return ArrayList
+     * @return CombinedData for the graph
      */
     private CombinedData getGraphData(float assets, float grossIncome, float fixedExpenses,
-                                       float variableExpenses, int age, int retirementAge,
-                                       int expectancy, int increment, int inflation) {
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-        ArrayList<Entry> lineEntries = new ArrayList<>();
-
-        float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH))) * 0.8f;
-        float firstYearExpenses = (fixedExpenses + variableExpenses) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
-        float subsequentAnnualIncome = grossIncome * 12 * 0.8f;
-        float subsequentAnnualExpenses = (fixedExpenses + variableExpenses) * 12;
-        float annualIncome = 0f;
-        float annualExpenses = 0f;
-        float balance = 0f;
-        float cpfOrdinaryAccount = 0f;
-        float cpfSpecialAccount = 0f;
-        float cpfMedisaveAccount = 0f;
-        int shortfallAge = -1;
-        int expensesExceededIncomeAge = -1;
-
-        for (int i = age; i < expectancy + 1; i++) {
-            if (i < retirementAge + 1) {
-
-                if (i == age) {
-//                    Log.i(TAG, "getGraphData: first year");
-                    annualIncome = firstYearIncome * 0.8f;
-                    annualExpenses = firstYearExpenses;
-                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
-                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
-                } else if (i == age + 1) {
-//                    Log.i(TAG, "getGraphData: subsequent");
-                    annualIncome = subsequentAnnualIncome * (100 + increment) / 100;
-                    annualExpenses = subsequentAnnualExpenses * (100 + inflation) / 100;
-                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
-                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
-                } else {
-                    annualIncome = annualIncome * (100 + increment) / 100;
-                    annualExpenses = annualExpenses * (100 + inflation) / 100;
-                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
-                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
-                }
-
-                List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, i),
-                        cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount, i);
-                cpfOrdinaryAccount = cpfDistribution.get(0);
-                cpfSpecialAccount = cpfDistribution.get(1);
-                cpfMedisaveAccount = cpfDistribution.get(2);
-
-                //-------------Calculation for the graph---------------
-
-                float remainder = annualIncome - annualExpenses;
-
-                if (remainder < 0) {
-                    assets += remainder;
-                    remainder = 0;
-                }
-
-                barEntries.add(new BarEntry(i, new float[]{annualExpenses, remainder}));
-                lineEntries.add(new Entry(i, assets));
-
-                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
-
-                assets += remainder;
-
-                if (i == retirementAge) {
-                    balance = assets;
-                }
-
-            } else {
-                annualExpenses = annualExpenses * (100 + inflation) / 100;
-                assets -= annualExpenses;
-                barEntries.add(new BarEntry(i, new float[]{annualExpenses, 0}));
-                lineEntries.add(new Entry(i, assets));
-
-                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
-            }
-
-            if (assets < 0f) {
-                if (shortfallAge == -1) {
-                    shortfallAge = i;
-                }
-            }
-
-            if (annualExpenses > annualIncome) {
-                if (expensesExceededIncomeAge == -1) {
-                    expensesExceededIncomeAge = i;
-                }
-            }
-
-            if (i == expectancy) {
-                mydb.updateUser(cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount,
-                        balance, assets, shortfallAge, expensesExceededIncomeAge);
-            }
-        }
-
-        //----------- Bar Graph ------------
-        //BarDataSet is similar to series
-        BarDataSet barDataSet = new BarDataSet(barEntries, null);
-        barDataSet.setColors(getResources().getColor(R.color.expensesGraph),
-                getResources().getColor(R.color.incomeGraph));
-        barDataSet.setStackLabels(new String[]{ScreenConstants.GRAPH_LEGEND_EXPENSES,
-                ScreenConstants.GRAPH_LEGEND_INCOME});
-
-        //values will appear on the graph
-        barDataSet.setDrawValues(false);
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(barDataSet);
-
-        BarData barData = new BarData(dataSets);
-        barData.setValueFormatter(new MyValueFormatter());
-        barData.setValueTextColor(Color.BLACK);
-
-        //------------- Line Graph ------------
-        LineDataSet lineDataSet = new LineDataSet(lineEntries, ScreenConstants.GRAPH_LEGEND_ASSETS);
-        lineDataSet.setColor(getResources().getColor(R.color.purple));
-        lineDataSet.setLineWidth(2.5f);
-        lineDataSet.setCircleColor(getResources().getColor(R.color.purple));
-        lineDataSet.setCircleRadius(1f);
-        lineDataSet.setFillColor(getResources().getColor(R.color.purple));
-        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        lineDataSet.setDrawValues(false);
-
-        lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        LineData lineData = new LineData();
-        lineData.addDataSet(lineDataSet);
-
-        CombinedData combinedData = new CombinedData();
-        combinedData.setData(barData);
-        combinedData.setData(lineData);
-
-        return combinedData;
-    }
-
-    private CombinedData editGraphData(float assets, float grossIncome, float fixedExpenses,
                                       float variableExpenses, int age, int retirementAge,
                                       int expectancy, int increment, int inflation) {
+        Log.d(TAG, "getGraphData: in");
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<Entry> lineEntries = new ArrayList<>();
 
@@ -447,31 +310,32 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         float cpfMedisaveAccount = 0f;
         int shortfallAge = -1;
         int expensesExceededIncomeAge = -1;
+        List<Float> selectedScenarioValuesList = getCombineSelectedList(age, expectancy);
 
-        for (int i = age; i < expectancy + 1; i++) {
-            if (i < retirementAge + 1) {
+        for (int currentAge = age; currentAge <= expectancy; currentAge++) {
+            if (currentAge <= retirementAge) {
 
-                if (i == age) {
+                if (currentAge == age) {
 //                    Log.i(TAG, "getGraphData: first year");
                     annualIncome = firstYearIncome * 0.8f;
                     annualExpenses = firstYearExpenses;
-                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
-                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
-                } else if (i == age + 1) {
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
+                } else if (currentAge == age + 1) {
 //                    Log.i(TAG, "getGraphData: subsequent");
                     annualIncome = subsequentAnnualIncome * (100 + increment) / 100;
                     annualExpenses = subsequentAnnualExpenses * (100 + inflation) / 100;
-                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
-                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                 } else {
                     annualIncome = annualIncome * (100 + increment) / 100;
                     annualExpenses = annualExpenses * (100 + inflation) / 100;
-                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + i);
-                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + i);
+                    Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                 }
 
-                List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, i),
-                        cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount, i);
+                List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, currentAge),
+                        cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount, currentAge);
                 cpfOrdinaryAccount = cpfDistribution.get(0);
                 cpfSpecialAccount = cpfDistribution.get(1);
                 cpfMedisaveAccount = cpfDistribution.get(2);
@@ -485,39 +349,42 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     remainder = 0;
                 }
 
-                barEntries.add(new BarEntry(i, new float[]{annualExpenses, remainder}));
-                lineEntries.add(new Entry(i, assets));
+                assets += selectedScenarioValuesList.get(currentAge);
 
-                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
+                barEntries.add(new BarEntry(currentAge, new float[]{annualExpenses, remainder}));
+                lineEntries.add(new Entry(currentAge, assets));
+
+                Log.d(TAG, "getGraphData: assets: " + assets + " at " + currentAge);
 
                 assets += remainder;
 
-                if (i == retirementAge) {
+                if (currentAge == retirementAge) {
                     balance = assets;
                 }
 
             } else {
                 annualExpenses = annualExpenses * (100 + inflation) / 100;
                 assets -= annualExpenses;
-                barEntries.add(new BarEntry(i, new float[]{annualExpenses, 99990}));
-                lineEntries.add(new Entry(i, assets));
+                assets += selectedScenarioValuesList.get(currentAge);
+                barEntries.add(new BarEntry(currentAge, new float[]{annualExpenses, 0}));
+                lineEntries.add(new Entry(currentAge, assets));
 
-                Log.d(TAG, "getGraphData: assets: " + assets + " at " + i);
+                Log.d(TAG, "getGraphData: assets: " + assets + " at " + currentAge);
             }
 
             if (assets < 0f) {
                 if (shortfallAge == -1) {
-                    shortfallAge = i;
+                    shortfallAge = currentAge;
                 }
             }
 
             if (annualExpenses > annualIncome) {
                 if (expensesExceededIncomeAge == -1) {
-                    expensesExceededIncomeAge = i;
+                    expensesExceededIncomeAge = currentAge;
                 }
             }
 
-            if (i == expectancy) {
+            if (currentAge == expectancy) {
                 mydb.updateUser(cpfOrdinaryAccount, cpfSpecialAccount, cpfMedisaveAccount,
                         balance, assets, shortfallAge, expensesExceededIncomeAge);
             }
@@ -559,28 +426,30 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         combinedData.setData(barData);
         combinedData.setData(lineData);
 
+        Log.d(TAG, "getGraphData: out");
         return combinedData;
     }
 
     /**
      * this method will get the CPF Contribution
-     * @param annualIncome
-     * @param i current index
-     * @return float
+     *
+     * @param annualIncome Annual Income
+     * @param currentAge   Current age
+     * @return CPF Contribution
      */
-    public float getCPFContribution(float annualIncome, int i) {
+    public float getCPFContribution(float annualIncome, int currentAge) {
         float cpfContribution;
-        if (i <= 55) {
+        if (currentAge <= 55) {
             cpfContribution = annualIncome * 0.37f;
             if (cpfContribution > 2200 * 12) {
                 cpfContribution = 2200 * 12;
             }
-        } else if (i <= 60) {
+        } else if (currentAge <= 60) {
             cpfContribution = annualIncome * 0.26f;
             if (cpfContribution > 1560 * 12) {
                 cpfContribution = 1560 * 12;
             }
-        } else if (i <= 65) {
+        } else if (currentAge <= 65) {
             cpfContribution = annualIncome * 0.165f;
             if (cpfContribution > 990 * 12) {
                 cpfContribution = 990 * 12;
@@ -596,11 +465,12 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
     /**
      * This method to get CPF Distribution
+     *
      * @param cpfContribution
      * @param cpfOrdinaryAccount
      * @param cpfSpecialAccount
      * @param cpfMedisaveAccount
-     * @param i current index
+     * @param i                  current index
      * @return List of float values
      */
     public List<Float> getCPFDistribution(float cpfContribution, float cpfOrdinaryAccount,
@@ -674,17 +544,166 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 startActivity(new Intent(getContext(), ScenarioActivity.class));
                 break;
             case R.id.action_export:
-                Snackbar.make(mLayout, "Export", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Do nothing
-                    }
-                }).show();
+                Snackbar.make(mLayout, "Export", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("CLOSE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Do nothing
+                            }
+                        }).show();
                 break;
 
             default:
                 Log.i(TAG, "onOptionsItemSelected: In default");
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    /**
+     * This method to get the combined data of Event, Milestone and Plan selected scenario
+     *
+     * @param age        Current age of user
+     * @param expectancy Expected to live age
+     * @return list of combined data
+     */
+    public List<Float> getCombineSelectedList(int age, int expectancy) {
+        List<Float> combineSelectedList = new ArrayList<>();
+        List<HashMap<String, String>> hashMapList = new ArrayList<>();
+
+        //add event till age value and recurring/amount value in hash map
+        for (int i = 0; i < eventList.size(); i++) {
+            HashMap<String, String> eventHashmap = new HashMap<>();
+
+            //if event status is Recurring, add current age and duration else current age
+            //Note: all duration -1 because it starts from current year
+            if (eventList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_STATUS)
+                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+
+                eventHashmap.put(KeyConstants.KEY_EVENT_START_AGE,
+                        eventList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                eventHashmap.put(KeyConstants.KEY_EVENT_TILL_AGE, String.valueOf(
+                        Integer.valueOf(eventList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE)) +
+                                Integer.valueOf(eventList.get(i).get(SQLConstants.EVENT_TABLE_DURATION)) - 1));
+                eventHashmap.put(KeyConstants.KEY_EVENT_RECURRING,
+                        String.valueOf(0 - Float.valueOf(eventList.get(i)
+                                .get(SQLConstants.EVENT_TABLE_COST_PER_YEAR))));
+            } else {
+                eventHashmap.put(KeyConstants.KEY_EVENT_START_AGE,
+                        eventList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                eventHashmap.put(KeyConstants.KEY_EVENT_TILL_AGE,
+                        eventList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                eventHashmap.put(KeyConstants.KEY_EVENT_RECURRING,
+                        String.valueOf(0 - Float.valueOf(eventList.get(i)
+                                .get(SQLConstants.EVENT_TABLE_AMOUNT))));
+            }
+
+            hashMapList.add(eventHashmap);
+        }
+
+        for (int i = 0; i < milestoneList.size(); i++) {
+            HashMap<String, String> milestoneHashmap = new HashMap<>();
+
+            //if milestone status is Recurring, add current age and duration else current age
+            if (milestoneList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)
+                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE,
+                        milestoneList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE, String.valueOf(
+                        Integer.valueOf(milestoneList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)) +
+                                Integer.valueOf(milestoneList.get(i).get(SQLConstants.MILESTONE_TABLE_DURATION)) - 1));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_RECURRING,
+                        String.valueOf(0 - Float.valueOf(milestoneList.get(i)
+                                .get(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR))));
+            } else {
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE, milestoneList.get(i).
+                        get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE, milestoneList.get(i).
+                        get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_RECURRING,
+                        String.valueOf(0 - Float.valueOf(milestoneList.get(i)
+                                .get(SQLConstants.MILESTONE_TABLE_AMOUNT))));
+            }
+
+            hashMapList.add(milestoneHashmap);
+        }
+
+        for (int i = 0; i < planList.size(); i++) {
+            HashMap<String, String> planHashmap = new HashMap<>();
+
+            //if plan status is Recurring, add current age and duration else current age
+            if (planList.get(i).get(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)
+                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+
+                planHashmap.put(KeyConstants.KEY_PLAN_START_AGE,
+                        planList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                planHashmap.put(KeyConstants.KEY_PLAN_TILL_AGE, String.valueOf(
+                        Integer.valueOf(planList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)) +
+                                Integer.valueOf(planList.get(i).get(SQLConstants.PLAN_TABLE_PLAN_DURATION)) - 1));
+            } else {
+                planHashmap.put(KeyConstants.KEY_PLAN_START_AGE,
+                        planList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                planHashmap.put(KeyConstants.KEY_PLAN_TILL_AGE,
+                        planList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+            }
+            planHashmap.put(KeyConstants.KEY_PLAN_RECURRING,
+                    String.valueOf(0 - Float.valueOf(planList.get(i)
+                            .get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
+
+            planHashmap.put(KeyConstants.KEY_PAYOUT_START_AGE,
+                    planList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AGE));
+
+            planHashmap.put(KeyConstants.KEY_PAYOUT_TILL_AGE, String.valueOf(
+                    Integer.valueOf(planList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AGE)) +
+                            Integer.valueOf(planList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)) - 1));
+
+            planHashmap.put(KeyConstants.KEY_PAYOUT_RECURRING, String.valueOf(
+                    Float.valueOf(planList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)) /
+                            Float.valueOf(planList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
+
+            hashMapList.add(planHashmap);
+        }
+
+        Log.d(TAG, "getCombineSelectedList: hashmap list: " + hashMapList.size());
+
+        //when add value to total when till age is more then or equal to current age
+        for (int currentAge = 0; currentAge <= expectancy; currentAge++) {
+            float totalValue = 0f;
+
+            for (HashMap<String, String> hashMap : hashMapList) {
+                if (hashMap.get(KeyConstants.KEY_EVENT_TILL_AGE) != null &&
+                        hashMap.get(KeyConstants.KEY_EVENT_START_AGE) != null &&
+                        currentAge >= Integer.valueOf(hashMap.get(KeyConstants.KEY_EVENT_START_AGE)) &&
+                        currentAge <= Integer.valueOf(hashMap.get(KeyConstants.KEY_EVENT_TILL_AGE))) {
+                    totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_EVENT_RECURRING));
+                }
+
+                if (hashMap.get(KeyConstants.KEY_MILESTONE_TILL_AGE) != null &&
+                        hashMap.get(KeyConstants.KEY_MILESTONE_START_AGE) != null &&
+                        currentAge >= Integer.valueOf(hashMap.get(KeyConstants.KEY_MILESTONE_START_AGE)) &&
+                        currentAge <= Integer.valueOf(hashMap.get(KeyConstants.KEY_MILESTONE_TILL_AGE))) {
+                    totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_MILESTONE_RECURRING));
+                }
+
+                if (hashMap.get(KeyConstants.KEY_PLAN_TILL_AGE) != null &&
+                        hashMap.get(KeyConstants.KEY_PLAN_START_AGE) != null &&
+                        currentAge >= Integer.valueOf(hashMap.get(KeyConstants.KEY_PLAN_START_AGE)) &&
+                        currentAge <= Integer.valueOf(hashMap.get(KeyConstants.KEY_PLAN_TILL_AGE))) {
+                    totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_PLAN_RECURRING));
+                }
+
+                if (hashMap.get(KeyConstants.KEY_PAYOUT_TILL_AGE) != null &&
+                        hashMap.get(KeyConstants.KEY_PAYOUT_START_AGE) != null &&
+                        currentAge >= Integer.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_START_AGE)) &&
+                        currentAge <= Integer.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_TILL_AGE))) {
+                    totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_RECURRING));
+                }
+            }
+            Log.d(TAG, "getCombineSelectedList: total: " + totalValue + ", current age: " + currentAge);
+
+            combineSelectedList.add(totalValue);
+        }
+
+        return combineSelectedList;
     }
 }
