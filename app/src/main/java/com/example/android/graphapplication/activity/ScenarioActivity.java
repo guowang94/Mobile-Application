@@ -149,7 +149,7 @@ public class ScenarioActivity extends AppCompatActivity {
         switch (menuItem.getItemId()) {
             case R.id.save:
                 Log.d(TAG, "onOptionsItemSelected: save");
-                if (scenarioSectionAdapter.getAllScenario().size() > 0) {
+                if (scenarioSectionAdapter != null) {
                     for (ScenarioSectionModel scenarioSectionModel : scenarioSectionAdapter.getAllScenario()) {
                         Log.d(TAG, "onOptionsItemSelected: " + scenarioSectionModel.getTitle());
 
@@ -187,6 +187,7 @@ public class ScenarioActivity extends AppCompatActivity {
                             }
                         }
                     }
+
                     startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(
                             KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 0).putExtra(
                             KeyConstants.INTENT_KEY_ACTION,

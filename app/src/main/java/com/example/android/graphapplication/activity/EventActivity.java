@@ -152,12 +152,12 @@ public class EventActivity extends AppCompatActivity implements
 
         String eventName = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME));
         String eventType = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE));
-        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_YEAR));
+        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE));
         String description = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION));
         String eventStatus = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS));
         String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
         String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
-        String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_COST_PER_MONTH)));
+        String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_COST_PER_YEAR)));
 
         if (!rs.isClosed()) {
             rs.close();

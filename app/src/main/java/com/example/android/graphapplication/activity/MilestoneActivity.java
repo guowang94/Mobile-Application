@@ -152,12 +152,12 @@ public class MilestoneActivity extends AppCompatActivity implements
 
         String milestoneName = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME));
         String milestoneType = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE));
-        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_YEAR));
+        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
         String description = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION));
         String milestoneStatus = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS));
         String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
         String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
-        String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_MONTH)));
+        String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR)));
 
         if (!rs.isClosed()) {
             rs.close();

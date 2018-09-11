@@ -10,4 +10,18 @@ public interface KeyConstants {
     String INTENT_KEY_VALUE_APPLIED_SCENARIO = "Applied Scenario";
     String INTENT_KEY_VALUE_EDIT = "Edit";
     String INTENT_KEY_VALUE_CREATE = "Create";
+
+    //Hashmap Key
+    String KEY_EVENT_START_AGE = "Event Start Age";
+    String KEY_EVENT_TILL_AGE = "Event Till Age";
+    String KEY_EVENT_RECURRING = "Event Recurring";
+    String KEY_MILESTONE_START_AGE = "Milestone Start Age";
+    String KEY_MILESTONE_TILL_AGE = "Milestone Till Age";
+    String KEY_MILESTONE_RECURRING = "Milestone Recurring";
+    String KEY_PLAN_START_AGE = "Plan Start Age";
+    String KEY_PLAN_TILL_AGE = "Plan Till Age";
+    String KEY_PLAN_RECURRING = "Plan Recurring";
+    String KEY_PAYOUT_START_AGE = "Payout Start Age";
+    String KEY_PAYOUT_TILL_AGE = "Payout Till Age";
+    String KEY_PAYOUT_RECURRING = "Payout Recurring";
 }
