@@ -30,7 +30,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/create_milestone_toolbar">
@@ -50,7 +50,7 @@
             app:layout_constraintStart_toStartOf="@id/name_input_layout"
             app:layout_constraintTop_toBottomOf="@id/name_input_layout"
             ls:labelText="@string/milestone_type"
-            ls:widgetColor="@color/form_color" />
+            app:widgetColor="@color/formColor" />
 
         <com.satsuware.usefulviews.LabelledSpinner
             android:id="@+id/age_spinner"
@@ -60,13 +60,13 @@
             app:layout_constraintStart_toStartOf="@id/milestone_type_spinner"
             app:layout_constraintTop_toBottomOf="@+id/milestone_type_spinner"
             ls:labelText="@string/age_occurred"
-            ls:widgetColor="@color/form_color" />
+            app:widgetColor="@color/formColor" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/description_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@id/age_spinner"
             app:layout_constraintStart_toStartOf="@id/age_spinner"
             app:layout_constraintTop_toBottomOf="@+id/age_spinner">
@@ -90,10 +90,10 @@
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/form_color"
+            app:sbg_borderColor="@color/formColor"
             app:sbg_borderSize="1dp"
             app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/form_color">
+            app:sbg_selectorColor="@color/formColor">
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
@@ -103,7 +103,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/one_time"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -114,7 +114,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/recurring"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>

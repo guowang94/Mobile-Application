@@ -157,7 +157,6 @@ public class MilestoneActivity extends AppCompatActivity implements
         String milestoneStatus = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS));
         String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
         String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
-        String cost = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_COST_PER_YEAR)));
 
         if (!rs.isClosed()) {
             rs.close();
@@ -190,7 +189,7 @@ public class MilestoneActivity extends AppCompatActivity implements
         } else {
             mMilestoneStatusSegmentedButton.setPosition(1);
             mDurationInputLayout.getEditText().setText(duration);
-            mCostInputLayout.getEditText().setText(cost);
+            mCostInputLayout.getEditText().setText(amount);
         }
         Log.d(TAG, "displayData: out");
     }
@@ -240,7 +239,7 @@ public class MilestoneActivity extends AppCompatActivity implements
 
             mLayout.removeView(findViewById(R.id.amount_input_layout));
 
-            mDurationInputLayout.setHint(getResources().getString(R.string.duration));
+            mDurationInputLayout.setHint(getResources().getString(R.string.duration_in_year));
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             if (mDurationEditText.getParent() == null) {
@@ -344,26 +343,25 @@ public class MilestoneActivity extends AppCompatActivity implements
                 String milestoneStatus = mMilestoneStatusSegmentedButton.getPosition() == 0 ?
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
-                float amount = 0f;
+                float amount;
                 int duration = 0;
-                float costPerMonth = 0f;
 
                 if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
                     amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
                 } else {
                     duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
-                    costPerMonth = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
+                    amount = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
                 }
 
                 if ("Create".equalsIgnoreCase(milestoneAction)) {
 
                     mydb.insertMilestone(milestoneName, milestoneTypeSpinnerValue, ageSpinnerValue,
-                            description, milestoneStatus, amount, duration, costPerMonth);
+                            description, milestoneStatus, amount, duration);
 
                 } else if ("Edit".equalsIgnoreCase(milestoneAction)) {
 
                     mydb.updateMilestone(currentMilestoneID, milestoneName, milestoneTypeSpinnerValue,
-                            ageSpinnerValue, description, milestoneStatus, amount, duration, costPerMonth);
+                            ageSpinnerValue, description, milestoneStatus, amount, duration);
                 }
 
                 startActivity(new Intent(this, MainActivity.class).putExtra(

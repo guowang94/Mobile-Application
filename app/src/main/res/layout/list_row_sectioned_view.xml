@@ -8,7 +8,7 @@
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/light_gray"
+        android:background="@color/lightGray"
         android:paddingBottom="4dp"
         android:paddingStart="16dp"
         android:paddingTop="4dp"

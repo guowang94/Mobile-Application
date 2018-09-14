@@ -38,7 +38,6 @@ public interface SQLConstants {
     String EVENT_TABLE_EVENT_STATUS = "event_status";
     String EVENT_TABLE_AMOUNT = "amount";
     String EVENT_TABLE_DURATION = "duration";
-    String EVENT_TABLE_COST_PER_YEAR = "cost_per_year";
     String EVENT_TABLE_IS_SELECTED = "is_selected";
 
     String MILESTONE_TABLE_MILESTONE_ID = "id";
@@ -49,7 +48,6 @@ public interface SQLConstants {
     String MILESTONE_TABLE_MILESTONE_STATUS = "milestone_status";
     String MILESTONE_TABLE_AMOUNT = "amount";
     String MILESTONE_TABLE_DURATION = "duration";
-    String MILESTONE_TABLE_COST_PER_YEAR = "cost_per_year";
     String MILESTONE_TABLE_IS_SELECTED = "is_selected";
 
     String PLAN_TABLE_PLAN_ID = "id";
@@ -100,7 +98,6 @@ public interface SQLConstants {
             + EVENT_TABLE_EVENT_STATUS + " TEXT NOT NULL, "
             + EVENT_TABLE_AMOUNT + " FLOAT DEFAULT 0.0, "
             + EVENT_TABLE_DURATION + " INTEGER DEFAULT 1, "
-            + EVENT_TABLE_COST_PER_YEAR + " FLOAT DEFAULT 0.0, "
             + EVENT_TABLE_IS_SELECTED + " INTEGER DEFAULT 0);";
 
     String CREATE_MILESTONE_TABLE = "CREATE TABLE "
@@ -113,7 +110,6 @@ public interface SQLConstants {
             + MILESTONE_TABLE_MILESTONE_STATUS + " TEXT NOT NULL, "
             + MILESTONE_TABLE_AMOUNT + " FLOAT DEFAULT 0.0, "
             + MILESTONE_TABLE_DURATION + " INTEGER DEFAULT 1, "
-            + MILESTONE_TABLE_COST_PER_YEAR + " FLOAT DEFAULT 0.0, "
             + MILESTONE_TABLE_IS_SELECTED + " INTEGER DEFAULT 0);";
 
     String CREATE_PLAN_TABLE = "CREATE TABLE "
