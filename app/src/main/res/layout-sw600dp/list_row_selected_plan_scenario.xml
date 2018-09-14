@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:layout_editor_absoluteY="25dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/template_text"
+        android:textColor="@color/listRowBlack"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/type"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="title" />
+
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/template_text"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/listRowBlack"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="type" />
+
+    <View
+        android:id="@+id/first_horizontal_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/type" />
+
+    <View
+        android:id="@+id/first_vertical_divider"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/second_vertical_divider"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_horizontal_divider" />
+
+    <View
+        android:id="@+id/second_vertical_divider"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/second_horizontal_divider"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/first_vertical_divider"
+        app:layout_constraintTop_toTopOf="@id/first_vertical_divider" />
+
+    <View
+        android:id="@+id/second_horizontal_divider"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/divider7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/second_vertical_divider"
+        app:layout_constraintTop_toTopOf="@id/first_vertical_divider" />
+
+    <View
+        android:id="@+id/divider7"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/divider8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/second_horizontal_divider"
+        app:layout_constraintTop_toTopOf="@id/first_vertical_divider" />
+
+    <View
+        android:id="@+id/divider8"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/divider7"
+        app:layout_constraintTop_toTopOf="@id/first_vertical_divider" />
+
+    <TextView
+        android:id="@+id/age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/template_text"
+        android:textColor="@color/listRowValue"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/first_horizontal_divider"
+        tools:text="age" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/age_occurred"
+        android:textColor="@color/listRowBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/age"
+        app:layout_constraintTop_toBottomOf="@+id/age" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/template_text"
+        android:textColor="@color/listRowValue"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/age"
+        app:layout_constraintStart_toEndOf="@+id/first_vertical_divider"
+        tools:text="amount" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/amount"
+        android:textColor="@color/listRowBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/amount"
+        app:layout_constraintTop_toBottomOf="@+id/amount" />
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/template_text"
+        android:textColor="@color/listRowValue"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/amount"
+        app:layout_constraintStart_toEndOf="@+id/second_vertical_divider"
+        tools:text="duration" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/duration"
+        android:textColor="@color/listRowBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/duration"
+        app:layout_constraintTop_toBottomOf="@+id/duration" />
+
+    <TextView
+        android:id="@+id/po_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/template_text"
+        android:textColor="@color/listRowValue"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/duration"
+        app:layout_constraintStart_toEndOf="@+id/second_horizontal_divider"
+        tools:text="po age" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/po_age_occurred"
+        android:textColor="@color/listRowBlack"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/po_age"
+        app:layout_constraintTop_toBottomOf="@+id/po_age"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        android:id="@+id/po_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/template_text"
+        android:textColor="@color/listRowValue"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/po_age"
+        app:layout_constraintStart_toEndOf="@+id/divider7"
+        tools:text="po amount" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/po_amount"
+        android:textColor="@color/listRowBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/po_amount"
+        app:layout_constraintTop_toBottomOf="@+id/po_amount" />
+
+    <TextView
+        android:id="@+id/po_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/template_text"
+        android:textColor="@color/listRowValue"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/po_amount"
+        app:layout_constraintStart_toEndOf="@+id/divider8"
+        tools:text="po duration" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/po_duration"
+        android:textColor="@color/listRowBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/po_duration"
+        app:layout_constraintTop_toBottomOf="@+id/po_duration" />
+
+</android.support.constraint.ConstraintLayout>

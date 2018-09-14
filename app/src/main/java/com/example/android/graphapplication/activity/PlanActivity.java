@@ -172,9 +172,9 @@ public class PlanActivity extends AppCompatActivity {
 //                            mPlanDurationInputLayout.getEditText().setHighlightColor(getResources().getColor(R.color.light_gray));
                         } else {
                             mPlanDurationInputLayout.setEnabled(true);
-//                            mPlanDurationInputLayout.getEditText().setTextColor(getResources().getColor(R.color.form_color));
-//                            mPlanDurationInputLayout.getEditText().setHintTextColor(getResources().getColor(R.color.form_color));
-//                            mPlanDurationInputLayout.getEditText().setHighlightColor(getResources().getColor(R.color.form_color));
+//                            mPlanDurationInputLayout.getEditText().setTextColor(getResources().getColor(R.color.formColor));
+//                            mPlanDurationInputLayout.getEditText().setHintTextColor(getResources().getColor(R.color.formColor));
+//                            mPlanDurationInputLayout.getEditText().setHighlightColor(getResources().getColor(R.color.formColor));
 //                            mPlanDurationInputLayout.getEditText().setHintTextColor(getResources().getColor(R.color.light_gray));
 //                            mPlanDurationInputLayout.getEditText().setHighlightColor(getResources().getColor(R.color.light_gray));
 //                            mPlanDurationInputLayout.setHintTextAppearance(R.style.inactive_input_layout_hint_color);

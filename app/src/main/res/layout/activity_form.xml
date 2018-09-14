@@ -48,7 +48,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/name_input_layout"
             app:layout_constraintStart_toStartOf="@+id/name_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/name_input_layout">
@@ -86,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/age_input_layout"
             app:layout_constraintStart_toStartOf="@+id/age_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/age_input_layout">
@@ -104,7 +104,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/retirement_age_input_layout"
             app:layout_constraintStart_toStartOf="@+id/retirement_age_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/retirement_age_input_layout">
@@ -129,10 +129,10 @@
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/form_color"
+            app:sbg_borderColor="@color/formColor"
             app:sbg_borderSize="1dp"
             app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/form_color">
+            app:sbg_selectorColor="@color/formColor">
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
@@ -142,7 +142,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/singaporean"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -153,7 +153,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/foreigner_or_pr"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
@@ -170,10 +170,10 @@
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/form_color"
+            app:sbg_borderColor="@color/formColor"
             app:sbg_borderSize="1dp"
             app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/form_color">
+            app:sbg_selectorColor="@color/formColor">
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
@@ -183,7 +183,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/employed"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -194,7 +194,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/self_employed"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
@@ -214,7 +214,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/retirement_age_input_layout"
             app:layout_constraintStart_toStartOf="@+id/retirement_age_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/textView3">
@@ -232,7 +232,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/income_input_layout"
             app:layout_constraintStart_toStartOf="@+id/income_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/income_input_layout">
@@ -250,7 +250,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/increment_input_layout"
             app:layout_constraintStart_toStartOf="@+id/increment_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/increment_input_layout">
@@ -268,7 +268,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/fixed_expenses_input_layout"
             app:layout_constraintStart_toStartOf="@+id/fixed_expenses_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/fixed_expenses_input_layout">
@@ -286,7 +286,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/variable_expenses_input_layout"
             app:layout_constraintStart_toStartOf="@+id/variable_expenses_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/variable_expenses_input_layout">
@@ -304,7 +304,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="@+id/inflation_input_layout"
             app:layout_constraintStart_toStartOf="@+id/inflation_input_layout"
             app:layout_constraintTop_toBottomOf="@+id/inflation_input_layout">

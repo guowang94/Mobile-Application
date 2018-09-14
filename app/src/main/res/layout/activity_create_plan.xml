@@ -27,7 +27,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/create_plan_toolbar">
@@ -46,7 +46,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name_input_layout">
@@ -83,10 +83,10 @@
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/form_color"
+            app:sbg_borderColor="@color/formColor"
             app:sbg_borderSize="1dp"
             app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/form_color">
+            app:sbg_selectorColor="@color/formColor">
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
@@ -96,7 +96,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/one_time"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -107,7 +107,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/recurring"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
@@ -119,7 +119,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_type_segmented_button">
@@ -138,7 +138,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/premium_start_age_input_layout">
@@ -157,7 +157,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_amount_input_layout">
@@ -176,7 +176,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/plan_duration_input_layout">
@@ -195,7 +195,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payout_age_input_layout">
@@ -214,7 +214,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColorHint="@color/form_color"
+            android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payout_amount_input_layout">
@@ -241,10 +241,10 @@
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/form_color"
+            app:sbg_borderColor="@color/formColor"
             app:sbg_borderSize="1dp"
             app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/form_color">
+            app:sbg_selectorColor="@color/formColor">
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
@@ -254,7 +254,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/existing_plan"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -265,7 +265,7 @@
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/non_existing_plan"
-                app:sb_textColor="@color/form_color"
+                app:sb_textColor="@color/formColor"
                 app:sb_textColor_onSelection="@color/white" />
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
