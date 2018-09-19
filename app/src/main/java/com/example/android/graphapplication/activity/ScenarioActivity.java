@@ -75,7 +75,6 @@ public class ScenarioActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_SCENARIO);
-        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -155,7 +154,7 @@ public class ScenarioActivity extends AppCompatActivity {
 
                         if (ScreenConstants.TOOLBAR_TITLE_EVENTS.equals(scenarioSectionModel.getTitle())) {
                             for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
-                                //Commented code is to print the value of the adapter
+                                //Commented code is to print the value of the adapter. used for debugging
 //                            Log.d(TAG, "onOptionsItemSelected: title: " + scenarioSectionModel.getScenarioModelList().get(i).getTitle() +
 //                            ", is selected: " + scenarioSectionModel.getScenarioModelList().get(i).isSelected() +
 //                            ", event id: " + eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_ID));

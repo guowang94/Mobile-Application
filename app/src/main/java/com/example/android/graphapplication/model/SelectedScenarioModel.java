@@ -4,6 +4,7 @@ public class SelectedScenarioModel {
 
     public static final int OTHER_SCENARIO = 0;
     public static final int PLAN_SCENARIO = 1;
+    public static final int SECTION_HEADER = 2;
 
     private int scenarioType;
     private String title;
@@ -14,6 +15,7 @@ public class SelectedScenarioModel {
     private String poAge;
     private String poAmount;
     private String poDuration;
+    private String sectionTitle;
 
     public SelectedScenarioModel(String title, String type, String age, String amount, String duration, int scenarioType) {
         this.title = title;
@@ -34,6 +36,19 @@ public class SelectedScenarioModel {
         this.poAmount = poAmount;
         this.poDuration = poDuration;
         this.scenarioType = scenarioType;
+    }
+
+    public SelectedScenarioModel(String sectionTitle, int scenarioType) {
+        this.scenarioType = scenarioType;
+        this.sectionTitle = sectionTitle;
+    }
+
+    public String getSectionTitle() {
+        return sectionTitle;
+    }
+
+    public void setSectionTitle(String sectionTitle) {
+        this.sectionTitle = sectionTitle;
     }
 
     public int getScenarioType() {
