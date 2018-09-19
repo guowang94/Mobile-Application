@@ -1,13 +1,42 @@
 package com.example.android.graphapplication.model;
 
 public class SummaryModel {
-    private int image;
-    private String title, value;
 
-    public SummaryModel(int image, String title, String value) {
+    public static final int SECTION_HEADER = 0;
+    public static final int CONTENT = 1;
+
+    private int image;
+    private String title;
+    private String value;
+    private String sectionTitle;
+    private int cellType;
+
+    public SummaryModel(int image, String title, String value, int cellType) {
         this.image = image;
         this.title = title;
         this.value = value;
+        this.cellType = cellType;
+    }
+
+    public SummaryModel(String sectionTitle, int cellType) {
+        this.sectionTitle = sectionTitle;
+        this.cellType = cellType;
+    }
+
+    public String getSectionTitle() {
+        return sectionTitle;
+    }
+
+    public void setSectionTitle(String sectionTitle) {
+        this.sectionTitle = sectionTitle;
+    }
+
+    public int getCellType() {
+        return cellType;
+    }
+
+    public void setCellType(int cellType) {
+        this.cellType = cellType;
     }
 
     public int getImage() {

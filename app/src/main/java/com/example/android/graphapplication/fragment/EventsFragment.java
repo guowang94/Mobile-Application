@@ -110,7 +110,6 @@ public class EventsFragment extends Fragment {
         Log.d(TAG, "initData: in");
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);
-        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         final Context context = getActivity().getApplicationContext();
 

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
@@ -67,6 +66,16 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    public class SectionViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mSectionTitle;
+
+        SectionViewHolder(View view) {
+            super(view);
+            mSectionTitle = view.findViewById(R.id.section_title);
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
         switch (selectedScenarioModelList.get(position).getScenarioType()) {
@@ -74,6 +83,8 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
                 return SelectedScenarioModel.OTHER_SCENARIO;
             case 1:
                 return SelectedScenarioModel.PLAN_SCENARIO;
+            case 2:
+                return SelectedScenarioModel.SECTION_HEADER;
             default:
                 return -1;
         }
@@ -92,6 +103,10 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
                 itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_row_selected_plan_scenario, parent, false);
                 return new PlanViewHolder(itemView);
+            case 2:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_row_section_header, parent, false);
+                return new SectionViewHolder(itemView);
             default:
                 return null;
         }
@@ -123,6 +138,10 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
                 planViewHolder.mPOAgeOccurred.setText(selectedScenarioModel.getPoAge());
                 planViewHolder.mPOAmount.setText(selectedScenarioModel.getPoAmount());
                 planViewHolder.mPODuration.setText(selectedScenarioModel.getPoDuration());
+                break;
+            case 2:
+                SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
+                sectionViewHolder.mSectionTitle.setText(selectedScenarioModel.getSectionTitle());
                 break;
             default:
                 Log.d(TAG, "onBindViewHolder: in default");

@@ -97,7 +97,6 @@ public class MilestoneActivity extends AppCompatActivity implements
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ADD_MILESTONE);
-        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         // Enable the top left button
         actionBar.setDisplayHomeAsUpEnabled(true);

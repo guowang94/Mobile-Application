@@ -77,6 +77,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.ExportActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

@@ -23,6 +23,17 @@
         app:layout_constraintTop_toBottomOf="@+id/graph_toolbar"
         app:layout_constraintVertical_weight="7" />
 
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@id/recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stack_bar_graph"
+        app:layout_constraintVertical_bias="1" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="0dp"
@@ -40,12 +51,12 @@
         android:id="@+id/empty_recycler_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         android:text="@string/graph_empty_recycler"
-        app:layout_constraintTop_toTopOf="@id/recycler_view"
-        app:layout_constraintStart_toStartOf="@id/recycler_view"
-        app:layout_constraintEnd_toEndOf="@id/recycler_view"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/recycler_view"
-        app:layout_constraintVertical_bias="0.4"/>
+        app:layout_constraintEnd_toEndOf="@id/recycler_view"
+        app:layout_constraintStart_toStartOf="@id/recycler_view"
+        app:layout_constraintTop_toTopOf="@id/recycler_view"
+        app:layout_constraintVertical_bias="0.4" />
 
 </android.support.constraint.ConstraintLayout>

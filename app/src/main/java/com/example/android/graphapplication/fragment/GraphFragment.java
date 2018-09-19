@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,14 +25,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.activity.ExportActivity;
 import com.example.android.graphapplication.activity.ScenarioActivity;
-import com.example.android.graphapplication.adapter.SelectedScenarioSectionAdapter;
+import com.example.android.graphapplication.adapter.SelectedScenarioAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.SelectedScenarioModel;
-import com.example.android.graphapplication.model.SelectedScenarioSectionModel;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -71,11 +72,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
 
-    private List<SelectedScenarioSectionModel> selectedScenarioSectionModelList = new ArrayList<>();
-    private List<SelectedScenarioModel> eventsModelList = new ArrayList<>();
-    private List<SelectedScenarioModel> milestonesModelList = new ArrayList<>();
-    private List<SelectedScenarioModel> plansModelList = new ArrayList<>();
-    private SelectedScenarioSectionAdapter selectedScenarioSectionAdapter;
+    private List<SelectedScenarioModel> selectedScenarioModelList = new ArrayList<>();
     private List<HashMap<String, String>> eventsList = new ArrayList<>();
     private List<HashMap<String, String>> milestonesList = new ArrayList<>();
     private List<HashMap<String, String>> plansList = new ArrayList<>();
@@ -143,7 +140,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_GRAPH);
-        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         mChart.setOnChartValueSelectedListener(this);
 
@@ -233,10 +229,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         eventsList.clear();
         milestonesList.clear();
         plansList.clear();
-        eventsModelList.clear();
-        milestonesModelList.clear();
-        plansModelList.clear();
-        selectedScenarioSectionModelList.clear();
+        selectedScenarioModelList.clear();
     }
 
     /**
@@ -590,13 +583,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 startActivity(new Intent(getContext(), ScenarioActivity.class));
                 break;
             case R.id.action_export:
-                Snackbar.make(mLayout, "Export", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("CLOSE", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Do nothing
-                            }
-                        }).show();
+                startActivity(new Intent(getContext(), ExportActivity.class));
                 break;
 
             default:
@@ -747,62 +734,66 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         return combineSelectedList;
     }
 
+    /**
+     * This method will setup the recycler view if there is any selected scenario
+     */
     public void recyclerViewSetup() {
-        for (HashMap<String, String> event : eventsList) {
-            eventsModelList.add(new SelectedScenarioModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME),
-                    event.get(SQLConstants.EVENT_TABLE_EVENT_TYPE),
-                    event.get(SQLConstants.EVENT_TABLE_EVENT_AGE),
-                    String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                            .format(Float.valueOf(event.get(SQLConstants.EVENT_TABLE_AMOUNT)))),
-                    event.get(SQLConstants.EVENT_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+        if (eventsList.size() > 0) {
+            selectedScenarioModelList.add(new SelectedScenarioModel(
+                    ScreenConstants.TOOLBAR_TITLE_EVENTS, SelectedScenarioModel.SECTION_HEADER));
+
+            for (HashMap<String, String> event : eventsList) {
+                selectedScenarioModelList.add(new SelectedScenarioModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME),
+                        event.get(SQLConstants.EVENT_TABLE_EVENT_TYPE),
+                        event.get(SQLConstants.EVENT_TABLE_EVENT_AGE),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                                .format(Float.valueOf(event.get(SQLConstants.EVENT_TABLE_AMOUNT)))),
+                        event.get(SQLConstants.EVENT_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+            }
         }
 
-        for (HashMap<String, String> milestone : milestonesList) {
-            milestonesModelList.add(new SelectedScenarioModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
-                    milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE),
-                    milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE),
-                    String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                            .format(Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_AMOUNT)))),
-                    milestone.get(SQLConstants.MILESTONE_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+        if (milestonesList.size() > 0) {
+            selectedScenarioModelList.add(new SelectedScenarioModel(
+                    ScreenConstants.TOOLBAR_TITLE_MILESTONES, SelectedScenarioModel.SECTION_HEADER));
+
+            for (HashMap<String, String> milestone : milestonesList) {
+                selectedScenarioModelList.add(new SelectedScenarioModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
+                        milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE),
+                        milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                                .format(Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_AMOUNT)))),
+                        milestone.get(SQLConstants.MILESTONE_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+            }
         }
 
-        for (HashMap<String, String> plan : plansList) {
-            plansModelList.add(new SelectedScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
-                    plan.get(SQLConstants.PLAN_TABLE_PLAN_TYPE),
-                    plan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE),
-                    String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                            .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)))),
-                    plan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION),
-                    plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE),
-                    String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                            .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)))),
-                    plan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION), SelectedScenarioModel.PLAN_SCENARIO));
+        if (plansList.size() > 0) {
+            selectedScenarioModelList.add(new SelectedScenarioModel(
+                    ScreenConstants.TOOLBAR_TITLE_PLANS, SelectedScenarioModel.SECTION_HEADER));
+
+            for (HashMap<String, String> plan : plansList) {
+                selectedScenarioModelList.add(new SelectedScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
+                        plan.get(SQLConstants.PLAN_TABLE_PLAN_TYPE),
+                        plan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                                .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)))),
+                        plan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION),
+                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                                .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)))),
+                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION), SelectedScenarioModel.PLAN_SCENARIO));
+            }
         }
 
-        if (eventsModelList.size() > 0) {
-            selectedScenarioSectionModelList.add(new SelectedScenarioSectionModel(
-                    ScreenConstants.TOOLBAR_TITLE_EVENTS, eventsModelList));
-        }
-
-        if (milestonesModelList.size() > 0) {
-            selectedScenarioSectionModelList.add(new SelectedScenarioSectionModel(
-                    ScreenConstants.TOOLBAR_TITLE_MILESTONES, milestonesModelList));
-        }
-
-        if (plansModelList.size() > 0) {
-            selectedScenarioSectionModelList.add(new SelectedScenarioSectionModel(
-                    ScreenConstants.TOOLBAR_TITLE_PLANS, plansModelList));
-        }
-
-        if (selectedScenarioSectionModelList.size() > 0) {
+        if (selectedScenarioModelList.size() > 0) {
             //Setup Recycler View
-            selectedScenarioSectionAdapter = new SelectedScenarioSectionAdapter(
-                    getActivity().getApplicationContext(), selectedScenarioSectionModelList);
+            SelectedScenarioAdapter selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
             RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
                     getActivity().getApplicationContext());
             mRecyclerView.setLayoutManager(mSummaryLayoutManager);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                    getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(selectedScenarioSectionAdapter);
+            mRecyclerView.setAdapter(selectedScenarioAdapter);
 
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         } else {

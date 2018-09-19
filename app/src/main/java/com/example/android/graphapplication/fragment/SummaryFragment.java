@@ -19,12 +19,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.adapter.SummarySectionAdapter;
+import com.example.android.graphapplication.adapter.SummaryAdapter;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.model.SummarySectionModel;
 import com.example.android.graphapplication.model.SummaryModel;
+import com.example.android.graphapplication.model.SummarySectionModel;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -38,10 +38,7 @@ public class SummaryFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TextView mToolbarTitle;
 
-    private List<SummarySectionModel> summarySectionModels = new ArrayList<>();
-    private List<SummaryModel> financialSummary = new ArrayList<>();
-    private List<SummaryModel> detailsSummary = new ArrayList<>();
-    private List<SummaryModel> cpfContributions = new ArrayList<>();
+    private List<SummaryModel> summary = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -104,7 +101,6 @@ public class SummaryFragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_SUMMARY);
-        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
@@ -140,32 +136,31 @@ public class SummaryFragment extends Fragment {
         shortfallAge = shortfallAge.equals("-1") ? "N/A" : shortfallAge;
         expensesExceededIncomeAge = expensesExceededIncomeAge.equals("-1") ? "N/A" : expensesExceededIncomeAge;
 
-        financialSummary.add(new SummaryModel(R.mipmap.ic_summary_total_shortfall, getString(R.string.total_shortfall), shortfall));
-        financialSummary.add(new SummaryModel(R.mipmap.ic_summary_balance, getString(R.string.balance_left_at_retirement), balance));
-        financialSummary.add(new SummaryModel(R.mipmap.ic_summary_expenses_exceeded_income, getString(R.string.expenses_exceeded_income_age), expensesExceededIncomeAge));
-        financialSummary.add(new SummaryModel(R.mipmap.ic_summary_initial_assets, getString(R.string.inital_assets), initialAssets));
-        summarySectionModels.add(new SummarySectionModel(getString(R.string.financial_summary), financialSummary));
+        summary.add(new SummaryModel(getString(R.string.financial_summary), SummaryModel.SECTION_HEADER));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_total_shortfall, getString(R.string.total_shortfall), shortfall, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_balance, getString(R.string.balance_left_at_retirement), balance, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_expenses_exceeded_income, getString(R.string.expenses_exceeded_income_age), expensesExceededIncomeAge, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_initial_assets, getString(R.string.inital_assets), initialAssets, SummaryModel.CONTENT));
 
-        detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_name, getString(R.string.name), name));
-        detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_age, getString(R.string.age), age));
-        detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_shortfallage, getString(R.string.shortfall_age), shortfallAge));
-        detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_retirementage, getString(R.string.retirement_age), retirementAge));
-        detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_jobstatus, getString(R.string.job_status), jobStatus));
-        detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_citizenship, getString(R.string.citizenship_status), citizenship));
-        detailsSummary.add(new SummaryModel(R.mipmap.ic_summary_income, getString(R.string.gross_monthly_income), monthlyIncome));
-        summarySectionModels.add(new SummarySectionModel(getString(R.string.details_summary), detailsSummary));
+        summary.add(new SummaryModel(getString(R.string.details_summary), SummaryModel.SECTION_HEADER));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_name, getString(R.string.name), name, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_age, getString(R.string.age), age, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_shortfallage, getString(R.string.shortfall_age), shortfallAge, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_retirementage, getString(R.string.retirement_age), retirementAge, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_jobstatus, getString(R.string.job_status), jobStatus, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_citizenship, getString(R.string.citizenship_status), citizenship, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_income, getString(R.string.gross_monthly_income), monthlyIncome, SummaryModel.CONTENT));
 
-        cpfContributions.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_special_account), specialAccount));
-        cpfContributions.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_medisave_account), medisaveAccount));
-        summarySectionModels.add(new SummarySectionModel(getString(R.string.cpf_contribution), cpfContributions));
+        summary.add(new SummaryModel(getString(R.string.cpf_contribution), SummaryModel.SECTION_HEADER));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_special_account), specialAccount, SummaryModel.CONTENT));
+        summary.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_medisave_account), medisaveAccount, SummaryModel.CONTENT));
 
-        //Recycler View Setup
-        SummarySectionAdapter summarySectionAdapter = new SummarySectionAdapter(
-                context, summarySectionModels);
+        SummaryAdapter summaryAdapter = new SummaryAdapter(summary);
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mSummaryLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(summarySectionAdapter);
+        mRecyclerView.setAdapter(summaryAdapter);
         Log.d(TAG, "initData: out");
     }
 
@@ -175,10 +170,7 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        summarySectionModels.clear();
-        financialSummary.clear();
-        detailsSummary.clear();
-        cpfContributions.clear();
+        summary.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }

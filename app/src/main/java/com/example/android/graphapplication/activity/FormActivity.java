@@ -89,7 +89,6 @@ public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemCh
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this toolbar
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ENTER_USER_DETAILS);
-        mToolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         mNameInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
