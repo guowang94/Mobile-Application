@@ -19,7 +19,7 @@
         android:top="1sp">
         <shape android:shape="rectangle">
             <!--the next line of code is something like alpha = 0.1-->
-            <solid android:color="#20ffffff"/>
+            <solid android:color="#20ffffff" />
         </shape>
 
     </item>

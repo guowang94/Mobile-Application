@@ -23,7 +23,7 @@ public class ScenarioAdapter extends RecyclerView.Adapter<ScenarioAdapter.MyView
         this.scenarioModelList = scenarioModelList;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTitle;
         private ImageView mImageView;

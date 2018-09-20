@@ -18,7 +18,12 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHold
     private static final String TAG = "CommonAdapter";
     private List<CommonModel> commonModels;
 
+    public CommonAdapter(List<CommonModel> commonModels) {
+        this.commonModels = commonModels;
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
+
         private TextView mTitle;
 
         MyViewHolder(View view) {
@@ -27,10 +32,6 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHold
             mTitle = view.findViewById(R.id.title);
         }
 
-    }
-
-    public CommonAdapter(List<CommonModel> commonModels) {
-        this.commonModels = commonModels;
     }
 
     @Override
