@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.RecyclerViewTouchListener;
-import com.example.android.graphapplication.activity.EventActivity;
 import com.example.android.graphapplication.activity.PlanActivity;
 import com.example.android.graphapplication.adapter.CommonAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;

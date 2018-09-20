@@ -23,7 +23,6 @@ import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.fragment.GraphFragment;
 import com.example.android.graphapplication.model.ScenarioModel;
 import com.example.android.graphapplication.model.ScenarioSectionModel;
 

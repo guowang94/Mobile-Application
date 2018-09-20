@@ -24,7 +24,6 @@ import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.SummaryModel;
-import com.example.android.graphapplication.model.SummarySectionModel;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

@@ -1,22 +1,17 @@
 package com.example.android.graphapplication.adapter;
 
 import android.content.Context;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.ScenarioModel;
 import com.example.android.graphapplication.model.ScenarioSectionModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSectionAdapter.MyViewHolder> {
