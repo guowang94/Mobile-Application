@@ -72,6 +72,10 @@ public class EventsFragment extends Fragment {
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
+        mEventsRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
 
@@ -129,9 +133,6 @@ public class EventsFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mEventsRecyclerView.setLayoutManager(layoutManager);
-        mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mEventsRecyclerView.addItemDecoration(new DividerItemDecoration(
-                context, LinearLayoutManager.VERTICAL));
         mEventsRecyclerView.setAdapter(mEventsAdapter);
 
         //Create on item touch listener
@@ -140,13 +141,13 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: event ID, " + eventsList.get(position)
-                        .get(SQLConstants.EVENT_TABLE_EVENT_ID));
+                Log.d(TAG, "onClick: event TABLE_ID, " + eventsList.get(position)
+                        .get(SQLConstants.TABLE_ID));
                 startActivity(new Intent(context, EventActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_EDIT)
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
                                 Integer.valueOf(eventsList.get(position)
-                                        .get(SQLConstants.EVENT_TABLE_EVENT_ID))));
+                                        .get(SQLConstants.TABLE_ID))));
             }
 
             @Override
@@ -164,7 +165,7 @@ public class EventsFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
                         mydb.deleteEvent(Integer.valueOf(eventsList.get(position)
-                                .get(SQLConstants.EVENT_TABLE_EVENT_ID)));
+                                .get(SQLConstants.TABLE_ID)));
                         mEventsAdapter.removeItem(position);
                     }
                 });

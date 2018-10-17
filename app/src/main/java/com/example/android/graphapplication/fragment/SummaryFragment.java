@@ -37,7 +37,7 @@ public class SummaryFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TextView mToolbarTitle;
 
-    private List<SummaryModel> summary = new ArrayList<>();
+    private List<SummaryModel> summaryModelList = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -61,6 +61,10 @@ public class SummaryFragment extends Fragment {
         mToolbar = view.findViewById(R.id.summary_toolbar);
         mRecyclerView = view.findViewById(R.id.recycerView);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
+
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
@@ -135,31 +139,30 @@ public class SummaryFragment extends Fragment {
         shortfallAge = shortfallAge.equals("-1") ? "N/A" : shortfallAge;
         expensesExceededIncomeAge = expensesExceededIncomeAge.equals("-1") ? "N/A" : expensesExceededIncomeAge;
 
-        summary.add(new SummaryModel(getString(R.string.financial_summary), SummaryModel.SECTION_HEADER));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_total_shortfall, getString(R.string.total_shortfall), shortfall, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_balance, getString(R.string.balance_left_at_retirement), balance, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_expenses_exceeded_income, getString(R.string.expenses_exceeded_income_age), expensesExceededIncomeAge, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_initial_assets, getString(R.string.inital_assets), initialAssets, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(getString(R.string.financial_summary), SummaryModel.SECTION_HEADER));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_total_shortfall, getString(R.string.total_shortfall), shortfall, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_balance, getString(R.string.balance_left_at_retirement), balance, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_expenses_exceeded_income, getString(R.string.expenses_exceeded_income_age), expensesExceededIncomeAge, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_initial_assets, getString(R.string.inital_assets), initialAssets, SummaryModel.CONTENT));
 
-        summary.add(new SummaryModel(getString(R.string.details_summary), SummaryModel.SECTION_HEADER));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_name, getString(R.string.name), name, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_age, getString(R.string.age), age, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_shortfallage, getString(R.string.shortfall_age), shortfallAge, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_retirementage, getString(R.string.retirement_age), retirementAge, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_jobstatus, getString(R.string.job_status), jobStatus, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_citizenship, getString(R.string.citizenship_status), citizenship, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_income, getString(R.string.gross_monthly_income), monthlyIncome, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(getString(R.string.details_summary), SummaryModel.SECTION_HEADER));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_name, getString(R.string.name), name, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_age, getString(R.string.age), age, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_shortfallage, getString(R.string.shortfall_age), shortfallAge, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_retirementage, getString(R.string.retirement_age), retirementAge, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_jobstatus, getString(R.string.job_status), jobStatus, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_citizenship, getString(R.string.citizenship_status), citizenship, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_income, getString(R.string.gross_monthly_income), monthlyIncome, SummaryModel.CONTENT));
 
-        summary.add(new SummaryModel(getString(R.string.cpf_contribution), SummaryModel.SECTION_HEADER));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_special_account), specialAccount, SummaryModel.CONTENT));
-        summary.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_medisave_account), medisaveAccount, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(getString(R.string.cpf_contribution), SummaryModel.SECTION_HEADER));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_special_account), specialAccount, SummaryModel.CONTENT));
+        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_medisave_account), medisaveAccount, SummaryModel.CONTENT));
 
-        SummaryAdapter summaryAdapter = new SummaryAdapter(summary);
+        SummaryAdapter summaryAdapter = new SummaryAdapter(summaryModelList);
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mSummaryLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(summaryAdapter);
+
         Log.d(TAG, "initData: out");
     }
 
@@ -169,7 +172,7 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        summary.clear();
+        summaryModelList.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }

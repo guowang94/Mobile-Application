@@ -343,7 +343,7 @@ public class MilestoneActivity extends AppCompatActivity implements
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
                 float amount;
-                int duration = 0;
+                int duration = 1;
 
                 if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
                     amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());

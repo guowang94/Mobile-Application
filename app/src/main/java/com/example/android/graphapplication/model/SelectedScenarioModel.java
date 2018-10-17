@@ -15,6 +15,7 @@ public class SelectedScenarioModel {
     private String poAge;
     private String poAmount;
     private String poDuration;
+    private String planStatus;
     private String sectionTitle;
 
     public SelectedScenarioModel(String title, String type, String age, String amount, String duration, int scenarioType) {
@@ -26,7 +27,7 @@ public class SelectedScenarioModel {
         this.scenarioType = scenarioType;
     }
 
-    public SelectedScenarioModel(String title, String type, String age, String amount, String duration, String poAge, String poAmount, String poDuration, int scenarioType) {
+    public SelectedScenarioModel(String title, String type, String age, String amount, String duration, String poAge, String poAmount, String poDuration, String planStatus, int scenarioType) {
         this.title = title;
         this.type = type;
         this.age = age;
@@ -35,12 +36,21 @@ public class SelectedScenarioModel {
         this.poAge = poAge;
         this.poAmount = poAmount;
         this.poDuration = poDuration;
+        this.planStatus = planStatus;
         this.scenarioType = scenarioType;
     }
 
     public SelectedScenarioModel(String sectionTitle, int scenarioType) {
         this.scenarioType = scenarioType;
         this.sectionTitle = sectionTitle;
+    }
+
+    public String getPlanStatus() {
+        return planStatus;
+    }
+
+    public void setPlanStatus(String planStatus) {
+        this.planStatus = planStatus;
     }
 
     public String getSectionTitle() {

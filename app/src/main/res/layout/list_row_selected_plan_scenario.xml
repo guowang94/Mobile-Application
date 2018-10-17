@@ -18,7 +18,7 @@
         android:text="@string/template_text"
         android:textColor="@color/listRowBlack"
         android:textSize="15sp"
-        app:layout_constraintEnd_toStartOf="@+id/type"
+        app:layout_constraintEnd_toStartOf="@+id/plan_status"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/template_text"
         android:textAlignment="viewEnd"
@@ -37,7 +38,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintStart_toEndOf="@+id/plan_status"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="type" />
 
@@ -85,7 +86,7 @@
         app:layout_constraintTop_toBottomOf="@id/first_horizontal_divider" />
 
     <TextView
-        android:id="@+id/age"
+        android:id="@+id/milestone_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -105,8 +106,8 @@
         android:text="@string/age_occurred"
         android:textColor="@color/listRowBlack"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/age"
-        app:layout_constraintTop_toBottomOf="@+id/age" />
+        app:layout_constraintStart_toStartOf="@+id/milestone_age"
+        app:layout_constraintTop_toBottomOf="@+id/milestone_age" />
 
     <TextView
         android:id="@+id/amount"
@@ -116,7 +117,7 @@
         android:text="@string/template_text"
         android:textColor="@color/listRowValue"
         android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/age"
+        app:layout_constraintBaseline_toBaselineOf="@+id/milestone_age"
         app:layout_constraintStart_toEndOf="@+id/first_vertical_divider"
         tools:text="amount" />
 
@@ -226,5 +227,22 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/po_duration"
         app:layout_constraintTop_toBottomOf="@+id/po_duration" />
+
+    <TextView
+        android:id="@+id/plan_status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/template_text"
+        android:textAlignment="center"
+        android:textColor="@color/listRowBlack"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/type"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="plan status" />
 
 </android.support.constraint.ConstraintLayout>

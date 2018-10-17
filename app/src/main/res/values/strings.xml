@@ -77,13 +77,19 @@
     <string name="po_amount">PO Amount</string>
     <string name="po_duration">PO Duration</string>
 
+    <!--Export Header-->
+    <string name="export_report_title">Analysis Report</string>
+    <string name="export_plan_name">Plan Name</string>
+    <string name="export_payment_start_end">Payment Start-End</string>
+    <string name="export_premium_status">Premium Status</string>
+    <string name="export_total_premium_payment">Total Premium Payment</string>
+    <string name="export_payout_start_end">Payout Start-End</string>
+    <string name="export_payout_status">Payout Status</string>
+    <string name="export_total_payout">Total Payout</string>
+
     <!--Option Menu-->
     <string name="action_apply_scenarios">Apply Scenarios</string>
     <string name="action_export">Export</string>
     <string name="save">Save</string>
-
-    <!--code string-->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>
