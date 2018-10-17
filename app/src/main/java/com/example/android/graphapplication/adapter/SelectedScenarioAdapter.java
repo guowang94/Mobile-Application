@@ -32,18 +32,20 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
         private TextView mPOAgeOccurred;
         private TextView mPOAmount;
         private TextView mPODuration;
+        private TextView mPlanStatus;
 
         PlanViewHolder(View view) {
             super(view);
 
             mTitle = view.findViewById(R.id.title);
             mType = view.findViewById(R.id.type);
-            mAgeOccurred = view.findViewById(R.id.age);
+            mAgeOccurred = view.findViewById(R.id.milestone_age);
             mAmount = view.findViewById(R.id.amount);
             mDuration = view.findViewById(R.id.duration);
             mPOAgeOccurred = view.findViewById(R.id.po_age);
             mPOAmount = view.findViewById(R.id.po_amount);
             mPODuration = view.findViewById(R.id.po_duration);
+            mPlanStatus = view.findViewById(R.id.plan_status);
         }
     }
 
@@ -60,7 +62,7 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             mTitle = view.findViewById(R.id.title);
             mType = view.findViewById(R.id.type);
-            mAgeOccurred = view.findViewById(R.id.age);
+            mAgeOccurred = view.findViewById(R.id.milestone_age);
             mAmount = view.findViewById(R.id.amount);
             mDuration = view.findViewById(R.id.duration);
         }
@@ -138,6 +140,7 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
                 planViewHolder.mPOAgeOccurred.setText(selectedScenarioModel.getPoAge());
                 planViewHolder.mPOAmount.setText(selectedScenarioModel.getPoAmount());
                 planViewHolder.mPODuration.setText(selectedScenarioModel.getPoDuration());
+                planViewHolder.mPlanStatus.setText(selectedScenarioModel.getPlanStatus());
                 break;
             case 2:
                 SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;

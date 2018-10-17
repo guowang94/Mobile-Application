@@ -80,19 +80,19 @@ public class ScenarioActivity extends AppCompatActivity {
         eventsList = mydb.getAllEvent();
         for (HashMap<String, String> event : eventsList) {
             eventsModelList.add(new ScenarioModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME),
-                    Integer.valueOf(event.get(SQLConstants.EVENT_TABLE_IS_SELECTED)) == 1));
+                    Integer.valueOf(event.get(SQLConstants.IS_SELECTED)) == 1));
         }
 
         milestonesList = mydb.getAllMilestone();
         for (HashMap<String, String> milestone : milestonesList) {
             milestonesModelList.add(new ScenarioModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
-                    Integer.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_IS_SELECTED)) == 1));
+                    Integer.valueOf(milestone.get(SQLConstants.IS_SELECTED)) == 1));
         }
 
         plansList = mydb.getAllPlan();
         for (HashMap<String, String> plan : plansList) {
             plansModelList.add(new ScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
-                    Integer.valueOf(plan.get(SQLConstants.PLAN_TABLE_IS_SELECTED)) == 1));
+                    Integer.valueOf(plan.get(SQLConstants.IS_SELECTED)) == 1));
         }
 
         if (eventsModelList.size() > 0) {
@@ -156,10 +156,10 @@ public class ScenarioActivity extends AppCompatActivity {
                                 //Commented code is to print the value of the adapter. used for debugging
 //                            Log.d(TAG, "onOptionsItemSelected: title: " + scenarioSectionModel.getScenarioModelList().get(i).getTitle() +
 //                            ", is selected: " + scenarioSectionModel.getScenarioModelList().get(i).isSelected() +
-//                            ", event id: " + eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_ID));
+//                            ", event id: " + eventsList.get(i).get(SQLConstants.TABLE_ID));
 
                                 mydb.updateEventIsSelectedStatus(eventsList.get(i)
-                                                .get(SQLConstants.EVENT_TABLE_EVENT_ID),
+                                                .get(SQLConstants.TABLE_ID),
                                         scenarioSectionModel.getScenarioModelList().get(i).isSelected()
                                                 ? 1 : 0);
                             }
@@ -169,7 +169,7 @@ public class ScenarioActivity extends AppCompatActivity {
                             for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
 
                                 mydb.updateMilestoneIsSelectedStatus(milestonesList.get(i)
-                                                .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID),
+                                                .get(SQLConstants.TABLE_ID),
                                         scenarioSectionModel.getScenarioModelList().get(i).isSelected()
                                                 ? 1 : 0);
                             }
@@ -179,7 +179,7 @@ public class ScenarioActivity extends AppCompatActivity {
                             for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
 
                                 mydb.updatePlanIsSelectedStatus(plansList.get(i)
-                                                .get(SQLConstants.PLAN_TABLE_PLAN_ID),
+                                                .get(SQLConstants.TABLE_ID),
                                         scenarioSectionModel.getScenarioModelList().get(i).isSelected()
                                                 ? 1 : 0);
                             }

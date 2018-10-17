@@ -24,4 +24,10 @@ public interface KeyConstants {
     String KEY_PAYOUT_START_AGE = "Payout Start Age";
     String KEY_PAYOUT_TILL_AGE = "Payout Till Age";
     String KEY_PAYOUT_RECURRING = "Payout Recurring";
+
+    //Preference File name
+    String PREFS_FILE_NAME = "PreferenceFile";
+
+    //Permission Key
+    int REQUEST_EXTERNAL_STORAGE = 1;
 }

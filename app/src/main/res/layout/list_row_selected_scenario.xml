@@ -56,7 +56,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/second_vertical_divider"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/age"
+        app:layout_constraintStart_toEndOf="@+id/milestone_age"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/first_horizontal_divider" />
 
@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@+id/first_horizontal_divider" />
 
     <TextView
-        android:id="@+id/age"
+        android:id="@+id/milestone_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -95,8 +95,8 @@
         android:textColor="@color/listRowBlack"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/age"
-        app:layout_constraintTop_toBottomOf="@+id/age"
+        app:layout_constraintStart_toStartOf="@+id/milestone_age"
+        app:layout_constraintTop_toBottomOf="@+id/milestone_age"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView

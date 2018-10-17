@@ -72,6 +72,10 @@ public class MilestoneFragment extends Fragment {
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
+        mMilestonesRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        mMilestonesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
 
@@ -114,8 +118,10 @@ public class MilestoneFragment extends Fragment {
         final Context context = getActivity().getApplicationContext();
 
         final List<HashMap<String, String>> milestoneList = mydb.getAllMilestone();
-        for (HashMap<String, String> milestone : milestoneList) {
-            this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+        if (milestonesModelList.size() == 0) {
+            for (HashMap<String, String> milestone : milestoneList) {
+                this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            }
         }
 
         if (milestonesModelList.size() == 0) {
@@ -129,9 +135,6 @@ public class MilestoneFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mMilestonesRecyclerView.setLayoutManager(layoutManager);
-        mMilestonesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mMilestonesRecyclerView.addItemDecoration(new DividerItemDecoration(
-                context, LinearLayoutManager.VERTICAL));
         mMilestonesRecyclerView.setAdapter(mMilestonesAdapter);
 
         //Create on item touch listener
@@ -140,13 +143,13 @@ public class MilestoneFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: milestone ID, " + milestoneList.get(position)
-                        .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID));
+                Log.d(TAG, "onClick: milestone TABLE_ID, " + milestoneList.get(position)
+                        .get(SQLConstants.TABLE_ID));
                 startActivity(new Intent(getActivity().getApplicationContext(), MilestoneActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, "Edit")
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
                                 Integer.valueOf(milestoneList.get(position)
-                                        .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID))));
+                                        .get(SQLConstants.TABLE_ID))));
             }
 
             @Override
@@ -165,7 +168,7 @@ public class MilestoneFragment extends Fragment {
                         // Write your code here to invoke YES event
                         mMilestonesAdapter.removeItem(position);
                         mydb.deleteMilestone(Integer.valueOf(milestoneList.get(position)
-                                .get(SQLConstants.MILESTONE_TABLE_MILESTONE_ID)));
+                                .get(SQLConstants.TABLE_ID)));
                     }
                 });
 

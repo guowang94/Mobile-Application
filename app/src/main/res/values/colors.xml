@@ -16,4 +16,7 @@
 
     <color name="listRowBlack">#6D6D72</color>
     <color name="listRowValue">#4A90E2</color>
+    <color name="listRowGrey">#14000000</color>
+    <color name="listRowGreen">#FF009245</color>
+    <color name="listRowRed">#FFFF0000</color>
 </resources>

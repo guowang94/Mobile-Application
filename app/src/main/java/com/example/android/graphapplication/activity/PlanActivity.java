@@ -297,7 +297,7 @@ public class PlanActivity extends AppCompatActivity {
                 String planStatus = mPlanStatusSegmentedButton.getPosition() == 0 ?
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_EXISTING_PLAN :
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_NON_EXISTING_PLAN;
-                int planDuration = 0;
+                int planDuration = 1;
 
 
                 if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(paymentType)) {

@@ -18,7 +18,6 @@ public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSection
 
     private Context context;
     private List<ScenarioSectionModel> scenarioSectionModelList;
-    private ScenarioAdapter scenarioAdapter;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
@@ -56,7 +55,7 @@ public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSection
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.mRecyclerView.setLayoutManager(linearLayoutManager);
         holder.mRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
-        scenarioAdapter = new ScenarioAdapter(scenarioSectionModel.getScenarioModelList());
+        ScenarioAdapter scenarioAdapter = new ScenarioAdapter(scenarioSectionModel.getScenarioModelList());
         holder.mRecyclerView.setAdapter(scenarioAdapter);
     }
 

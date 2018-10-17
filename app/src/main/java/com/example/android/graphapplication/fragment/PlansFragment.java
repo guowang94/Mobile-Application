@@ -72,6 +72,10 @@ public class PlansFragment extends Fragment {
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
+        mPlansRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        mPlansRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
 
@@ -114,8 +118,10 @@ public class PlansFragment extends Fragment {
         final Context context = getActivity().getApplicationContext();
 
         final List<HashMap<String, String>> plansList = mydb.getAllPlan();
-        for (HashMap<String, String> plan : plansList) {
-            this.plansModelList.add(new CommonModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+        if (plansModelList.size() == 0) {
+            for (HashMap<String, String> plan : plansList) {
+                this.plansModelList.add(new CommonModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            }
         }
 
         if (plansModelList.size() == 0) {
@@ -129,9 +135,6 @@ public class PlansFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mPlansRecyclerView.setLayoutManager(layoutManager);
-        mPlansRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mPlansRecyclerView.addItemDecoration(new DividerItemDecoration(
-                context, LinearLayoutManager.VERTICAL));
         mPlansRecyclerView.setAdapter(mPlansAdapter);
 
         //Create on item touch listener
@@ -140,13 +143,13 @@ public class PlansFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: plan ID, " + plansList.get(position)
-                        .get(SQLConstants.PLAN_TABLE_PLAN_ID));
+                Log.d(TAG, "onClick: plan TABLE_ID, " + plansList.get(position)
+                        .get(SQLConstants.TABLE_ID));
                 startActivity(new Intent(context, PlanActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_EDIT)
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
                                 Integer.valueOf(plansList.get(position)
-                                        .get(SQLConstants.PLAN_TABLE_PLAN_ID))));
+                                        .get(SQLConstants.TABLE_ID))));
             }
 
             @Override
@@ -164,7 +167,7 @@ public class PlansFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
                         mydb.deletePlan(Integer.valueOf(plansList.get(position)
-                                .get(SQLConstants.PLAN_TABLE_PLAN_ID)));
+                                .get(SQLConstants.TABLE_ID)));
                         mPlansAdapter.removeItem(position);
                     }
                 });

@@ -21,7 +21,7 @@ import com.example.android.graphapplication.validations.Validation;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
-public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemChosenListener*/ {
+public class FormActivity extends AppCompatActivity {
 
     private static final String TAG = "FormActivity";
     private TextInputLayout mNameInput;
@@ -67,16 +67,16 @@ public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemCh
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
-//        mNameInput.getEditText().setText("");
-//        mAgeInput.getEditText().setText("");
-//        mRetirementAgeInput.getEditText().setText("");
-//        mExpectancyInput.getEditText().setText("");
-//        mIncomeInput.getEditText().setText("");
-//        mIncrementInput.getEditText().setText("");
-//        mFixedExpensesInput.getEditText().setText("");
-//        mVariableExpensesInput.getEditText().setText("");
-//        mInflationInput.getEditText().setText("");
-//        mAssets.getEditText().setText("");
+        mNameInput.getEditText().setText("wang");
+        mAgeInput.getEditText().setText("24");
+        mRetirementAgeInput.getEditText().setText("55");
+        mExpectancyInput.getEditText().setText("90");
+        mIncomeInput.getEditText().setText("4000");
+        mIncrementInput.getEditText().setText("8");
+        mFixedExpensesInput.getEditText().setText("400");
+        mVariableExpensesInput.getEditText().setText("800");
+        mInflationInput.getEditText().setText("5");
+        mAssets.getEditText().setText("10000");
 
         initData();
         Log.d(TAG, "onCreate: out");
@@ -162,6 +162,24 @@ public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemCh
             }
         });
 
+        mIncrementInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    currencyValidation(mIncrementInput);
+                }
+            }
+        });
+
+        mInflationInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    currencyValidation(mInflationInput);
+                }
+            }
+        });
+
         mComputeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,13 +257,19 @@ public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemCh
                 }
 
                 try {
-                    blankFieldValidation(mIncrementInput);
+                    if (!blankFieldValidation(mIncrementInput)) {
+                        //Double check Gross Income Input
+                        currencyValidation(mIncrementInput);
+                    }
                 } catch (Exception e) {
                     //Do nothing
                 }
 
                 try {
-                    blankFieldValidation(mInflationInput);
+                    if (!blankFieldValidation(mInflationInput)) {
+                        //Double check Gross Income Input
+                        currencyValidation(mInflationInput);
+                    }
                 } catch (Exception e) {
                     //Do nothing
                 }
@@ -405,6 +429,12 @@ public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemCh
                     case R.id.variable_expenses_input_layout:
                         mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
                         break;
+                    case R.id.increment_input_layout:
+                        mIncrementInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INCREMENT);
+                        break;
+                    case R.id.inflation_input_layout:
+                        mInflationInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INFLATION);
+                        break;
                     default:
                         Log.d(TAG, "currencyValidation: In if() default");
                 }
@@ -421,6 +451,12 @@ public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemCh
                         break;
                     case R.id.variable_expenses_input_layout:
                         mVariableExpensesInput.setErrorEnabled(false);
+                        break;
+                    case R.id.increment_input_layout:
+                        mIncrementInput.setErrorEnabled(false);
+                        break;
+                    case R.id.inflation_input_layout:
+                        mInflationInput.setErrorEnabled(false);
                         break;
                     default:
                         Log.d(TAG, "currencyValidation: In else() default");
@@ -439,6 +475,12 @@ public class FormActivity extends AppCompatActivity /*, LabelledSpinner.OnItemCh
                     break;
                 case R.id.variable_expenses_input_layout:
                     mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
+                    break;
+                case R.id.increment_input_layout:
+                    mIncrementInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INCREMENT);
+                    break;
+                case R.id.inflation_input_layout:
+                    mInflationInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INFLATION);
                     break;
                 default:
                     Log.d(TAG, "currencyValidation: In catch() default");

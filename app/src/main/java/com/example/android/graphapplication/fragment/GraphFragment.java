@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -76,6 +77,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private List<HashMap<String, String>> eventsList = new ArrayList<>();
     private List<HashMap<String, String>> milestonesList = new ArrayList<>();
     private List<HashMap<String, String>> plansList = new ArrayList<>();
+    private SelectedScenarioAdapter selectedScenarioAdapter;
 
     private DBHelper mydb;
 
@@ -100,6 +102,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
+
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
@@ -223,6 +229,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
     @Override
     public void onPause() {
+        Log.d(TAG, "onPause: in");
         super.onPause();
         isDataLoaded = false;
         isViewLoaded = false;
@@ -230,6 +237,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         milestonesList.clear();
         plansList.clear();
         selectedScenarioModelList.clear();
+        Log.d(TAG, "onPause: out");
     }
 
     /**
@@ -360,9 +368,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
                 List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, currentAge),
                         currentAge);
-                cpfOrdinaryAccount = cpfDistribution.get(0);
-                cpfSpecialAccount = cpfDistribution.get(1);
-                cpfMedisaveAccount = cpfDistribution.get(2);
+                cpfOrdinaryAccount += cpfDistribution.get(0);
+                cpfSpecialAccount += cpfDistribution.get(1);
+                cpfMedisaveAccount += cpfDistribution.get(2);
 
                 //-------------Calculation for the graph---------------
 
@@ -432,8 +440,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         //----------- Bar Graph ------------
         //BarDataSet is similar to series
         BarDataSet barDataSet = new BarDataSet(barEntries, null);
-        barDataSet.setColors(Color.RED, getResources().getColor(R.color.expensesGraph),
-                getResources().getColor(R.color.incomeGraph), Color.GREEN);
+        barDataSet.setColors(Color.RED, ContextCompat.getColor(getActivity().getApplicationContext(), R.color.expensesGraph),
+                ContextCompat.getColor(getActivity().getApplicationContext(), R.color.incomeGraph), Color.GREEN);
         barDataSet.setStackLabels(new String[]{"Negative Value", ScreenConstants.GRAPH_LEGEND_EXPENSES,
                 ScreenConstants.GRAPH_LEGEND_INCOME, "Positive Value"});
 
@@ -449,11 +457,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         //------------- Line Graph ------------
         LineDataSet lineDataSet = new LineDataSet(lineEntries, ScreenConstants.GRAPH_LEGEND_ASSETS);
-        lineDataSet.setColor(getResources().getColor(R.color.lineGraph));
+        lineDataSet.setColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.lineGraph));
         lineDataSet.setLineWidth(2.5f);
-        lineDataSet.setCircleColor(getResources().getColor(R.color.lineGraph));
+        lineDataSet.setCircleColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.lineGraph));
         lineDataSet.setCircleRadius(1f);
-        lineDataSet.setFillColor(getResources().getColor(R.color.lineGraph));
+        lineDataSet.setFillColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.lineGraph));
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         lineDataSet.setDrawValues(false);
 
@@ -566,8 +574,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "onCreateOptionsMenu: in");
         inflater.inflate(R.menu.graph_fragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        Log.d(TAG, "onCreateOptionsMenu: out");
     }
 
     /**
@@ -764,6 +774,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                                 .format(Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_AMOUNT)))),
                         milestone.get(SQLConstants.MILESTONE_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
             }
+
         }
 
         if (plansList.size() > 0) {
@@ -771,6 +782,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     ScreenConstants.TOOLBAR_TITLE_PLANS, SelectedScenarioModel.SECTION_HEADER));
 
             for (HashMap<String, String> plan : plansList) {
+                Log.d(TAG, "recyclerViewSetup: plan status: " + plan.get(SQLConstants.PLAN_TABLE_PLAN_STATUS));
                 selectedScenarioModelList.add(new SelectedScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
                         plan.get(SQLConstants.PLAN_TABLE_PLAN_TYPE),
                         plan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE),
@@ -780,19 +792,18 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)))),
-                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION), SelectedScenarioModel.PLAN_SCENARIO));
+                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION),
+                        plan.get(SQLConstants.PLAN_TABLE_PLAN_STATUS),
+                        SelectedScenarioModel.PLAN_SCENARIO));
             }
         }
 
         if (selectedScenarioModelList.size() > 0) {
             //Setup Recycler View
-            SelectedScenarioAdapter selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
-            RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(
+            selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(
                     getActivity().getApplicationContext());
-            mRecyclerView.setLayoutManager(mSummaryLayoutManager);
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(
-                    getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setAdapter(selectedScenarioAdapter);
 
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
