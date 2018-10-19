@@ -183,34 +183,64 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 switch (h.getStackIndex()) {
                     case 0:
                         type = ", Negative Value: ";
+                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                        .format(entry.getX()) + type +
+                                        DecimalFormat.getCurrencyInstance(Locale.US)
+                                                .format(entry.getYVals()[h.getStackIndex()]),
+                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Do nothing
+                            }
+                        }).show();
                         break;
 
                     case 1:
                         type = ", Expenses: ";
+                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                        .format(entry.getX()) + type +
+                                        DecimalFormat.getCurrencyInstance(Locale.US)
+                                                .format(entry.getYVals()[h.getStackIndex()]),
+                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Do nothing
+                            }
+                        }).show();
                         break;
                     case 2:
                         type = ", Income: ";
+                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                        .format(entry.getX()) + type +
+                                        DecimalFormat.getCurrencyInstance(Locale.US)
+                                                .format(entry.getYVals()[h.getStackIndex()] +
+                                                        entry.getYVals()[1]),
+                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Do nothing
+                            }
+                        }).show();
                         break;
 
                     case 3:
                         type = ", Positive Value: ";
+                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                        .format(entry.getX()) + type +
+                                        DecimalFormat.getCurrencyInstance(Locale.US)
+                                                .format(entry.getYVals()[h.getStackIndex()]),
+                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Do nothing
+                            }
+                        }).show();
                         break;
 
                     default:
-                        Log.i(TAG, "Index Value: " + h.getStackIndex() + ", type not available");
-                        type = ", Others: ";
+                        Log.d(TAG, "onValueSelected: None of the ids have matched. " +
+                                "Current Graph Index: " + h.getStackIndex());
                 }
-
-                Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                .format(entry.getX()) + type +
-                                DecimalFormat.getCurrencyInstance(Locale.US)
-                                        .format(entry.getYVals()[h.getStackIndex()]),
-                        Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Do nothing
-                    }
-                }).show();
             } else {
                 Log.i("VAL SELECTED", "Value: " + entry.getY());
             }

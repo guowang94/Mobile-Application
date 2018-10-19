@@ -64,10 +64,9 @@ public class MilestoneActivity extends AppCompatActivity implements
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_milestone);
-        //TODO need to set onFocusChangeListener for programmatically created TextInputLayout
 
         mToolbar = findViewById(R.id.create_milestone_toolbar);
-        mMilestoneNameInputLayout = findViewById(R.id.name_input_layout);
+        mMilestoneNameInputLayout = findViewById(R.id.milestone_name_input_layout);
         mMilestoneTypeSpinner = findViewById(R.id.milestone_type_spinner);
         mAgeSpinner = findViewById(R.id.age_spinner);
         mMilestoneDescriptionInputLayout = findViewById(R.id.description_input_layout);
@@ -127,6 +126,12 @@ public class MilestoneActivity extends AppCompatActivity implements
                 });
 
         setupSpinners();
+
+        //Validation
+        if (mMilestoneNameInputLayout.getEditText() != null) {
+            mMilestoneNameInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForNameValidation(mMilestoneNameInputLayout));
+        }
 
         if ("Edit".equalsIgnoreCase(milestoneAction) && currentMilestoneID != -1) {
             displayData();
@@ -237,6 +242,12 @@ public class MilestoneActivity extends AppCompatActivity implements
                     mMilestoneStatusSegmentedButton.getId(), ConstraintSet.END, 0);
 
             constraintSet.applyTo(mLayout);
+
+            // Validation
+            if (mAmountInputLayout.getEditText() != null) {
+                mAmountInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mAmountInputLayout));
+            }
         } else {
             Log.d(TAG, "drawTextInputLayout: in else()");
 
@@ -283,6 +294,16 @@ public class MilestoneActivity extends AppCompatActivity implements
                     mDurationInputLayout.getId(), ConstraintSet.END, 0);
 
             constraintSet.applyTo(mLayout);
+
+            // Validation
+            if (mDurationInputLayout.getEditText() != null) {
+                mDurationInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mDurationInputLayout));
+            }
+            if (mCostInputLayout.getEditText() != null) {
+                mCostInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mCostInputLayout));
+            }
         }
         Log.d(TAG, "drawTextInputLayout: out");
     }

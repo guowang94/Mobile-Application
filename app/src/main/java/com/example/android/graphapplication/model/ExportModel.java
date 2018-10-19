@@ -109,111 +109,55 @@ public class ExportModel {
         return exportType;
     }
 
-    public void setExportType(int exportType) {
-        this.exportType = exportType;
-    }
-
     public String getMilestoneName() {
         return milestoneName;
-    }
-
-    public void setMilestoneName(String milestoneName) {
-        this.milestoneName = milestoneName;
     }
 
     public String getMilestoneType() {
         return milestoneType;
     }
 
-    public void setMilestoneType(String milestoneType) {
-        this.milestoneType = milestoneType;
-    }
-
     public String getMilestoneAgeRange() {
         return milestoneAgeRange;
-    }
-
-    public void setMilestoneAgeRange(String milestoneAgeRange) {
-        this.milestoneAgeRange = milestoneAgeRange;
     }
 
     public String getMilestoneStatus() {
         return milestoneStatus;
     }
 
-    public void setMilestoneStatus(String milestoneStatus) {
-        this.milestoneStatus = milestoneStatus;
-    }
-
     public String getMilestoneAmount() {
         return milestoneAmount;
-    }
-
-    public void setMilestoneAmount(String milestoneAmount) {
-        this.milestoneAmount = milestoneAmount;
     }
 
     public String getPlanName() {
         return planName;
     }
 
-    public void setPlanName(String planName) {
-        this.planName = planName;
-    }
-
     public String getPaymentAgeRange() {
         return paymentAgeRange;
-    }
-
-    public void setPaymentAgeRange(String paymentAgeRange) {
-        this.paymentAgeRange = paymentAgeRange;
     }
 
     public String getPremiumStatus() {
         return premiumStatus;
     }
 
-    public void setPremiumStatus(String premiumStatus) {
-        this.premiumStatus = premiumStatus;
-    }
-
     public String getTotalPremiumPayment() {
         return totalPremiumPayment;
-    }
-
-    public void setTotalPremiumPayment(String totalPremiumPayment) {
-        this.totalPremiumPayment = totalPremiumPayment;
     }
 
     public String getPayoutAgeRange() {
         return payoutAgeRange;
     }
 
-    public void setPayoutAgeRange(String payoutAgeRange) {
-        this.payoutAgeRange = payoutAgeRange;
-    }
-
     public String getPayoutStatus() {
         return payoutStatus;
-    }
-
-    public void setPayoutStatus(String payoutStatus) {
-        this.payoutStatus = payoutStatus;
     }
 
     public String getTotalPayout() {
         return totalPayout;
     }
 
-    public void setTotalPayout(String totalPayout) {
-        this.totalPayout = totalPayout;
-    }
-
     public List<ExportModel> getPlanTypeList() {
         return planTypeList;
-    }
-
-    public void setPlanTypeList(List<ExportModel> planTypeList) {
-        this.planTypeList = planTypeList;
     }
 }

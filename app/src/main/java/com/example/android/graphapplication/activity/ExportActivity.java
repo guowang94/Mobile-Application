@@ -283,7 +283,7 @@ public class ExportActivity extends AppCompatActivity {
      */
     private void setupReportRecyclerView() {
         UserModel userModel = mydb.getAllUser().get(0);
-        List<HashMap<String, String>> milestoneList = mydb.getAllMilestone();
+        List<HashMap<String, String>> milestoneList = mydb.getAllSelectedMilestone();
         List<HashMap<String, String>> existingPlanList = mydb.getAllExistingPlan();
         List<HashMap<String, String>> nonExistingPlanList = mydb.getAllNonExistingPlan();
         mydb.close();

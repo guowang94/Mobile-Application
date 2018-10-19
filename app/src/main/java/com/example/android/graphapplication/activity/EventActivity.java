@@ -65,10 +65,9 @@ public class EventActivity extends AppCompatActivity implements
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-        //TODO need to set onFocusChangeListener for programmatically created TextInputLayout
 
         mToolbar = findViewById(R.id.create_event_toolbar);
-        mEventNameInputLayout = findViewById(R.id.name_input_layout);
+        mEventNameInputLayout = findViewById(R.id.event_name_input_layout);
         mEventTypeSpinner = findViewById(R.id.event_type_spinner);
         mAgeSpinner = findViewById(R.id.age_spinner);
         mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
@@ -128,6 +127,12 @@ public class EventActivity extends AppCompatActivity implements
                 });
 
         setupSpinners();
+
+        //Validation
+        if (mEventNameInputLayout.getEditText() != null) {
+            mEventNameInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForNameValidation(mEventNameInputLayout));
+        }
 
         if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction) && currentEventID != -1) {
             displayData();
@@ -239,6 +244,12 @@ public class EventActivity extends AppCompatActivity implements
                     mEventStatusSegmentedButton.getId(), ConstraintSet.END, 0);
 
             constraintSet.applyTo(mLayout);
+
+            // Validation
+            if (mAmountInputLayout.getEditText() != null) {
+                mAmountInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mAmountInputLayout));
+            }
         } else {
             Log.d(TAG, "drawTextInputLayout: in else()");
 
@@ -285,6 +296,16 @@ public class EventActivity extends AppCompatActivity implements
                     mDurationInputLayout.getId(), ConstraintSet.END, 0);
 
             constraintSet.applyTo(mLayout);
+
+            // Validation
+            if (mDurationInputLayout.getEditText() != null) {
+                mDurationInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mDurationInputLayout));
+            }
+            if (mCostInputLayout.getEditText() != null) {
+                mCostInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mCostInputLayout));
+            }
         }
         Log.d(TAG, "drawTextInputLayout: out");
     }
@@ -368,23 +389,23 @@ public class EventActivity extends AppCompatActivity implements
 
                 if (mEventNameInputLayout.isErrorEnabled()) {
                     isErrorEnabled = true;
+                }
 
-                    if (mAmountInputLayout.isAttachedToWindow()) {
-                        if (mAmountInputLayout.isErrorEnabled()) {
-                            isErrorEnabled = true;
-                        }
+                if (mAmountInputLayout.isAttachedToWindow()) {
+                    if (mAmountInputLayout.isErrorEnabled()) {
+                        isErrorEnabled = true;
                     }
+                }
 
-                    if (mDurationInputLayout.isAttachedToWindow()) {
-                        if (mDurationInputLayout.isErrorEnabled()) {
-                            isErrorEnabled = true;
-                        }
+                if (mDurationInputLayout.isAttachedToWindow()) {
+                    if (mDurationInputLayout.isErrorEnabled()) {
+                        isErrorEnabled = true;
                     }
+                }
 
-                    if (mCostInputLayout.isAttachedToWindow()) {
-                        if (mCostInputLayout.isErrorEnabled()) {
-                            isErrorEnabled = true;
-                        }
+                if (mCostInputLayout.isAttachedToWindow()) {
+                    if (mCostInputLayout.isErrorEnabled()) {
+                        isErrorEnabled = true;
                     }
                 }
 

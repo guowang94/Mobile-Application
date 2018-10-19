@@ -49,48 +49,24 @@ public class SelectedScenarioModel {
         return planStatus;
     }
 
-    public void setPlanStatus(String planStatus) {
-        this.planStatus = planStatus;
-    }
-
     public String getSectionTitle() {
         return sectionTitle;
-    }
-
-    public void setSectionTitle(String sectionTitle) {
-        this.sectionTitle = sectionTitle;
     }
 
     public int getScenarioType() {
         return scenarioType;
     }
 
-    public void setScenarioType(int scenarioType) {
-        this.scenarioType = scenarioType;
-    }
-
     public String getPoAge() {
         return poAge;
-    }
-
-    public void setPoAge(String poAge) {
-        this.poAge = poAge;
     }
 
     public String getPoAmount() {
         return poAmount;
     }
 
-    public void setPoAmount(String poAmount) {
-        this.poAmount = poAmount;
-    }
-
     public String getPoDuration() {
         return poDuration;
-    }
-
-    public void setPoDuration(String poDuration) {
-        this.poDuration = poDuration;
     }
 
     public String getTitle() {
