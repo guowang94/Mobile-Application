@@ -110,7 +110,9 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
                         .inflate(R.layout.list_row_section_header, parent, false);
                 return new SectionViewHolder(itemView);
             default:
-                return null;
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_row_selected_scenario, parent, false);
+                return new OtherViewHolder(itemView);
         }
     }
 

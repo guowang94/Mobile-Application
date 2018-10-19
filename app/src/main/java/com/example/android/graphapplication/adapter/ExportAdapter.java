@@ -1,9 +1,7 @@
 package com.example.android.graphapplication.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -168,7 +166,9 @@ public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .inflate(R.layout.list_row_export_title_and_value, parent, false);
                 return new TitleAndValueViewHolder(itemView);
             default:
-                return null;
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_row_export_report_title, parent, false);
+                return new ReportTitleViewHolder(itemView);
         }
     }
 

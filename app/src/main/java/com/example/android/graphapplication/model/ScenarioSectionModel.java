@@ -22,8 +22,4 @@ public class ScenarioSectionModel {
     public List<ScenarioModel> getScenarioModelList() {
         return scenarioModelList;
     }
-
-    public void setScenarioModelList(List<ScenarioModel> scenarioModelList) {
-        this.scenarioModelList = scenarioModelList;
-    }
 }

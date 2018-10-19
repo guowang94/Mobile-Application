@@ -37,7 +37,7 @@ public class SummaryFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TextView mToolbarTitle;
 
-    private List<SummaryModel> summaryModelList = new ArrayList<>();
+    private List<SummaryModel> summaryModelList;
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -62,9 +62,13 @@ public class SummaryFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycerView);
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
 
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(
-                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        if (getActivity() != null) {
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                    getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        }
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        summaryModelList = new ArrayList<>();
 
         isViewLoaded = true;
         mydb = new DBHelper(getActivity().getApplicationContext());
@@ -101,8 +105,9 @@ public class SummaryFragment extends Fragment {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
-
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        }
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_SUMMARY);
 
         //Get the content from internal storage file

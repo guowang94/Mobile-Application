@@ -9,6 +9,6 @@
     <item name="nav_graph" type="id" />
 
     <item name="amount_input_layout" type="id" />
-    <item name="cost_input_layout" type="id" />
+    <item name="cost_per_year_input_layout" type="id" />
     <item name="duration_input_layout" type="id" />
 </resources>

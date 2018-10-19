@@ -32,6 +32,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="Widget.Design.TextInputLayout.textColorHint">
+        <item name="android:textColorHint">@color/formColor</item>
+    </style>
+
     <style name="landing_screen_get_started">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>

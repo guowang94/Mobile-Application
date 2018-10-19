@@ -12,7 +12,7 @@ public class PermissionUtil {
      * Check if version is marshmallow and above.
      * Used in deciding to ask runtime permission
      * */
-    public static boolean shouldAskPermission() {
+    private static boolean shouldAskPermission() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
     }
 

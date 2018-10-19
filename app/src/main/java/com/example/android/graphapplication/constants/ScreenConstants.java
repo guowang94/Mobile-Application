@@ -1,10 +1,6 @@
 package com.example.android.graphapplication.constants;
 
 public interface ScreenConstants {
-    //Summary Screen
-    String SUMMARY_BALANCE = "Balance";
-    String SUMMARY_SHORTFALL = "ShortFall";
-
     //Segmented Button Value
     String SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED = "Self-Employed";
     String SEGMENTED_BUTTON_VALUE_EMPLOYED = "Employed";

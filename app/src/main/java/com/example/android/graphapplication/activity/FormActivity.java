@@ -50,7 +50,7 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        mNameInput = findViewById(R.id.name_input_layout);
+        mNameInput = findViewById(R.id.user_name_input_layout);
         mAgeInput = findViewById(R.id.age_input_layout);
         mAssets = findViewById(R.id.assets_input_layout);
         mIncomeInput = findViewById(R.id.income_input_layout);
@@ -67,16 +67,16 @@ public class FormActivity extends AppCompatActivity {
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
-        mNameInput.getEditText().setText("wang");
-        mAgeInput.getEditText().setText("24");
-        mRetirementAgeInput.getEditText().setText("55");
-        mExpectancyInput.getEditText().setText("90");
-        mIncomeInput.getEditText().setText("4000");
-        mIncrementInput.getEditText().setText("8");
-        mFixedExpensesInput.getEditText().setText("400");
-        mVariableExpensesInput.getEditText().setText("800");
-        mInflationInput.getEditText().setText("5");
-        mAssets.getEditText().setText("10000");
+//        mNameInput.getEditText().setText("wang");
+//        mAgeInput.getEditText().setText("24");
+//        mRetirementAgeInput.getEditText().setText("55");
+//        mExpectancyInput.getEditText().setText("90");
+//        mIncomeInput.getEditText().setText("4000");
+//        mIncrementInput.getEditText().setText("8");
+//        mFixedExpensesInput.getEditText().setText("400");
+//        mVariableExpensesInput.getEditText().setText("800");
+//        mInflationInput.getEditText().setText("5");
+//        mAssets.getEditText().setText("10000");
 
         initData();
         Log.d(TAG, "onCreate: out");
@@ -90,188 +90,80 @@ public class FormActivity extends AppCompatActivity {
         // Get a support ActionBar corresponding to this toolbar
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ENTER_USER_DETAILS);
 
-        mNameInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    nameValidation();
-                }
-            }
-        });
-
-        mAgeInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    ageValidation();
-                }
-            }
-        });
-
-        mAssets.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    currencyValidation(mAssets);
-                }
-            }
-        });
-
-        mIncomeInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    currencyValidation(mIncomeInput);
-                }
-            }
-        });
-
-        mFixedExpensesInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    currencyValidation(mFixedExpensesInput);
-                }
-            }
-        });
-
-        mVariableExpensesInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    currencyValidation(mVariableExpensesInput);
-                }
-            }
-        });
-
-        mRetirementAgeInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    ageValidation();
-                }
-            }
-        });
-
-        mExpectancyInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    ageValidation();
-                }
-            }
-        });
-
-        mIncrementInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    currencyValidation(mIncrementInput);
-                }
-            }
-        });
-
-        mInflationInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    currencyValidation(mInflationInput);
-                }
-            }
-        });
+        // Set onFocusChangeListener
+        if (mNameInput.getEditText() != null)
+            mNameInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNameValidation(mNameInput));
+        if (mAgeInput.getEditText() != null)
+            mAgeInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
+        if (mAssets.getEditText() != null)
+            mAssets.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mAssets));
+        if (mIncomeInput.getEditText() != null)
+            mIncomeInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mIncomeInput));
+        if (mFixedExpensesInput.getEditText() != null)
+            mFixedExpensesInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mFixedExpensesInput));
+        if (mVariableExpensesInput.getEditText() != null)
+            mVariableExpensesInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mVariableExpensesInput));
+        if (mRetirementAgeInput.getEditText() != null)
+            mRetirementAgeInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
+        if (mExpectancyInput.getEditText() != null)
+            mExpectancyInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
+        if (mIncrementInput.getEditText() != null)
+            mIncrementInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mIncrementInput));
+        if (mInflationInput.getEditText() != null)
+            mInflationInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mInflationInput));
 
         mComputeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                try {
-                    if (!blankFieldValidation(mNameInput)) {
-                        //Double check Name Input
-                        nameValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mNameInput)) {
+                    //Double check Name Input
+                    validation.nameValidation(mNameInput);
                 }
 
-                try {
-                    if (!blankFieldValidation(mRetirementAgeInput)) {
-                        //Double check Retirement Age Input
-                        ageValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mRetirementAgeInput)) {
+                    //Double check Retirement Age Input
+                    ageValidation();
                 }
 
-                try {
-                    if (!blankFieldValidation(mExpectancyInput)) {
-                        //Double check Expectancy Input
-                        ageValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mExpectancyInput)) {
+                    //Double check Expectancy Input
+                    ageValidation();
                 }
 
-                try {
-                    if (!blankFieldValidation(mAgeInput)) {
-                        //Double check Age Input
-                        ageValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mAgeInput)) {
+                    //Double check Age Input
+                    ageValidation();
                 }
 
-                try {
-                    if (!blankFieldValidation(mAssets)) {
-                        //Double check Assets Input
-                        currencyValidation(mAssets);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mAssets)) {
+                    //Double check Assets Input
+                    validation.negativeValueValidation(mAssets);
                 }
 
-                try {
-                    if (!blankFieldValidation(mFixedExpensesInput)) {
-                        //Double check Fixed Expenses Input
-                        currencyValidation(mFixedExpensesInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mFixedExpensesInput)) {
+                    //Double check Fixed Expenses Input
+                    validation.negativeValueValidation(mFixedExpensesInput);
                 }
 
-                try {
-                    if (!blankFieldValidation(mVariableExpensesInput)) {
-                        //Double check Variable Expenses Input
-                        currencyValidation(mVariableExpensesInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mVariableExpensesInput)) {
+                    //Double check Variable Expenses Input
+                    validation.negativeValueValidation(mVariableExpensesInput);
                 }
 
-                try {
-                    if (!blankFieldValidation(mIncomeInput)) {
-                        //Double check Gross Income Input
-                        currencyValidation(mIncomeInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mIncomeInput)) {
+                    //Double check Gross Income Input
+                    validation.negativeValueValidation(mIncomeInput);
                 }
 
-                try {
-                    if (!blankFieldValidation(mIncrementInput)) {
-                        //Double check Gross Income Input
-                        currencyValidation(mIncrementInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mIncrementInput)) {
+                    //Double check Gross Income Input
+                    validation.negativeValueValidation(mIncrementInput);
                 }
 
-                try {
-                    if (!blankFieldValidation(mInflationInput)) {
-                        //Double check Gross Income Input
-                        currencyValidation(mInflationInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mInflationInput)) {
+                    //Double check Gross Income Input
+                    validation.negativeValueValidation(mInflationInput);
                 }
 
                 //Check if any of the EditText has error
@@ -306,6 +198,7 @@ public class FormActivity extends AppCompatActivity {
                             Integer.valueOf(mInflationInput.getEditText().getText().toString()));
 
                     Log.d(TAG, "onClick: " + mydb.numberOfRows(SQLConstants.USER_TABLE));
+                    mydb.close();
 
                     startActivity(new Intent(FormActivity.this, MainActivity.class));
                 }
@@ -314,61 +207,49 @@ public class FormActivity extends AppCompatActivity {
     }
 
     /**
-     * This method will validate the name input
-     */
-    private void nameValidation() {
-        try {
-            if ((!validation.matchCharOnly(mNameInput.getEditText().getText().toString())) &&
-                    mNameInput.getEditText().getText().length() > 0) {
-                mNameInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_NAME);
-            } else {
-                mNameInput.setErrorEnabled(false);
-            }
-        } catch (Exception e) {
-            //Do nothing
-        }
-    }
-
-    /**
      * This method will validate the age input
      */
     private void ageValidation() {
         //validate age
         try {
-            if (mAgeInput.getEditText().getText().toString().isEmpty()) {
-                mAgeInput.setErrorEnabled(false);
-            } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) > 999) {
-                mAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
-            } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) < 18) {
-                mAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_AGE);
-            } else {
-                mAgeInput.setErrorEnabled(false);
+            if (mAgeInput.getEditText() != null) {
+                if (mAgeInput.getEditText().getText().toString().isEmpty()) {
+                    mAgeInput.setErrorEnabled(false);
+                } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) > 999) {
+                    mAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
+                } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) < 18) {
+                    mAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
+                } else {
+                    mAgeInput.setErrorEnabled(false);
+                }
             }
         } catch (NumberFormatException e) {
             //Do nothing
         }
 
+        //validate retirement age
         try {
-            //validate retirement age
-            if (mRetirementAgeInput.getEditText().getText().toString().isEmpty()) {
-                mRetirementAgeInput.setErrorEnabled(false);
-            } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 999) {
-                mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_RETIREMENT_AGE_CANNOT_BE_MORE_THAN_999);
-            } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 18) {
-                mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_RETIREMENT_AGE_CANNOT_BE_LESS_THAN_18);
-            } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 999 &&
-                    Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 18) {
-                mRetirementAgeInput.setErrorEnabled(false);
-            } else {
-                mRetirementAgeInput.setErrorEnabled(false);
-            }
-
-            if (!mRetirementAgeInput.isErrorEnabled()) {
-                if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) <
-                        Integer.valueOf(mAgeInput.getEditText().getText().toString())) {
-                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_RETIREMENT_AGE);
+            if (mRetirementAgeInput.getEditText() != null) {
+                if (mRetirementAgeInput.getEditText().getText().toString().isEmpty()) {
+                    mRetirementAgeInput.setErrorEnabled(false);
+                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 999) {
+                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
+                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 18) {
+                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
+                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 999 &&
+                        Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 18) {
+                    mRetirementAgeInput.setErrorEnabled(false);
                 } else {
                     mRetirementAgeInput.setErrorEnabled(false);
+                }
+
+                if (!mRetirementAgeInput.isErrorEnabled()) {
+                    if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) <
+                            Integer.valueOf(mAgeInput.getEditText().getText().toString())) {
+                        mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_RETIREMENT_AGE);
+                    } else {
+                        mRetirementAgeInput.setErrorEnabled(false);
+                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -377,31 +258,33 @@ public class FormActivity extends AppCompatActivity {
 
         //validate expectancy
         try {
-            if (mExpectancyInput.getEditText().getText().toString().isEmpty()) {
-                mExpectancyInput.setErrorEnabled(false);
-            } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 999) {
-                mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_EXPECTANCY_CANNOT_BE_MORE_THAN_999);
-            } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 18) {
-                mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_EXPECTANCY_CANNOT_BE_LESS_THAN_18);
-            } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 999 &&
-                    Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 18) {
-                mExpectancyInput.setErrorEnabled(false);
-            } else {
-                mExpectancyInput.setErrorEnabled(false);
-            }
-
-            if (!mExpectancyInput.isErrorEnabled()) {
-                if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
-                        Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
-                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
-                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
-                        Integer.valueOf(mAgeInput.getEditText().getText().toString()) ||
-                        Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
-                                Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
-                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
+            if (mExpectancyInput.getEditText() != null) {
+                if (mExpectancyInput.getEditText().getText().toString().isEmpty()) {
+                    mExpectancyInput.setErrorEnabled(false);
+                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 999) {
+                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
+                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 18) {
+                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
+                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 999 &&
+                        Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 18) {
+                    mExpectancyInput.setErrorEnabled(false);
                 } else {
                     mExpectancyInput.setErrorEnabled(false);
                 }
+
+                if (!mExpectancyInput.isErrorEnabled()) {
+                    if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
+                            Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
+                        mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
+                    } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
+                            Integer.valueOf(mAgeInput.getEditText().getText().toString()) ||
+                            Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
+                                    Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
+                        mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
+                    } else {
+                        mExpectancyInput.setErrorEnabled(false);
+                    }
+                }
             }
         } catch (NumberFormatException e) {
             //Do nothing
@@ -409,132 +292,18 @@ public class FormActivity extends AppCompatActivity {
     }
 
     /**
-     * This method will validate the input value
+     * This method will return onFocusChangeListener for age validation
      *
-     * @param textInputLayout is the view
+     * @return onFocusChangeListener
      */
-    private void currencyValidation(TextInputLayout textInputLayout) {
-        try {
-            if (Float.valueOf(textInputLayout.getEditText().getText().toString()) < 0f) {
-                switch (textInputLayout.getId()) {
-                    case R.id.assets_input_layout:
-                        mAssets.setError(ErrorMsgConstants.ERR_MSG_INVALID_ASSETS);
-                        break;
-                    case R.id.income_input_layout:
-                        mIncomeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
-                        break;
-                    case R.id.fixed_expenses_input_layout:
-                        mFixedExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_FIXED_EXPENSES);
-                        break;
-                    case R.id.variable_expenses_input_layout:
-                        mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
-                        break;
-                    case R.id.increment_input_layout:
-                        mIncrementInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INCREMENT);
-                        break;
-                    case R.id.inflation_input_layout:
-                        mInflationInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INFLATION);
-                        break;
-                    default:
-                        Log.d(TAG, "currencyValidation: In if() default");
-                }
-            } else {
-                switch (textInputLayout.getId()) {
-                    case R.id.assets_input_layout:
-                        mAssets.setErrorEnabled(false);
-                        break;
-                    case R.id.income_input_layout:
-                        mIncomeInput.setErrorEnabled(false);
-                        break;
-                    case R.id.fixed_expenses_input_layout:
-                        mFixedExpensesInput.setErrorEnabled(false);
-                        break;
-                    case R.id.variable_expenses_input_layout:
-                        mVariableExpensesInput.setErrorEnabled(false);
-                        break;
-                    case R.id.increment_input_layout:
-                        mIncrementInput.setErrorEnabled(false);
-                        break;
-                    case R.id.inflation_input_layout:
-                        mInflationInput.setErrorEnabled(false);
-                        break;
-                    default:
-                        Log.d(TAG, "currencyValidation: In else() default");
+    private View.OnFocusChangeListener onFocusChangeListenerForAgeValidation() {
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    ageValidation();
                 }
             }
-        } catch (NumberFormatException e) {
-            switch (textInputLayout.getId()) {
-                case R.id.assets_input_layout:
-                    mAssets.setError(ErrorMsgConstants.ERR_MSG_INVALID_ASSETS);
-                    break;
-                case R.id.income_input_layout:
-                    mIncomeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
-                    break;
-                case R.id.fixed_expenses_input_layout:
-                    mFixedExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_FIXED_EXPENSES);
-                    break;
-                case R.id.variable_expenses_input_layout:
-                    mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
-                    break;
-                case R.id.increment_input_layout:
-                    mIncrementInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INCREMENT);
-                    break;
-                case R.id.inflation_input_layout:
-                    mInflationInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_INFLATION);
-                    break;
-                default:
-                    Log.d(TAG, "currencyValidation: In catch() default");
-            }
-        }
-    }
-
-    /**
-     * This method will check for blank input field
-     *
-     * @param textInputLayout is the view
-     * @return boolean
-     */
-    private boolean blankFieldValidation(TextInputLayout textInputLayout) {
-        try {
-            if (textInputLayout.getEditText().getText().toString().isEmpty()) {
-                switch (textInputLayout.getId()) {
-                    case R.id.name_input_layout:
-                        mNameInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.retirement_age_input_layout:
-                        mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.expectancy_input_layout:
-                        mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.age_input_layout:
-                        mAgeInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.assets_input_layout:
-                        mAssets.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.fixed_expenses_input_layout:
-                        mFixedExpensesInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.variable_expenses_input_layout:
-                        mVariableExpensesInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.income_input_layout:
-                        mIncomeInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.increment_input_layout:
-                        mIncrementInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    case R.id.inflation_input_layout:
-                        mInflationInput.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
-                        return true;
-                    default:
-                        Log.d(TAG, "blankFieldValidation: in default");
-                }
-            }
-        } catch (NumberFormatException e) {
-            //Do nothing
-        }
-        return false;
+        };
     }
 }

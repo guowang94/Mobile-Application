@@ -72,7 +72,9 @@ public class SummaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .inflate(R.layout.list_row_summary, parent, false);
                 return new ContentViewHolder(itemView);
             default:
-                return null;
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_row_section_header, parent, false);
+                return new SectionViewHolder(itemView);
         }
     }
 

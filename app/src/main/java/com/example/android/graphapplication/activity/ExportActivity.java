@@ -86,7 +86,9 @@ public class ExportActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EXPORT_PREVIEW);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         setupReportRecyclerView();
     }
@@ -249,9 +251,9 @@ public class ExportActivity extends AppCompatActivity {
     /**
      * This method will check if permission is granted and perform relevant action
      *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param requestCode Created in KeyConstant
+     * @param permissions Permissions
+     * @param grantResults Grant result array
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -264,10 +266,11 @@ public class ExportActivity extends AppCompatActivity {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     exportPDFToEmailApp();
-                } else {
+                }
+                /*else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                }
+                }*/
             }
 
             // other 'case' lines to check for other
@@ -280,12 +283,12 @@ public class ExportActivity extends AppCompatActivity {
      */
     private void setupReportRecyclerView() {
         UserModel userModel = mydb.getAllUser().get(0);
-        List<HashMap<String, String>> milestoneList = mydb.getAllMilestone();
+        List<HashMap<String, String>> milestoneList = mydb.getAllSelectedMilestone();
         List<HashMap<String, String>> existingPlanList = mydb.getAllExistingPlan();
         List<HashMap<String, String>> nonExistingPlanList = mydb.getAllNonExistingPlan();
         mydb.close();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
         String currentDate = simpleDateFormat.format(new Date());
         Float totalMilestoneCost = 0f;
         Float totalExistingCoverage = 0f;

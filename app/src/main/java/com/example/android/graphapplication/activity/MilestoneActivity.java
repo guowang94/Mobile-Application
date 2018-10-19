@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -18,10 +20,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
@@ -53,29 +57,35 @@ public class MilestoneActivity extends AppCompatActivity implements
     private int currentMilestoneID;
     private String ageRange[];
 
+    private Validation validation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_milestone);
-        //TODO need to add validation for all the fields (Low Priority)
 
         mToolbar = findViewById(R.id.create_milestone_toolbar);
-        mMilestoneNameInputLayout = findViewById(R.id.name_input_layout);
+        mMilestoneNameInputLayout = findViewById(R.id.milestone_name_input_layout);
         mMilestoneTypeSpinner = findViewById(R.id.milestone_type_spinner);
         mAgeSpinner = findViewById(R.id.age_spinner);
         mMilestoneDescriptionInputLayout = findViewById(R.id.description_input_layout);
         mMilestoneStatusSegmentedButton = findViewById(R.id.milestone_status_segmented_button);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
-        mAmountInputLayout = new TextInputLayout(this);
+
+        mAmountInputLayout = new TextInputLayout(new ContextThemeWrapper(
+                MilestoneActivity.this, R.style.Widget_Design_TextInputLayout_textColorHint));
+        mCostInputLayout = new TextInputLayout(new ContextThemeWrapper(
+                MilestoneActivity.this, R.style.Widget_Design_TextInputLayout_textColorHint));
+        mDurationInputLayout = new TextInputLayout(new ContextThemeWrapper(
+                MilestoneActivity.this, R.style.Widget_Design_TextInputLayout_textColorHint));
         mAmountEditText = new EditText(this);
-        mCostInputLayout = new TextInputLayout(this);
         mCostEditText = new EditText(this);
-        mDurationInputLayout = new TextInputLayout(this);
         mDurationEditText = new EditText(this);
 
         mydb = new DBHelper(getApplicationContext());
+        validation = new Validation();
 
         if (getIntent() != null) {
             milestoneAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
@@ -99,8 +109,11 @@ public class MilestoneActivity extends AppCompatActivity implements
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ADD_MILESTONE);
 
         // Enable the top left button
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
+        // Draw TextInputLayout based on Milestone Status
         drawTextInputLayout(mMilestoneStatusSegmentedButton.getPosition());
 
         mMilestoneStatusSegmentedButton.setOnPositionChangedListener(
@@ -112,27 +125,13 @@ public class MilestoneActivity extends AppCompatActivity implements
                     }
                 });
 
-        mMilestoneTypeSpinner.setItemsArray(R.array.milestone_type_array);
-        mMilestoneTypeSpinner.setOnItemChosenListener(this);
+        setupSpinners();
 
-        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
-        rs.moveToFirst();
-
-        int currentAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
-        int expectancyAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
-
-        if (!rs.isClosed()) {
-            rs.close();
+        //Validation
+        if (mMilestoneNameInputLayout.getEditText() != null) {
+            mMilestoneNameInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForNameValidation(mMilestoneNameInputLayout));
         }
-
-        //Create age range
-        ageRange = new String[expectancyAge - currentAge + 1];
-        for (int i = 0; i < ageRange.length; i++) {
-            ageRange[i] = currentAge + "";
-            currentAge++;
-        }
-        mAgeSpinner.setItemsArray(ageRange);
-        mAgeSpinner.setOnItemChosenListener(this);
 
         if ("Edit".equalsIgnoreCase(milestoneAction) && currentMilestoneID != -1) {
             displayData();
@@ -163,7 +162,9 @@ public class MilestoneActivity extends AppCompatActivity implements
 
         Log.d(TAG, "displayData: " + milestoneName);
 
-        mMilestoneNameInputLayout.getEditText().setText(milestoneName);
+        if (mMilestoneNameInputLayout.getEditText() != null) {
+            mMilestoneNameInputLayout.getEditText().setText(milestoneName);
+        }
 
         String[] milestoneArray = getResources().getStringArray(R.array.milestone_type_array);
         for (int i = 0; i < milestoneArray.length; i++) {
@@ -179,16 +180,24 @@ public class MilestoneActivity extends AppCompatActivity implements
         }
 
         if (description != null && !description.equalsIgnoreCase("")) {
-            mMilestoneDescriptionInputLayout.getEditText().setText(description);
+            if (mMilestoneDescriptionInputLayout.getEditText() != null) {
+                mMilestoneDescriptionInputLayout.getEditText().setText(description);
+            }
         }
 
         if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equalsIgnoreCase(milestoneStatus)) {
             mMilestoneStatusSegmentedButton.setPosition(0);
-            mAmountInputLayout.getEditText().setText(amount);
+            if (mAmountInputLayout.getEditText() != null) {
+                mAmountInputLayout.getEditText().setText(amount);
+            }
         } else {
             mMilestoneStatusSegmentedButton.setPosition(1);
-            mDurationInputLayout.getEditText().setText(duration);
-            mCostInputLayout.getEditText().setText(amount);
+            if (mDurationInputLayout.getEditText() != null) {
+                mDurationInputLayout.getEditText().setText(duration);
+            }
+            if (mCostInputLayout.getEditText() != null) {
+                mCostInputLayout.getEditText().setText(amount);
+            }
         }
         Log.d(TAG, "displayData: out");
     }
@@ -207,7 +216,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             Log.d(TAG, "drawTextInputLayout: in if()");
 
             mLayout.removeView(findViewById(R.id.duration_input_layout));
-            mLayout.removeView(findViewById(R.id.cost_input_layout));
+            mLayout.removeView(findViewById(R.id.cost_per_year_input_layout));
 
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
@@ -233,6 +242,12 @@ public class MilestoneActivity extends AppCompatActivity implements
                     mMilestoneStatusSegmentedButton.getId(), ConstraintSet.END, 0);
 
             constraintSet.applyTo(mLayout);
+
+            // Validation
+            if (mAmountInputLayout.getEditText() != null) {
+                mAmountInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mAmountInputLayout));
+            }
         } else {
             Log.d(TAG, "drawTextInputLayout: in else()");
 
@@ -247,7 +262,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mLayout.addView(mDurationInputLayout);
 
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
-            mCostInputLayout.setId(R.id.cost_input_layout);
+            mCostInputLayout.setId(R.id.cost_per_year_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
@@ -279,6 +294,16 @@ public class MilestoneActivity extends AppCompatActivity implements
                     mDurationInputLayout.getId(), ConstraintSet.END, 0);
 
             constraintSet.applyTo(mLayout);
+
+            // Validation
+            if (mDurationInputLayout.getEditText() != null) {
+                mDurationInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mDurationInputLayout));
+            }
+            if (mCostInputLayout.getEditText() != null) {
+                mCostInputLayout.getEditText().setOnFocusChangeListener(
+                        validation.onFocusChangeListenerForNegativeValueValidation(mCostInputLayout));
+            }
         }
         Log.d(TAG, "drawTextInputLayout: out");
     }
@@ -337,34 +362,98 @@ public class MilestoneActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.save:
-                String milestoneName = mMilestoneNameInputLayout.getEditText().getText().toString();
-                String description = mMilestoneDescriptionInputLayout.getEditText().getText().toString();
-                String milestoneStatus = mMilestoneStatusSegmentedButton.getPosition() == 0 ?
-                        ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
-                        ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
-                float amount;
-                int duration = 1;
+                //Validation
+                validation.blankFieldValidation(mMilestoneNameInputLayout);
 
-                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
-                    amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
+                if (mAmountInputLayout.isAttachedToWindow()) {
+                    if (!validation.blankFieldValidation(mAmountInputLayout)) {
+                        validation.negativeValueValidation(mAmountInputLayout);
+                    }
+                }
+
+                if (mDurationInputLayout.isAttachedToWindow()) {
+                    if (!validation.blankFieldValidation(mDurationInputLayout)) {
+                        validation.negativeValueValidation(mDurationInputLayout);
+                    }
+                }
+
+                if (mCostInputLayout.isAttachedToWindow()) {
+                    if (!validation.blankFieldValidation(mCostInputLayout)) {
+                        validation.negativeValueValidation(mCostInputLayout);
+                    }
+                }
+
+                boolean isErrorEnabled = false;
+
+                if (mMilestoneNameInputLayout.isErrorEnabled()) {
+                    isErrorEnabled = true;
+
+                    if (mAmountInputLayout.isAttachedToWindow()) {
+                        if (mAmountInputLayout.isErrorEnabled()) {
+                            isErrorEnabled = true;
+                        }
+                    }
+
+                    if (mDurationInputLayout.isAttachedToWindow()) {
+                        if (mDurationInputLayout.isErrorEnabled()) {
+                            isErrorEnabled = true;
+                        }
+                    }
+
+                    if (mCostInputLayout.isAttachedToWindow()) {
+                        if (mCostInputLayout.isErrorEnabled()) {
+                            isErrorEnabled = true;
+                        }
+                    }
+                }
+
+                if (!isErrorEnabled) {
+                    String milestoneName = null;
+                    String description = null;
+                    String milestoneStatus = mMilestoneStatusSegmentedButton.getPosition() == 0 ?
+                            ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
+                            ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
+                    float amount = 0f;
+                    int duration = 1;
+
+                    if (mMilestoneNameInputLayout.getEditText() != null) {
+                        milestoneName = mMilestoneNameInputLayout.getEditText().getText().toString();
+                    }
+
+                    if (mMilestoneDescriptionInputLayout.getEditText() != null) {
+                        description = mMilestoneDescriptionInputLayout.getEditText().getText().toString();
+                    }
+
+                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestoneStatus)) {
+                        if (mAmountInputLayout.getEditText() != null) {
+                            amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
+                        }
+                    } else {
+                        if (mDurationInputLayout.getEditText() != null) {
+                            duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
+                        }
+                        if (mCostInputLayout.getEditText() != null) {
+                            amount = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
+                        }
+                    }
+
+                    if ("Create".equalsIgnoreCase(milestoneAction)) {
+
+                        mydb.insertMilestone(milestoneName, milestoneTypeSpinnerValue, ageSpinnerValue,
+                                description, milestoneStatus, amount, duration);
+
+                    } else if ("Edit".equalsIgnoreCase(milestoneAction)) {
+
+                        mydb.updateMilestone(currentMilestoneID, milestoneName, milestoneTypeSpinnerValue,
+                                ageSpinnerValue, description, milestoneStatus, amount, duration);
+                    }
+
+                    startActivity(new Intent(this, MainActivity.class).putExtra(
+                            KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 2));
                 } else {
-                    duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
-                    amount = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
+                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
+                            Snackbar.LENGTH_LONG).show();
                 }
-
-                if ("Create".equalsIgnoreCase(milestoneAction)) {
-
-                    mydb.insertMilestone(milestoneName, milestoneTypeSpinnerValue, ageSpinnerValue,
-                            description, milestoneStatus, amount, duration);
-
-                } else if ("Edit".equalsIgnoreCase(milestoneAction)) {
-
-                    mydb.updateMilestone(currentMilestoneID, milestoneName, milestoneTypeSpinnerValue,
-                            ageSpinnerValue, description, milestoneStatus, amount, duration);
-                }
-
-                startActivity(new Intent(this, MainActivity.class).putExtra(
-                        KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 2));
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -373,5 +462,32 @@ public class MilestoneActivity extends AppCompatActivity implements
                 Log.i(TAG, "onOptionsItemSelected: In default");
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    /**
+     * This method to setup Spinners' item
+     */
+    private void setupSpinners() {
+        mMilestoneTypeSpinner.setItemsArray(R.array.milestone_type_array);
+        mMilestoneTypeSpinner.setOnItemChosenListener(this);
+
+        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
+        rs.moveToFirst();
+
+        int currentAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
+        int expectancyAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
+
+        if (!rs.isClosed()) {
+            rs.close();
+        }
+
+        //Create age range
+        ageRange = new String[expectancyAge - currentAge + 1];
+        for (int i = 0; i < ageRange.length; i++) {
+            ageRange[i] = currentAge + "";
+            currentAge++;
+        }
+        mAgeSpinner.setItemsArray(ageRange);
+        mAgeSpinner.setOnItemChosenListener(this);
     }
 }

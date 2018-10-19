@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mViewPager = findViewById(R.id.viewpager);
+        ViewPager mViewPager = findViewById(R.id.viewpager);
         setupViewPager(mViewPager);
 
         try {
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This method will return custom tab
      *
-     * @param position
+     * @param position of tab
      * @return Custom Tab
      */
     private TextView getCustomTab(int position) {
@@ -117,7 +116,13 @@ public class MainActivity extends AppCompatActivity {
                 tab.setCompoundDrawablePadding(8);
                 return tab;
             default:
-                return null;
+                tab = (TextView) LayoutInflater.from(this).inflate(
+                        R.layout.custom_tab, mTabLayout, false);
+                tab.setText(ScreenConstants.NAV_GRAPH);
+                tab.setWidth(width / 5);
+                tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_graph_selector, 0, 0);
+                tab.setCompoundDrawablePadding(8);
+                return tab;
         }
     }
 

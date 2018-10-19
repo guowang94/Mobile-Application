@@ -27,16 +27,8 @@ public class SummaryModel {
         return sectionTitle;
     }
 
-    public void setSectionTitle(String sectionTitle) {
-        this.sectionTitle = sectionTitle;
-    }
-
     public int getCellType() {
         return cellType;
-    }
-
-    public void setCellType(int cellType) {
-        this.cellType = cellType;
     }
 
     public int getImage() {
