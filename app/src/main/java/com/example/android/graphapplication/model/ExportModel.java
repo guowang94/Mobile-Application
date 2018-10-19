@@ -39,8 +39,8 @@ public class ExportModel {
     /**
      * This constructor is for (Report Title's timestamp / Report Header)
      *
-     * @param header
-     * @param exportType
+     * @param header (Report Title's timestamp / Report Header)
+     * @param exportType ExportType
      */
     public ExportModel(String header, int exportType) {
         this.header = header;
@@ -50,9 +50,9 @@ public class ExportModel {
     /**
      * This constructor is for (Total Section & Total Value / Client Detail's title & value / Plan Detail's title & value)
      *
-     * @param title
-     * @param value
-     * @param exportType
+     * @param title Title
+     * @param value Value
+     * @param exportType ExportType
      */
     public ExportModel(String title, String value, int exportType) {
         this.title = title;

@@ -72,8 +72,10 @@ public class PlansFragment extends Fragment {
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
-        mPlansRecyclerView.addItemDecoration(new DividerItemDecoration(
-                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        if (getActivity() != null) {
+            mPlansRecyclerView.addItemDecoration(new DividerItemDecoration(
+                    getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        }
         mPlansRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         isViewLoaded = true;
@@ -112,7 +114,9 @@ public class PlansFragment extends Fragment {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        }
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_PLANS);
 
         final Context context = getActivity().getApplicationContext();
@@ -217,9 +221,11 @@ public class PlansFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.add_event:
-                startActivity(new Intent(getActivity().getApplicationContext(),
-                        PlanActivity.class).putExtra(
-                        KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_CREATE));
+                if (getActivity() != null) {
+                    startActivity(new Intent(getActivity().getApplicationContext(),
+                            PlanActivity.class).putExtra(
+                            KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_CREATE));
+                }
                 break;
             default:
                 Log.i(TAG, "onOptionsItemSelected: In default");

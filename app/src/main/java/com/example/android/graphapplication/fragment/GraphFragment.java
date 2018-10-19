@@ -77,7 +77,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private List<HashMap<String, String>> eventsList = new ArrayList<>();
     private List<HashMap<String, String>> milestonesList = new ArrayList<>();
     private List<HashMap<String, String>> plansList = new ArrayList<>();
-    private SelectedScenarioAdapter selectedScenarioAdapter;
 
     private DBHelper mydb;
 
@@ -103,8 +102,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(
-                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        if (getActivity() != null) {
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                    getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        }
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         isViewLoaded = true;
@@ -143,7 +144,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      */
     private void initData() {
         Log.d(TAG, "initData: in");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        }
         // Get a support ActionBar corresponding to this mToolbar
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_GRAPH);
 
@@ -167,7 +170,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         Log.d(TAG, "onValueSelected: highlight, " + h);
         if (h.getStackIndex() != -1) {
             BarEntry entry = (BarEntry) e;
-            String type = null;
+            String type;
 
             if (entry.getYVals() != null) {
                 Log.i(TAG, "y values: " + entry.getY());
@@ -342,7 +345,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         float cpfMedisaveAccount = 0f;
         int shortfallAge = -1;
         int expensesExceededIncomeAge = -1;
-        List<Float> selectedScenarioValuesList = getCombineSelectedList(age, expectancy);
+        List<Float> selectedScenarioValuesList = getCombineSelectedList(expectancy);
 
         for (int currentAge = age; currentAge <= expectancy; currentAge++) {
             if (currentAge <= retirementAge) {
@@ -605,11 +608,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     /**
      * This method to get the combined data of Event, Milestone and Plan selected scenario
      *
-     * @param age        Current age of user
      * @param expectancy Expected to live age
      * @return list of combined data
      */
-    public List<Float> getCombineSelectedList(int age, int expectancy) {
+    public List<Float> getCombineSelectedList(int expectancy) {
         List<Float> combineSelectedList = new ArrayList<>();
         List<HashMap<String, String>> hashMapList = new ArrayList<>();
 
@@ -800,9 +802,12 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         if (selectedScenarioModelList.size() > 0) {
             //Setup Recycler View
-            selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(
-                    getActivity().getApplicationContext());
+            SelectedScenarioAdapter selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
+            RecyclerView.LayoutManager mLayoutManager = null;
+            if (getActivity() != null) {
+                 mLayoutManager= new LinearLayoutManager(
+                        getActivity().getApplicationContext());
+            }
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setAdapter(selectedScenarioAdapter);
 

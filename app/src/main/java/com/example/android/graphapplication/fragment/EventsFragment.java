@@ -72,8 +72,10 @@ public class EventsFragment extends Fragment {
         mToolbarTitle = view.findViewById(R.id.toolbar_title);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
 
-        mEventsRecyclerView.addItemDecoration(new DividerItemDecoration(
-                getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        if (getActivity() != null) {
+            mEventsRecyclerView.addItemDecoration(new DividerItemDecoration(
+                    getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        }
         mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         isViewLoaded = true;
@@ -112,6 +114,7 @@ public class EventsFragment extends Fragment {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        if (getActivity() != null)
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);
 
@@ -215,9 +218,11 @@ public class EventsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.add_event:
-                startActivity(new Intent(getActivity().getApplicationContext(),
-                        EventActivity.class).putExtra(
-                        KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_CREATE));
+                if (getActivity() != null) {
+                    startActivity(new Intent(getActivity().getApplicationContext(),
+                            EventActivity.class).putExtra(
+                            KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_CREATE));
+                }
                 break;
             default:
                 Log.i(TAG, "onOptionsItemSelected: In default");

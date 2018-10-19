@@ -96,114 +96,74 @@ public class FormActivity extends AppCompatActivity {
         if (mAgeInput.getEditText() != null)
             mAgeInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
         if (mAssets.getEditText() != null)
-            mAssets.getEditText().setOnFocusChangeListener(onFocusChangeListenerForCurrencyValidation(mAssets));
+            mAssets.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForCurrencyValidation(mAssets));
         if (mIncomeInput.getEditText() != null)
-            mIncomeInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForCurrencyValidation(mIncomeInput));
+            mIncomeInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForCurrencyValidation(mIncomeInput));
         if (mFixedExpensesInput.getEditText() != null)
-            mFixedExpensesInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForCurrencyValidation(mFixedExpensesInput));
+            mFixedExpensesInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForCurrencyValidation(mFixedExpensesInput));
         if (mVariableExpensesInput.getEditText() != null)
-            mVariableExpensesInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForCurrencyValidation(mVariableExpensesInput));
+            mVariableExpensesInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForCurrencyValidation(mVariableExpensesInput));
         if (mRetirementAgeInput.getEditText() != null)
             mRetirementAgeInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
         if (mExpectancyInput.getEditText() != null)
             mExpectancyInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
         if (mIncrementInput.getEditText() != null)
-            mIncrementInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForCurrencyValidation(mIncrementInput));
+            mIncrementInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForCurrencyValidation(mIncrementInput));
         if (mInflationInput.getEditText() != null)
-            mInflationInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForCurrencyValidation(mInflationInput));
+            mInflationInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForCurrencyValidation(mInflationInput));
 
         mComputeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                try {
-                    if (!validation.blankFieldValidation(mNameInput)) {
-                        //Double check Name Input
-                        nameValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mNameInput)) {
+                    //Double check Name Input
+                    nameValidation();
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mRetirementAgeInput)) {
-                        //Double check Retirement Age Input
-                        ageValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mRetirementAgeInput)) {
+                    //Double check Retirement Age Input
+                    ageValidation();
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mExpectancyInput)) {
-                        //Double check Expectancy Input
-                        ageValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mExpectancyInput)) {
+                    //Double check Expectancy Input
+                    ageValidation();
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mAgeInput)) {
-                        //Double check Age Input
-                        ageValidation();
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mAgeInput)) {
+                    //Double check Age Input
+                    ageValidation();
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mAssets)) {
-                        //Double check Assets Input
-                        validation.currencyValidation(mAssets);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mAssets)) {
+                    //Double check Assets Input
+                    validation.negativeValueValidation(mAssets);
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mFixedExpensesInput)) {
-                        //Double check Fixed Expenses Input
-                        validation.currencyValidation(mFixedExpensesInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mFixedExpensesInput)) {
+                    //Double check Fixed Expenses Input
+                    validation.negativeValueValidation(mFixedExpensesInput);
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mVariableExpensesInput)) {
-                        //Double check Variable Expenses Input
-                        validation.currencyValidation(mVariableExpensesInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mVariableExpensesInput)) {
+                    //Double check Variable Expenses Input
+                    validation.negativeValueValidation(mVariableExpensesInput);
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mIncomeInput)) {
-                        //Double check Gross Income Input
-                        validation.currencyValidation(mIncomeInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mIncomeInput)) {
+                    //Double check Gross Income Input
+                    validation.negativeValueValidation(mIncomeInput);
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mIncrementInput)) {
-                        //Double check Gross Income Input
-                        validation.currencyValidation(mIncrementInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mIncrementInput)) {
+                    //Double check Gross Income Input
+                    validation.negativeValueValidation(mIncrementInput);
                 }
 
-                try {
-                    if (!validation.blankFieldValidation(mInflationInput)) {
-                        //Double check Gross Income Input
-                        validation.currencyValidation(mInflationInput);
-                    }
-                } catch (Exception e) {
-                    //Do nothing
+                if (!validation.blankFieldValidation(mInflationInput)) {
+                    //Double check Gross Income Input
+                    validation.negativeValueValidation(mInflationInput);
                 }
 
                 //Check if any of the EditText has error
@@ -347,23 +307,6 @@ public class FormActivity extends AppCompatActivity {
         } catch (NumberFormatException e) {
             //Do nothing
         }
-    }
-
-    /**
-     * This method will return onFocusChangeListener for currency validation
-     *
-     * @param textInputLayout TextInputLayout
-     * @return onFocusChangeListener
-     */
-    private View.OnFocusChangeListener onFocusChangeListenerForCurrencyValidation(final TextInputLayout textInputLayout) {
-        return new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    validation.currencyValidation(textInputLayout);
-                }
-            }
-        };
     }
 
     /**

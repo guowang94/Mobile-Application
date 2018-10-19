@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,10 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
+import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
@@ -55,12 +58,14 @@ public class EventActivity extends AppCompatActivity implements
     private int currentEventID;
     private String ageRange[];
 
+    private Validation validation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-        //TODO need to add validation for all the fields (Low Priority)
+        //TODO need to set onFocusChangeListener for programmatically created TextInputLayout
 
         mToolbar = findViewById(R.id.create_event_toolbar);
         mEventNameInputLayout = findViewById(R.id.name_input_layout);
@@ -82,6 +87,7 @@ public class EventActivity extends AppCompatActivity implements
         mDurationEditText = new EditText(this);
 
         mydb = new DBHelper(getApplicationContext());
+        validation = new Validation();
 
         if (getIntent() != null) {
             eventAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
@@ -109,6 +115,7 @@ public class EventActivity extends AppCompatActivity implements
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Draw TextInputLayout based on Event Status
         drawTextInputLayout(mEventStatusSegmentedButton.getPosition());
 
         mEventStatusSegmentedButton.setOnPositionChangedListener(
@@ -120,31 +127,12 @@ public class EventActivity extends AppCompatActivity implements
                     }
                 });
 
-        mEventTypeSpinner.setItemsArray(R.array.event_type_array);
-        mEventTypeSpinner.setOnItemChosenListener(this);
-
-        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
-        rs.moveToFirst();
-
-        int currentAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
-        int expectancyAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
-
-        //Create age range
-        ageRange = new String[expectancyAge - currentAge + 1];
-        for (int i = 0; i < ageRange.length; i++) {
-            ageRange[i] = currentAge + "";
-            currentAge++;
-        }
-        mAgeSpinner.setItemsArray(ageRange);
-        mAgeSpinner.setOnItemChosenListener(this);
+        setupSpinners();
 
         if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction) && currentEventID != -1) {
             displayData();
         }
+
         Log.d(TAG, "initData: out");
     }
 
@@ -225,7 +213,7 @@ public class EventActivity extends AppCompatActivity implements
             Log.d(TAG, "drawTextInputLayout: in if()");
 
             mLayout.removeView(findViewById(R.id.duration_input_layout));
-            mLayout.removeView(findViewById(R.id.cost_input_layout));
+            mLayout.removeView(findViewById(R.id.cost_per_year_input_layout));
 
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
@@ -265,7 +253,7 @@ public class EventActivity extends AppCompatActivity implements
             mLayout.addView(mDurationInputLayout);
 
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
-            mCostInputLayout.setId(R.id.cost_input_layout);
+            mCostInputLayout.setId(R.id.cost_per_year_input_layout);
             mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
@@ -355,48 +343,98 @@ public class EventActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.save:
-                String eventName = null;
-                String description = null;
-                String eventStatus = mEventStatusSegmentedButton.getPosition() == 0 ?
-                        ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
-                        ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
-                float amount = 0f;
-                int duration = 1;
+                //Validation
+                validation.blankFieldValidation(mEventNameInputLayout);
 
-                if (mEventNameInputLayout.getEditText() != null) {
-                    eventName = mEventNameInputLayout.getEditText().getText().toString();
-                }
-
-                if (mEventDescriptionInputLayout.getEditText() != null) {
-                    description = mEventDescriptionInputLayout.getEditText().getText().toString();
-                }
-
-                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
-                    if (mAmountInputLayout.getEditText() != null) {
-                        amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
+                if (mAmountInputLayout.isAttachedToWindow()) {
+                    if (!validation.blankFieldValidation(mAmountInputLayout)) {
+                        validation.negativeValueValidation(mAmountInputLayout);
                     }
+                }
+
+                if (mDurationInputLayout.isAttachedToWindow()) {
+                    if (!validation.blankFieldValidation(mDurationInputLayout)) {
+                        validation.negativeValueValidation(mDurationInputLayout);
+                    }
+                }
+
+                if (mCostInputLayout.isAttachedToWindow()) {
+                    if (!validation.blankFieldValidation(mCostInputLayout)) {
+                        validation.negativeValueValidation(mCostInputLayout);
+                    }
+                }
+
+                boolean isErrorEnabled = false;
+
+                if (mEventNameInputLayout.isErrorEnabled()) {
+                    isErrorEnabled = true;
+
+                    if (mAmountInputLayout.isAttachedToWindow()) {
+                        if (mAmountInputLayout.isErrorEnabled()) {
+                            isErrorEnabled = true;
+                        }
+                    }
+
+                    if (mDurationInputLayout.isAttachedToWindow()) {
+                        if (mDurationInputLayout.isErrorEnabled()) {
+                            isErrorEnabled = true;
+                        }
+                    }
+
+                    if (mCostInputLayout.isAttachedToWindow()) {
+                        if (mCostInputLayout.isErrorEnabled()) {
+                            isErrorEnabled = true;
+                        }
+                    }
+                }
+
+                if (!isErrorEnabled) {
+                    String eventName = null;
+                    String description = null;
+                    String eventStatus = mEventStatusSegmentedButton.getPosition() == 0 ?
+                            ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
+                            ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
+                    float amount = 0f;
+                    int duration = 1;
+
+                    if (mEventNameInputLayout.getEditText() != null) {
+                        eventName = mEventNameInputLayout.getEditText().getText().toString();
+                    }
+
+                    if (mEventDescriptionInputLayout.getEditText() != null) {
+                        description = mEventDescriptionInputLayout.getEditText().getText().toString();
+                    }
+
+                    if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
+                        if (mAmountInputLayout.getEditText() != null) {
+                            amount = Float.valueOf(mAmountInputLayout.getEditText().getText().toString());
+                        }
+                    } else {
+                        if (mDurationInputLayout.getEditText() != null) {
+                            duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
+                        }
+                        if (mCostInputLayout.getEditText() != null) {
+                            amount = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
+                        }
+                    }
+
+                    if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
+
+                        mydb.insertEvent(eventName, eventTypeSpinnerValue, yearSpinnerValue, description,
+                                eventStatus, amount, duration);
+
+                    } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)) {
+
+                        mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, yearSpinnerValue,
+                                description, eventStatus, amount, duration);
+                    }
+
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(
+                            KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 1));
                 } else {
-                    if (mDurationInputLayout.getEditText() != null) {
-                        duration = Integer.valueOf(mDurationInputLayout.getEditText().getText().toString());
-                    }
-                    if (mCostInputLayout.getEditText() != null) {
-                        amount = Float.valueOf(mCostInputLayout.getEditText().getText().toString());
-                    }
+                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
+                            Snackbar.LENGTH_LONG).show();
                 }
-
-                if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
-
-                    mydb.insertEvent(eventName, eventTypeSpinnerValue, yearSpinnerValue, description,
-                            eventStatus, amount, duration);
-
-                } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)) {
-
-                    mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, yearSpinnerValue,
-                            description, eventStatus, amount, duration);
-                }
-
-                startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(
-                        KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 1));
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -405,5 +443,32 @@ public class EventActivity extends AppCompatActivity implements
                 Log.i(TAG, "onOptionsItemSelected: In default");
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    /**
+     * This method will setup Spinners' item
+     */
+    private void setupSpinners() {
+        mEventTypeSpinner.setItemsArray(R.array.event_type_array);
+        mEventTypeSpinner.setOnItemChosenListener(this);
+
+        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
+        rs.moveToFirst();
+
+        int currentAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
+        int expectancyAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
+
+        if (!rs.isClosed()) {
+            rs.close();
+        }
+
+        //Create age range
+        ageRange = new String[expectancyAge - currentAge + 1];
+        for (int i = 0; i < ageRange.length; i++) {
+            ageRange[i] = currentAge + "";
+            currentAge++;
+        }
+        mAgeSpinner.setItemsArray(ageRange);
+        mAgeSpinner.setOnItemChosenListener(this);
     }
 }

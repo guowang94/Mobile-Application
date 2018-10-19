@@ -1,6 +1,7 @@
 package com.example.android.graphapplication.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,13 +39,14 @@ public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSection
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_sectioned_view, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final ScenarioSectionModel scenarioSectionModel = scenarioSectionModelList.get(position);
         holder.mTitle.setText(scenarioSectionModel.getTitle());
 

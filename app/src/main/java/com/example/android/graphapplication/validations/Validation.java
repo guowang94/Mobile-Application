@@ -2,6 +2,7 @@ package com.example.android.graphapplication.validations;
 
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
+import android.view.View;
 
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.constants.ErrorMsgConstants;
@@ -56,7 +57,7 @@ public class Validation {
      *
      * @param textInputLayout is the view
      */
-    public void currencyValidation(TextInputLayout textInputLayout) {
+    public void negativeValueValidation(TextInputLayout textInputLayout) {
         try {
             if (Float.valueOf(textInputLayout.getEditText().getText().toString()) < 0f) {
                 switch (textInputLayout.getId()) {
@@ -78,8 +79,18 @@ public class Validation {
                     case R.id.inflation_input_layout:
                         textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_INFLATION);
                         break;
+                    case R.id.amount_input_layout:
+                        textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_AMOUNT);
+                        break;
+                    case R.id.duration_input_layout:
+                        textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_DURATION);
+                        break;
+                    case R.id.cost_per_year_input_layout:
+                        textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_COST_PER_YEAR);
+                        break;
                     default:
-                        Log.d(TAG, "currencyValidation: In if() default");
+                        Log.d(TAG, "negativeValueValidation: None of the TextInputLayout id has been matched." +
+                                "TextInputLayout id: " + textInputLayout.getId());
                 }
             } else {
                 switch (textInputLayout.getId()) {
@@ -89,10 +100,14 @@ public class Validation {
                     case R.id.variable_expenses_input_layout:
                     case R.id.increment_input_layout:
                     case R.id.inflation_input_layout:
+                    case R.id.amount_input_layout:
+                    case R.id.duration_input_layout:
+                    case R.id.cost_per_year_input_layout:
                         textInputLayout.setErrorEnabled(false);
                         break;
                     default:
-                        Log.d(TAG, "currencyValidation: In else() default");
+                        Log.d(TAG, "negativeValueValidation: None of the TextInputLayout id has been matched." +
+                                "TextInputLayout id: " + textInputLayout.getId());
                 }
             }
         } catch (NumberFormatException e) {
@@ -115,9 +130,36 @@ public class Validation {
                 case R.id.inflation_input_layout:
                     textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_INFLATION);
                     break;
+                case R.id.amount_input_layout:
+                    textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_AMOUNT);
+                    break;
+                case R.id.duration_input_layout:
+                    textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_DURATION);
+                    break;
+                case R.id.cost_per_year_input_layout:
+                    textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_COST_PER_YEAR);
+                    break;
                 default:
-                    Log.d(TAG, "currencyValidation: In catch() default");
+                    Log.d(TAG, "negativeValueValidation: None of the TextInputLayout id has been matched." +
+                                "TextInputLayout id: " + textInputLayout.getId());
             }
         }
+    }
+
+    /**
+     * This method will return onFocusChangeListener for currency validation
+     *
+     * @param textInputLayout TextInputLayout
+     * @return onFocusChangeListener
+     */
+    public View.OnFocusChangeListener onFocusChangeListenerForCurrencyValidation(final TextInputLayout textInputLayout) {
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    negativeValueValidation(textInputLayout);
+                }
+            }
+        };
     }
 }

@@ -12,6 +12,9 @@ public interface ErrorMsgConstants {
     String ERR_MSG_INVALID_VARIABLE_EXPENSES = "Variable expenses cannot be less than $0";
     String ERR_MSG_INVALID_INCREMENT = "Increment rate cannot be less than 0";
     String ERR_MSG_INVALID_INFLATION = "Inflation rate cannot be less than 0";
+    String ERR_MSG_INVALID_DURATION = "Duration cannot be less than 0";
+    String ERR_MSG_INVALID_COST_PER_YEAR = "Cost per year cannot be less than $0";
+    String ERR_MSG_INVALID_AMOUNT = "Amount cannot be less than $0";
     String ERR_MSG_ENTER_VALID_INPUT = "Please ensure all input is correct";
     String ERR_MSG_FIELD_CANNOT_BE_BLANK = "This field cannot be blank";
     String ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999 = "Age cannot be more than 999 years old";

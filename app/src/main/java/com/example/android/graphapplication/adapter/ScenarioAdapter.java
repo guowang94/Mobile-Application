@@ -19,11 +19,11 @@ public class ScenarioAdapter extends RecyclerView.Adapter<ScenarioAdapter.MyView
     private static final String TAG = "ScenarioAdapter";
     private List<ScenarioModel> scenarioModelList;
 
-    public ScenarioAdapter(List<ScenarioModel> scenarioModelList) {
+    ScenarioAdapter(List<ScenarioModel> scenarioModelList) {
         this.scenarioModelList = scenarioModelList;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTitle;
         private ImageView mImageView;

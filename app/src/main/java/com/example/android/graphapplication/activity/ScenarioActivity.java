@@ -75,7 +75,9 @@ public class ScenarioActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_SCENARIO);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         eventsList = mydb.getAllEvent();
         for (HashMap<String, String> event : eventsList) {
