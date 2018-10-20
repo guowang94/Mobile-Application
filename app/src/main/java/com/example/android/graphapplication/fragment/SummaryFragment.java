@@ -1,7 +1,6 @@
 package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,10 +19,10 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.adapter.SummaryAdapter;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.SummaryModel;
+import com.example.android.graphapplication.model.UserModel;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -110,36 +109,30 @@ public class SummaryFragment extends Fragment {
         }
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_SUMMARY);
 
-        //Get the content from internal storage file
         Context context = getActivity().getApplicationContext();
 
-        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
-        rs.moveToFirst();
+        UserModel userModel = mydb.getAllUser().get(0);
 
         String shortfall = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_SHORTFALL))));
+                .format(userModel.getShortfall()));
         String balance = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_BALANCE))));
-        String expensesExceededIncomeAge = String.valueOf(rs.getInt(
-                rs.getColumnIndex(SQLConstants.USER_TABLE_EXPENSES_EXCEEDED_INCOME_AGE)));
+                .format(userModel.getBalance()));
+        String expensesExceededIncomeAge = String.valueOf(userModel.getExpensesExceededIncomeAge());
         String initialAssets = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INITIAL_ASSETS))));
-        String name = rs.getString(rs.getColumnIndex(SQLConstants.USER_TABLE_NAME));
-        String age = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE)));
-        String shortfallAge = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_SHORTFALL_AGE)));
-        String retirementAge = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTED_RETIREMENT_AGE)));
-        String jobStatus = rs.getString(rs.getColumnIndex(SQLConstants.USER_TABLE_JOB_STATUS));
-        String citizenship = rs.getString(rs.getColumnIndex(SQLConstants.USER_TABLE_CITIZENSHIP));
+                .format(userModel.getInitialAssets()));
+        String name = userModel.getName();
+        String age = String.valueOf(userModel.getAge());
+        String shortfallAge = String.valueOf(userModel.getShortfallAge());
+        String retirementAge = String.valueOf(userModel.getExpectedRetirementAge());
+        String jobStatus = userModel.getJobStatus();
+        String citizenship = userModel.getCitizenship();
         String monthlyIncome = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INCOME))));
+                .format(userModel.getMonthlyIncome()));
         String specialAccount = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_SPECIAL_ACCOUNT))));
+                .format(userModel.getSpecialAccount()));
         String medisaveAccount = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                .format(rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_MEDISAVE_ACCOUNT))));
+                .format(userModel.getMedisaveAccount()));
 
-        if (!rs.isClosed()) {
-            rs.close();
-        }
 
         shortfallAge = shortfallAge.equals("-1") ? "N/A" : shortfallAge;
         expensesExceededIncomeAge = expensesExceededIncomeAge.equals("-1") ? "N/A" : expensesExceededIncomeAge;
@@ -159,9 +152,12 @@ public class SummaryFragment extends Fragment {
         summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_citizenship, getString(R.string.citizenship_status), citizenship, SummaryModel.CONTENT));
         summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_income, getString(R.string.gross_monthly_income), monthlyIncome, SummaryModel.CONTENT));
 
-        summaryModelList.add(new SummaryModel(getString(R.string.cpf_contribution), SummaryModel.SECTION_HEADER));
-        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_special_account), specialAccount, SummaryModel.CONTENT));
-        summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_medisave_account), medisaveAccount, SummaryModel.CONTENT));
+        if (!ScreenConstants.SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED.equals(userModel.getJobStatus()) &&
+                !ScreenConstants.SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR.equals(userModel.getCitizenship())) {
+            summaryModelList.add(new SummaryModel(getString(R.string.cpf_contribution), SummaryModel.SECTION_HEADER));
+            summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_special_account), specialAccount, SummaryModel.CONTENT));
+            summaryModelList.add(new SummaryModel(R.mipmap.ic_summary_cpf, getString(R.string.cpf_medisave_account), medisaveAccount, SummaryModel.CONTENT));
+        }
 
         SummaryAdapter summaryAdapter = new SummaryAdapter(summaryModelList);
         RecyclerView.LayoutManager mSummaryLayoutManager = new LinearLayoutManager(context);

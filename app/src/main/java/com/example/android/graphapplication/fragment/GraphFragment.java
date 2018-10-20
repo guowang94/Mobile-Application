@@ -1,7 +1,6 @@
 package com.example.android.graphapplication.fragment;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,10 +29,12 @@ import com.example.android.graphapplication.activity.ExportActivity;
 import com.example.android.graphapplication.activity.ScenarioActivity;
 import com.example.android.graphapplication.adapter.SelectedScenarioAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.SelectedScenarioModel;
+import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -74,9 +75,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private boolean isDataLoaded = false;
 
     private List<SelectedScenarioModel> selectedScenarioModelList = new ArrayList<>();
-    private List<HashMap<String, String>> eventsList = new ArrayList<>();
-    private List<HashMap<String, String>> milestonesList = new ArrayList<>();
-    private List<HashMap<String, String>> plansList = new ArrayList<>();
+    private List<CommonModel> eventsList = new ArrayList<>();
+    private List<CommonModel> milestonesList = new ArrayList<>();
+    private List<PlanModel> plansList = new ArrayList<>();
 
     private DBHelper mydb;
 
@@ -282,30 +283,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
         });
 
-        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
-        rs.moveToFirst();
-
-        float assets = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INITIAL_ASSETS));
-        float monthlyIncome = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INCOME));
-        float fixedExpenses = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_FIXED_EXPENSES));
-        float variableExpenses = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_VARIABLE_EXPENSES));
-        int age = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
-        int retirementAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTED_RETIREMENT_AGE));
-        int expectancy = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
-        int increment = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_INCREMENT));
-        int inflation = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_INFLATION));
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        UserModel userModel = mydb.getAllUser().get(0);
 
         CombinedData data;
         eventsList = mydb.getAllSelectedEvent();
         milestonesList = mydb.getAllSelectedMilestone();
         plansList = mydb.getAllSelectedPlan();
 
-        data = getGraphData(assets, monthlyIncome, fixedExpenses, variableExpenses, age,
-                retirementAge, expectancy, increment, inflation);
+        data = getGraphData(userModel);
 
         mChart.getDescription().setEnabled(false);
         mChart.setPinchZoom(true);
@@ -318,8 +303,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisMinimum(age - 1);
-        xAxis.setAxisMaximum(expectancy + 1);
+        xAxis.setAxisMinimum(userModel.getAge() - 1);
+        xAxis.setAxisMaximum(userModel.getExpectancy() + 1);
 
         YAxis yAxis = mChart.getAxisLeft();
         yAxis.setValueFormatter(new MyAxisValueFormatter());
@@ -345,44 +330,42 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     /**
      * This method will calculate and return the data for the graph
      *
-     * @param assets           The current amount that the user has
-     * @param grossIncome      The monthly income of the user
-     * @param fixedExpenses    e.g. Bills, Loans, etc
-     * @param variableExpenses e.g. Food, Entertainment, Transport, etc
-     * @param age              The current age of the user
-     * @param retirementAge    The age when the user stop working
-     * @param expectancy       The age when the user is tired of living on earth
-     * @param increment        Salary Increment rate
-     * @param inflation        Currency Inflation rate
+     * @param userModel Contains details of the user
      * @return CombinedData for the graph
      */
-    private CombinedData getGraphData(float assets, float grossIncome, float fixedExpenses,
-                                      float variableExpenses, int age, int retirementAge,
-                                      int expectancy, int increment, int inflation) {
+    private CombinedData getGraphData(UserModel userModel) {
         Log.d(TAG, "getGraphData: in");
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<Entry> lineEntries = new ArrayList<>();
 
-        float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH))) * 0.8f;
-        float firstYearExpenses = (fixedExpenses + variableExpenses) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
-        float subsequentAnnualIncome = grossIncome * 12 * 0.8f;
-        float subsequentAnnualExpenses = (fixedExpenses + variableExpenses) * 12;
+        float assets = userModel.getInitialAssets();
+        float firstYearIncome = userModel.getMonthlyIncome() * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
+        float firstYearExpenses = (userModel.getFixedExpenses() + userModel.getVariableExpenses()) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
+        float subsequentAnnualIncome = userModel.getMonthlyIncome() * 12;
+        float subsequentAnnualExpenses = (userModel.getFixedExpenses() + userModel.getVariableExpenses()) * 12;
         float annualIncome = 0f;
         float annualExpenses = 0f;
+        float annualIncomeAfterDeductCPF = 0f;
         float balance = 0f;
         float cpfOrdinaryAccount = 0f;
         float cpfSpecialAccount = 0f;
         float cpfMedisaveAccount = 0f;
         int shortfallAge = -1;
         int expensesExceededIncomeAge = -1;
+        int age = userModel.getAge();
+        int retirementAge = userModel.getExpectedRetirementAge();
+        int expectancy = userModel.getExpectancy();
+        int increment = userModel.getIncrement();
+        int inflation = userModel.getInflation();
         List<Float> selectedScenarioValuesList = getCombineSelectedList(expectancy);
 
         for (int currentAge = age; currentAge <= expectancy; currentAge++) {
             if (currentAge <= retirementAge) {
 
+                // Income Increment Calculation
                 if (currentAge == age) {
 //                    Log.i(TAG, "getGraphData: first year");
-                    annualIncome = firstYearIncome * 0.8f;
+                    annualIncome = firstYearIncome;
                     annualExpenses = firstYearExpenses;
                     Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
                     Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
@@ -399,15 +382,25 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                 }
 
-                List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, currentAge),
-                        currentAge);
-                cpfOrdinaryAccount += cpfDistribution.get(0);
-                cpfSpecialAccount += cpfDistribution.get(1);
-                cpfMedisaveAccount += cpfDistribution.get(2);
+                //CPF Calculation
+                if (!ScreenConstants.SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED.equals(userModel.getJobStatus()) &&
+                        !ScreenConstants.SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR.equals(userModel.getCitizenship())) {
+                    List<Float> calculatedValues = getCPFContribution(annualIncome, currentAge);
+                    List<Float> cpfDistribution = getCPFDistribution(calculatedValues.get(1), currentAge);
+
+                    cpfOrdinaryAccount += cpfDistribution.get(0);
+                    cpfSpecialAccount += cpfDistribution.get(1);
+                    cpfMedisaveAccount += cpfDistribution.get(2);
+                    annualIncomeAfterDeductCPF = calculatedValues.get(0);
+                    Log.d(TAG, "getGraphData: income after deduct cpf: " + annualIncome + " at " + currentAge);
+                } else {
+                    //Update the value of annualIncomeAfterDeductCPF as it will be used for graph calculation
+                    annualIncomeAfterDeductCPF = annualIncome;
+                }
 
                 //-------------Calculation for the graph---------------
 
-                float remainder = annualIncome - annualExpenses;
+                float remainder = annualIncomeAfterDeductCPF - annualExpenses;
 
                 if (remainder < 0) {
                     assets += remainder;
@@ -458,7 +451,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 }
             }
 
-            if (annualExpenses > annualIncome) {
+            if (annualExpenses > annualIncomeAfterDeductCPF) {
                 if (expensesExceededIncomeAge == -1) {
                     expensesExceededIncomeAge = currentAge;
                 }
@@ -511,36 +504,49 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     }
 
     /**
-     * this method will get the CPF Contribution
+     * this method will get Annual Income(after deduction of cpf) and CPF Contribution
      *
      * @param annualIncome Annual Income
      * @param currentAge   Current age
-     * @return CPF Contribution
+     * @return CalculatedValues
+     * <ul>
+     * <li>0 - Annual Income after deducted for CPF</li>
+     * <li>1 - CPF Contribution</li>
+     * </ul>
      */
-    public float getCPFContribution(float annualIncome, int currentAge) {
+    public List<Float> getCPFContribution(float annualIncome, int currentAge) {
+        List<Float> calculatedValues = new ArrayList<>();
         float cpfContribution;
         if (currentAge <= 55) {
+            //CPF Contribution from employer
             cpfContribution = annualIncome * 0.37f;
+            //Annual income after deducted for CPR
+            annualIncome = annualIncome * 0.8f;
             if (cpfContribution > 2200 * 12) {
                 cpfContribution = 2200 * 12;
             }
         } else if (currentAge <= 60) {
             cpfContribution = annualIncome * 0.26f;
+            annualIncome = annualIncome * 0.87f;
             if (cpfContribution > 1560 * 12) {
                 cpfContribution = 1560 * 12;
             }
         } else if (currentAge <= 65) {
             cpfContribution = annualIncome * 0.165f;
+            annualIncome = annualIncome * 0.925f;
             if (cpfContribution > 990 * 12) {
                 cpfContribution = 990 * 12;
             }
         } else {
             cpfContribution = annualIncome * 0.125f;
+            annualIncome = annualIncome * 0.95f;
             if (cpfContribution > 750 * 12) {
                 cpfContribution = 750 * 12;
             }
         }
-        return cpfContribution;
+        calculatedValues.add(annualIncome);
+        calculatedValues.add(cpfContribution);
+        return calculatedValues;
     }
 
     /**
@@ -651,23 +657,20 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
             //if event status is Recurring, add current age and duration else current age
             //Note: all duration -1 because it starts from current year
-            if (eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_STATUS)
-                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(eventsList.get(i).getStatus())) {
 
                 eventHashmap.put(KeyConstants.KEY_EVENT_START_AGE,
-                        eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                        String.valueOf(eventsList.get(i).getAge()));
                 eventHashmap.put(KeyConstants.KEY_EVENT_TILL_AGE, String.valueOf(
-                        Integer.valueOf(eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE)) +
-                                Integer.valueOf(eventsList.get(i).get(SQLConstants.EVENT_TABLE_DURATION)) - 1));
+                        eventsList.get(i).getAge() + eventsList.get(i).getDuration() - 1));
             } else {
                 eventHashmap.put(KeyConstants.KEY_EVENT_START_AGE,
-                        eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                        String.valueOf(eventsList.get(i).getAge()));
                 eventHashmap.put(KeyConstants.KEY_EVENT_TILL_AGE,
-                        eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                        String.valueOf(eventsList.get(i).getAge()));
             }
             eventHashmap.put(KeyConstants.KEY_EVENT_RECURRING,
-                    String.valueOf(0 - Float.valueOf(eventsList.get(i)
-                            .get(SQLConstants.EVENT_TABLE_AMOUNT))));
+                    String.valueOf(0 - eventsList.get(i).getAmount()));
 
             hashMapList.add(eventHashmap);
         }
@@ -676,23 +679,20 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             HashMap<String, String> milestoneHashmap = new HashMap<>();
 
             //if milestone status is Recurring, add current age and duration else current age
-            if (milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)
-                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(milestonesList.get(i).getStatus())) {
 
                 milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE,
-                        milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
+                        String.valueOf(milestonesList.get(i).getAge()));
                 milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE, String.valueOf(
-                        Integer.valueOf(milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)) +
-                                Integer.valueOf(milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_DURATION)) - 1));
+                        milestonesList.get(i).getAge() + milestonesList.get(i).getDuration() - 1));
             } else {
-                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE, milestonesList.get(i).
-                        get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
-                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE, milestonesList.get(i).
-                        get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE,
+                        String.valueOf(milestonesList.get(i).getAge()));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE,
+                        String.valueOf(milestonesList.get(i).getAge()));
             }
             milestoneHashmap.put(KeyConstants.KEY_MILESTONE_RECURRING,
-                    String.valueOf(0 - Float.valueOf(milestonesList.get(i)
-                            .get(SQLConstants.MILESTONE_TABLE_AMOUNT))));
+                    String.valueOf(0 - milestonesList.get(i).getAmount()));
 
             hashMapList.add(milestoneHashmap);
         }
@@ -701,34 +701,30 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             HashMap<String, String> planHashmap = new HashMap<>();
 
             //if plan status is Recurring, add current age and duration else current age
-            if (plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)
-                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(plansList.get(i).getPaymentType())) {
 
                 planHashmap.put(KeyConstants.KEY_PLAN_START_AGE,
-                        plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                        String.valueOf(plansList.get(i).getPremiumStartAge()));
                 planHashmap.put(KeyConstants.KEY_PLAN_TILL_AGE, String.valueOf(
-                        Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)) +
-                                Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PLAN_DURATION)) - 1));
+                        plansList.get(i).getPremiumStartAge() +
+                                plansList.get(i).getPlanDuration() - 1));
             } else {
                 planHashmap.put(KeyConstants.KEY_PLAN_START_AGE,
-                        plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                        String.valueOf(plansList.get(i).getPremiumStartAge()));
                 planHashmap.put(KeyConstants.KEY_PLAN_TILL_AGE,
-                        plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                        String.valueOf(plansList.get(i).getPremiumStartAge()));
             }
             planHashmap.put(KeyConstants.KEY_PLAN_RECURRING,
-                    String.valueOf(0 - Float.valueOf(plansList.get(i)
-                            .get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
+                    String.valueOf(0 - plansList.get(i).getPaymentAmount()));
 
             planHashmap.put(KeyConstants.KEY_PAYOUT_START_AGE,
-                    plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AGE));
+                    String.valueOf(plansList.get(i).getPayoutAge()));
 
             planHashmap.put(KeyConstants.KEY_PAYOUT_TILL_AGE, String.valueOf(
-                    Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AGE)) +
-                            Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)) - 1));
+                    plansList.get(i).getPayoutAge() + plansList.get(i).getPayoutDuration() - 1));
 
             planHashmap.put(KeyConstants.KEY_PAYOUT_RECURRING, String.valueOf(
-                    Float.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)) /
-                            Float.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
+                    plansList.get(i).getPayoutAmount() / plansList.get(i).getPayoutDuration()));
 
             hashMapList.add(planHashmap);
         }
@@ -784,13 +780,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             selectedScenarioModelList.add(new SelectedScenarioModel(
                     ScreenConstants.TOOLBAR_TITLE_EVENTS, SelectedScenarioModel.SECTION_HEADER));
 
-            for (HashMap<String, String> event : eventsList) {
-                selectedScenarioModelList.add(new SelectedScenarioModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME),
-                        event.get(SQLConstants.EVENT_TABLE_EVENT_TYPE),
-                        event.get(SQLConstants.EVENT_TABLE_EVENT_AGE),
-                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(event.get(SQLConstants.EVENT_TABLE_AMOUNT)))),
-                        event.get(SQLConstants.EVENT_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+            for (CommonModel event : eventsList) {
+                selectedScenarioModelList.add(new SelectedScenarioModel(event.getName(),
+                        event.getType(), String.valueOf(event.getAge()),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(event.getAmount())),
+                        String.valueOf(event.getDuration()), SelectedScenarioModel.OTHER_SCENARIO));
             }
         }
 
@@ -798,13 +792,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             selectedScenarioModelList.add(new SelectedScenarioModel(
                     ScreenConstants.TOOLBAR_TITLE_MILESTONES, SelectedScenarioModel.SECTION_HEADER));
 
-            for (HashMap<String, String> milestone : milestonesList) {
-                selectedScenarioModelList.add(new SelectedScenarioModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
-                        milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE),
-                        milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE),
-                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_AMOUNT)))),
-                        milestone.get(SQLConstants.MILESTONE_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+            for (CommonModel milestone : milestonesList) {
+                selectedScenarioModelList.add(new SelectedScenarioModel(milestone.getName(),
+                        milestone.getType(), String.valueOf(milestone.getAge()),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(milestone.getAmount())),
+                        String.valueOf(milestone.getDuration()), SelectedScenarioModel.OTHER_SCENARIO));
             }
 
         }
@@ -813,19 +805,16 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             selectedScenarioModelList.add(new SelectedScenarioModel(
                     ScreenConstants.TOOLBAR_TITLE_PLANS, SelectedScenarioModel.SECTION_HEADER));
 
-            for (HashMap<String, String> plan : plansList) {
-                Log.d(TAG, "recyclerViewSetup: plan status: " + plan.get(SQLConstants.PLAN_TABLE_PLAN_STATUS));
-                selectedScenarioModelList.add(new SelectedScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
-                        plan.get(SQLConstants.PLAN_TABLE_PLAN_TYPE),
-                        plan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE),
+            for (PlanModel plan : plansList) {
+                Log.d(TAG, "recyclerViewSetup: plan status: " + plan.getPlanStatus());
+                selectedScenarioModelList.add(new SelectedScenarioModel(plan.getPlanName(),
+                        plan.getPlanType(), String.valueOf(plan.getPremiumStartAge()),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)))),
-                        plan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION),
-                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE),
+                                .format(plan.getPaymentAmount())),
+                        String.valueOf(plan.getPlanDuration()), String.valueOf(plan.getPayoutAge()),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)))),
-                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION),
-                        plan.get(SQLConstants.PLAN_TABLE_PLAN_STATUS),
+                                .format(plan.getPayoutAmount())),
+                        String.valueOf(plan.getPayoutDuration()), plan.getPlanStatus(),
                         SelectedScenarioModel.PLAN_SCENARIO));
             }
         }
@@ -835,7 +824,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             SelectedScenarioAdapter selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
             RecyclerView.LayoutManager mLayoutManager = null;
             if (getActivity() != null) {
-                 mLayoutManager= new LinearLayoutManager(
+                mLayoutManager = new LinearLayoutManager(
                         getActivity().getApplicationContext());
             }
             mRecyclerView.setLayoutManager(mLayoutManager);

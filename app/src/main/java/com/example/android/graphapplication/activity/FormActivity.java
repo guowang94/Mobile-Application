@@ -67,14 +67,15 @@ public class FormActivity extends AppCompatActivity {
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
+        //tod need to comment
 //        mNameInput.getEditText().setText("wang");
 //        mAgeInput.getEditText().setText("24");
-//        mRetirementAgeInput.getEditText().setText("55");
-//        mExpectancyInput.getEditText().setText("90");
-//        mIncomeInput.getEditText().setText("4000");
-//        mIncrementInput.getEditText().setText("8");
-//        mFixedExpensesInput.getEditText().setText("400");
-//        mVariableExpensesInput.getEditText().setText("800");
+//        mRetirementAgeInput.getEditText().setText("30");
+//        mExpectancyInput.getEditText().setText("34");
+//        mIncomeInput.getEditText().setText("1000");
+//        mIncrementInput.getEditText().setText("5");
+//        mFixedExpensesInput.getEditText().setText("100");
+//        mVariableExpensesInput.getEditText().setText("100");
 //        mInflationInput.getEditText().setText("5");
 //        mAssets.getEditText().setText("10000");
 
@@ -239,17 +240,11 @@ public class FormActivity extends AppCompatActivity {
                 } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 999 &&
                         Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 18) {
                     mRetirementAgeInput.setErrorEnabled(false);
+                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) <
+                        Integer.valueOf(mAgeInput.getEditText().getText().toString())) {
+                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_RETIREMENT_AGE);
                 } else {
                     mRetirementAgeInput.setErrorEnabled(false);
-                }
-
-                if (!mRetirementAgeInput.isErrorEnabled()) {
-                    if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) <
-                            Integer.valueOf(mAgeInput.getEditText().getText().toString())) {
-                        mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_RETIREMENT_AGE);
-                    } else {
-                        mRetirementAgeInput.setErrorEnabled(false);
-                    }
                 }
             }
         } catch (NumberFormatException e) {
@@ -268,22 +263,16 @@ public class FormActivity extends AppCompatActivity {
                 } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 999 &&
                         Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 18) {
                     mExpectancyInput.setErrorEnabled(false);
+                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
+                        Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
+                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
+                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
+                        Integer.valueOf(mAgeInput.getEditText().getText().toString()) ||
+                        Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
+                                Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
+                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
                 } else {
                     mExpectancyInput.setErrorEnabled(false);
-                }
-
-                if (!mExpectancyInput.isErrorEnabled()) {
-                    if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
-                            Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
-                        mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
-                    } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
-                            Integer.valueOf(mAgeInput.getEditText().getText().toString()) ||
-                            Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
-                                    Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
-                        mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
-                    } else {
-                        mExpectancyInput.setErrorEnabled(false);
-                    }
                 }
             }
         } catch (NumberFormatException e) {

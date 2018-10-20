@@ -26,15 +26,14 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.RecyclerViewTouchListener;
 import com.example.android.graphapplication.activity.MilestoneActivity;
-import com.example.android.graphapplication.adapter.CommonAdapter;
+import com.example.android.graphapplication.adapter.CommonTitleAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.CommonTitleModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MilestoneFragment extends Fragment {
@@ -45,8 +44,8 @@ public class MilestoneFragment extends Fragment {
     private TextView mToolbarTitle;
     private TextView mEmptyRecyclerTextView;
 
-    private CommonAdapter mMilestonesAdapter;
-    private List<CommonModel> milestonesModelList = new ArrayList<>();
+    private CommonTitleAdapter mMilestonesAdapter;
+    private List<CommonTitleModel> milestonesModelList = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -121,10 +120,10 @@ public class MilestoneFragment extends Fragment {
 
         final Context context = getActivity().getApplicationContext();
 
-        final List<HashMap<String, String>> milestoneList = mydb.getAllMilestone();
+        final List<CommonModel> milestoneList = mydb.getAllMilestone();
         if (milestonesModelList.size() == 0) {
-            for (HashMap<String, String> milestone : milestoneList) {
-                this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            for (CommonModel milestone : milestoneList) {
+                this.milestonesModelList.add(new CommonTitleModel(milestone.getName()));
             }
         }
 
@@ -134,8 +133,8 @@ public class MilestoneFragment extends Fragment {
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
-        //Recycler View Setup for CommonModel
-        mMilestonesAdapter = new CommonAdapter(this.milestonesModelList);
+        //Recycler View Setup for CommonTitleModel
+        mMilestonesAdapter = new CommonTitleAdapter(this.milestonesModelList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mMilestonesRecyclerView.setLayoutManager(layoutManager);
@@ -147,13 +146,11 @@ public class MilestoneFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: milestone TABLE_ID, " + milestoneList.get(position)
-                        .get(SQLConstants.TABLE_ID));
+                Log.d(TAG, "onClick: milestone TABLE_ID, " + milestoneList.get(position).getId());
                 startActivity(new Intent(getActivity().getApplicationContext(), MilestoneActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, "Edit")
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
-                                Integer.valueOf(milestoneList.get(position)
-                                        .get(SQLConstants.TABLE_ID))));
+                                Integer.valueOf(milestoneList.get(position).getId())));
             }
 
             @Override
@@ -171,8 +168,7 @@ public class MilestoneFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
                         mMilestonesAdapter.removeItem(position);
-                        mydb.deleteMilestone(Integer.valueOf(milestoneList.get(position)
-                                .get(SQLConstants.TABLE_ID)));
+                        mydb.deleteMilestone(milestoneList.get(position).getId());
                     }
                 });
 

@@ -1,7 +1,6 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -23,9 +22,10 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
 
@@ -53,7 +53,7 @@ public class EventActivity extends AppCompatActivity implements
     private DBHelper mydb;
 
     private String eventTypeSpinnerValue;
-    private String yearSpinnerValue;
+    private int ageSpinnerValue;
     private String eventAction;
     private int currentEventID;
     private String ageRange[];
@@ -147,20 +147,15 @@ public class EventActivity extends AppCompatActivity implements
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        Cursor rs = mydb.getData(SQLConstants.EVENT_TABLE, currentEventID);
-        rs.moveToFirst();
+        CommonModel eventModel = mydb.getEventDetails(currentEventID);
 
-        String eventName = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME));
-        String eventType = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE));
-        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE));
-        String description = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION));
-        String eventStatus = rs.getString(rs.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS));
-        String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
-        String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        String eventName = eventModel.getName();
+        String eventType = eventModel.getType();
+        String ageOccurred = String.valueOf(eventModel.getAge());
+        String description = eventModel.getDescription();
+        String eventStatus = eventModel.getStatus();
+        String amount = String.valueOf(eventModel.getAmount());
+        String duration = String.valueOf(eventModel.getDuration());
 
         Log.d(TAG, "displayData: " + eventName);
 
@@ -176,7 +171,7 @@ public class EventActivity extends AppCompatActivity implements
         }
 
         for (int i = 0; i < ageRange.length; i++) {
-            if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
+            if (ageRange[i].equalsIgnoreCase(ageOccurred)) {
                 mAgeSpinner.setSelection(i);
             }
         }
@@ -329,7 +324,7 @@ public class EventActivity extends AppCompatActivity implements
             case R.id.age_spinner:
                 Log.i(TAG, "onItemChosen: " + mAgeSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
-                yearSpinnerValue = mAgeSpinner.getSpinner().getItemAtPosition(position).toString();
+                ageSpinnerValue = Integer.valueOf(mAgeSpinner.getSpinner().getItemAtPosition(position).toString());
                 break;
 
             default:
@@ -439,14 +434,16 @@ public class EventActivity extends AppCompatActivity implements
                         }
                     }
 
+                    Log.d(TAG, "displayData: description: " + description);
+
                     if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
 
-                        mydb.insertEvent(eventName, eventTypeSpinnerValue, yearSpinnerValue, description,
+                        mydb.insertEvent(eventName, eventTypeSpinnerValue, ageSpinnerValue, description,
                                 eventStatus, amount, duration);
 
                     } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)) {
 
-                        mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, yearSpinnerValue,
+                        mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, ageSpinnerValue,
                                 description, eventStatus, amount, duration);
                     }
 
@@ -473,15 +470,10 @@ public class EventActivity extends AppCompatActivity implements
         mEventTypeSpinner.setItemsArray(R.array.event_type_array);
         mEventTypeSpinner.setOnItemChosenListener(this);
 
-        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
-        rs.moveToFirst();
+        UserModel userModel = mydb.getAllUser().get(0);
 
-        int currentAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
-        int expectancyAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        int currentAge = userModel.getAge();
+        int expectancyAge = userModel.getExpectancy();
 
         //Create age range
         ageRange = new String[expectancyAge - currentAge + 1];

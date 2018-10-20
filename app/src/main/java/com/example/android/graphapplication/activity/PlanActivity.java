@@ -2,7 +2,6 @@ package com.example.android.graphapplication.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
@@ -22,9 +21,10 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.PlanModel;
+import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
@@ -164,24 +164,18 @@ public class PlanActivity extends AppCompatActivity {
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        Cursor rs = mydb.getData(SQLConstants.PLAN_TABLE, currentPlanID);
-        rs.moveToFirst();
+        PlanModel planModel = mydb.getPlanDetails(currentPlanID);
 
-        String planName = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME));
-        String planType = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE));
-        String paymentType = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE));
-        String premiumStartAge = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)));
-        String paymentAmount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)));
-        String planduration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION)));
-        String payoutAge = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE)));
-        String payoutAmount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)));
-        String payoutDuration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
-        String planStatus = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS));
-
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        String planName = planModel.getPlanName();
+        String planType = planModel.getPlanType();
+        String paymentType = planModel.getPaymentType();
+        String premiumStartAge = String.valueOf(planModel.getPremiumStartAge());
+        String paymentAmount = String.valueOf(planModel.getPaymentAmount());
+        String planduration = String.valueOf(planModel.getPlanDuration());
+        String payoutAge = String.valueOf(planModel.getPayoutAge());
+        String payoutAmount = String.valueOf(planModel.getPayoutAmount());
+        String payoutDuration = String.valueOf(planModel.getPayoutDuration());
+        String planStatus = planModel.getPlanStatus();
 
         Log.d(TAG, "displayData: " + planName);
 
@@ -277,7 +271,7 @@ public class PlanActivity extends AppCompatActivity {
                 }
 
                 if (!validation.blankFieldValidation(mPayoutAgeInputLayout)) {
-                    validation.negativeValueValidation(mPayoutAgeInputLayout);
+                    ageValidation();
                 }
 
                 if (!validation.blankFieldValidation(mPayoutAmountInputLayout)) {
@@ -423,11 +417,18 @@ public class PlanActivity extends AppCompatActivity {
      * This method will validate the age input
      */
     private void ageValidation() {
+
+        UserModel userModel = mydb.getAllUser().get(0);
+        int userAge = userModel.getAge();
+        int expectancy = userModel.getExpectancy();
+
         //validate premium start age
         try {
             if (mPremiumStartAgeInputLayout.getEditText() != null) {
                 if (mPremiumStartAgeInputLayout.getEditText().getText().toString().isEmpty()) {
                     mPremiumStartAgeInputLayout.setErrorEnabled(false);
+                } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) > expectancy) {
+                    mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY);
                 } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) > 999) {
                     mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
                 } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) < 18) {
@@ -449,22 +450,13 @@ public class PlanActivity extends AppCompatActivity {
                     mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
                 } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) < 18) {
                     mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
-                }
-//                else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) < 999 &&
-//                        Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) > 18) {
-//                    mPayoutAgeInputLayout.setErrorEnabled(false);
-//                }
-                else {
+                } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) > expectancy) {
+                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY);
+                } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) <
+                        Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString())) {
+                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_PAYOUT_AGE);
+                } else {
                     mPayoutAgeInputLayout.setErrorEnabled(false);
-                }
-
-                if (!mPayoutAgeInputLayout.isErrorEnabled()) {
-                    if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) <
-                            Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString())) {
-                        mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_PAYOUT_AGE);
-                    } else {
-                        mPayoutAgeInputLayout.setErrorEnabled(false);
-                    }
                 }
             }
         } catch (NumberFormatException e) {

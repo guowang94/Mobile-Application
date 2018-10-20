@@ -1,7 +1,6 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -22,9 +21,10 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
 
@@ -52,7 +52,7 @@ public class MilestoneActivity extends AppCompatActivity implements
     private DBHelper mydb;
 
     private String milestoneTypeSpinnerValue;
-    private String ageSpinnerValue;
+    private int ageSpinnerValue;
     private String milestoneAction;
     private int currentMilestoneID;
     private String ageRange[];
@@ -145,20 +145,15 @@ public class MilestoneActivity extends AppCompatActivity implements
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        Cursor rs = mydb.getData(SQLConstants.MILESTONE_TABLE, currentMilestoneID);
-        rs.moveToFirst();
+        CommonModel milestoneModel = mydb.getMilestoneDetails(currentMilestoneID);
 
-        String milestoneName = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME));
-        String milestoneType = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE));
-        String yearOccurred = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
-        String description = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION));
-        String milestoneStatus = rs.getString(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS));
-        String amount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
-        String duration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        String milestoneName = milestoneModel.getName();
+        String milestoneType = milestoneModel.getType();
+        String ageOccurred = String.valueOf(milestoneModel.getAge());
+        String description = milestoneModel.getDescription();
+        String milestoneStatus = milestoneModel.getStatus();
+        String amount = String.valueOf(milestoneModel.getAmount());
+        String duration = String.valueOf(milestoneModel.getDuration());
 
         Log.d(TAG, "displayData: " + milestoneName);
 
@@ -174,7 +169,7 @@ public class MilestoneActivity extends AppCompatActivity implements
         }
 
         for (int i = 0; i < ageRange.length; i++) {
-            if (ageRange[i].equalsIgnoreCase(yearOccurred)) {
+            if (ageRange[i].equalsIgnoreCase(ageOccurred)) {
                 mAgeSpinner.setSelection(i);
             }
         }
@@ -327,7 +322,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             case R.id.age_spinner:
                 Log.i(TAG, "onItemChosen: " + mAgeSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
-                ageSpinnerValue = mAgeSpinner.getSpinner().getItemAtPosition(position).toString();
+                ageSpinnerValue = Integer.valueOf(mAgeSpinner.getSpinner().getItemAtPosition(position).toString());
                 break;
 
             default:
@@ -471,15 +466,10 @@ public class MilestoneActivity extends AppCompatActivity implements
         mMilestoneTypeSpinner.setItemsArray(R.array.milestone_type_array);
         mMilestoneTypeSpinner.setOnItemChosenListener(this);
 
-        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
-        rs.moveToFirst();
+        UserModel userModel = mydb.getAllUser().get(0);
 
-        int currentAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
-        int expectancyAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        int currentAge = userModel.getAge();
+        int expectancyAge = userModel.getExpectancy();
 
         //Create age range
         ageRange = new String[expectancyAge - currentAge + 1];

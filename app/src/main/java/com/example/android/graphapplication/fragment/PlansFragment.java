@@ -26,15 +26,14 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.RecyclerViewTouchListener;
 import com.example.android.graphapplication.activity.PlanActivity;
-import com.example.android.graphapplication.adapter.CommonAdapter;
+import com.example.android.graphapplication.adapter.CommonTitleAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.CommonTitleModel;
+import com.example.android.graphapplication.model.PlanModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PlansFragment extends Fragment {
@@ -45,8 +44,8 @@ public class PlansFragment extends Fragment {
     private TextView mToolbarTitle;
     private TextView mEmptyRecyclerTextView;
 
-    private CommonAdapter mPlansAdapter;
-    private List<CommonModel> plansModelList = new ArrayList<>();
+    private CommonTitleAdapter mPlansAdapter;
+    private List<CommonTitleModel> plansModelList = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -121,10 +120,10 @@ public class PlansFragment extends Fragment {
 
         final Context context = getActivity().getApplicationContext();
 
-        final List<HashMap<String, String>> plansList = mydb.getAllPlan();
+        final List<PlanModel> plansList = mydb.getAllPlan();
         if (plansModelList.size() == 0) {
-            for (HashMap<String, String> plan : plansList) {
-                this.plansModelList.add(new CommonModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            for (PlanModel plan : plansList) {
+                this.plansModelList.add(new CommonTitleModel(plan.getPlanName()));
             }
         }
 
@@ -134,8 +133,8 @@ public class PlansFragment extends Fragment {
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
-        //Recycler View Setup for CommonModel
-        mPlansAdapter = new CommonAdapter(this.plansModelList);
+        //Recycler View Setup for CommonTitleModel
+        mPlansAdapter = new CommonTitleAdapter(this.plansModelList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mPlansRecyclerView.setLayoutManager(layoutManager);
@@ -147,13 +146,11 @@ public class PlansFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: plan TABLE_ID, " + plansList.get(position)
-                        .get(SQLConstants.TABLE_ID));
+                Log.d(TAG, "onClick: plan TABLE_ID, " + plansList.get(position).getId());
                 startActivity(new Intent(context, PlanActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_EDIT)
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
-                                Integer.valueOf(plansList.get(position)
-                                        .get(SQLConstants.TABLE_ID))));
+                                Integer.valueOf(plansList.get(position).getId())));
             }
 
             @Override
@@ -170,8 +167,7 @@ public class PlansFragment extends Fragment {
                 alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
-                        mydb.deletePlan(Integer.valueOf(plansList.get(position)
-                                .get(SQLConstants.TABLE_ID)));
+                        mydb.deletePlan(plansList.get(position).getId());
                         mPlansAdapter.removeItem(position);
                     }
                 });

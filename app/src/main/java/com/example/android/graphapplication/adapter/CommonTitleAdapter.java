@@ -9,17 +9,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.CommonTitleModel;
 
 import java.util.List;
 
-public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHolder> {
+public class CommonTitleAdapter extends RecyclerView.Adapter<CommonTitleAdapter.MyViewHolder> {
 
-    private static final String TAG = "CommonAdapter";
-    private List<CommonModel> commonModels;
+    private static final String TAG = "CommonTitleAdapter";
+    private List<CommonTitleModel> commonTitleModels;
 
-    public CommonAdapter(List<CommonModel> commonModels) {
-        this.commonModels = commonModels;
+    public CommonTitleAdapter(List<CommonTitleModel> commonTitleModels) {
+        this.commonTitleModels = commonTitleModels;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -36,7 +36,7 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHold
 
     @Override
     @NonNull
-    public CommonAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CommonTitleAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row_event, parent, false);
 
@@ -44,21 +44,21 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CommonAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CommonTitleAdapter.MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        CommonModel commonModel = this.commonModels.get(position);
-        Log.i(TAG, "onBindViewHolder: " + commonModel.toString());
-        holder.mTitle.setText(commonModel.getTitle());
+        CommonTitleModel commonTitleModel = this.commonTitleModels.get(position);
+        Log.i(TAG, "onBindViewHolder: " + commonTitleModel.toString());
+        holder.mTitle.setText(commonTitleModel.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return commonModels.size();
+        return commonTitleModels.size();
     }
 
     public void removeItem(int position) {
-        commonModels.remove(position);
+        commonTitleModels.remove(position);
         // notify the item removed by position to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
         notifyItemRemoved(position);

@@ -12,9 +12,6 @@ public interface ErrorMsgConstants {
     String ERR_MSG_INVALID_VARIABLE_EXPENSES = "Variable expenses cannot be less than $0";
     String ERR_MSG_INVALID_INCREMENT = "Increment rate cannot be less than 0";
     String ERR_MSG_INVALID_INFLATION = "Inflation rate cannot be less than 0";
-    String ERR_MSG_INVALID_EVENT_NAME = "Please enter valid event name";
-    String ERR_MSG_INVALID_MILESTONE_NAME = "Please enter valid milestone name";
-    String ERR_MSG_INVALID_PLAN_NAME = "Please enter valid plan name";
     String ERR_MSG_INVALID_DURATION = "Duration cannot be less than 0";
     String ERR_MSG_INVALID_COST_PER_YEAR = "Cost per year cannot be less than $0";
     String ERR_MSG_INVALID_AMOUNT = "Amount cannot be less than $0";
@@ -24,4 +21,5 @@ public interface ErrorMsgConstants {
     String ERR_MSG_FIELD_CANNOT_BE_BLANK = "This field cannot be blank";
     String ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18 = "Age cannot be less than 18";
     String ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999 = "Age cannot be more than 999 years old";
+    String ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY = "Age cannot be more than Expectancy";
 }
