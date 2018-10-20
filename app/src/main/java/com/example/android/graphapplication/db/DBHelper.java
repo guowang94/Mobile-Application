@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
+import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.UserModel;
 
 import java.util.ArrayList;
@@ -114,8 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<UserModel> userModelList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_TABLE
-                .replace("$1", SQLConstants.USER_TABLE), null);
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_USER_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
@@ -238,8 +239,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<HashMap<String, String>> eventsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_TABLE
-                .replace("$1", SQLConstants.EVENT_TABLE), null);
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_EVENT_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
@@ -268,6 +268,33 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method to get event details
+     *
+     * @param id id of current event
+     * @return event details
+     */
+    public CommonModel getEventDetails(int id) {
+        CommonModel eventModel = new CommonModel();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_EVENT_TABLE_WHERE_ID + id, null);
+        res.moveToFirst();
+
+        eventModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+        eventModel.setName(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+        eventModel.setAge(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+        eventModel.setType(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
+        eventModel.setDescription(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION)));
+        eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
+        eventModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
+        eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
+        eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+
+        res.close();
+        return eventModel;
+    }
+
+    /**
      * This method to get all selected event
      *
      * @return list of selected event
@@ -276,8 +303,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<HashMap<String, String>> eventsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_TABLE
-                .replace("$1", SQLConstants.EVENT_TABLE), null);
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_EVENT_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
@@ -397,8 +423,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<HashMap<String, String>> milestonesList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_TABLE
-                .replace("$1", SQLConstants.MILESTONE_TABLE), null);
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_MILESTONE_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
@@ -427,6 +452,33 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method to get milestone details
+     *
+     * @param id id of current milestone
+     * @return milestone details
+     */
+    public CommonModel getMilestoneDetails(int id) {
+        CommonModel milestoneModel = new CommonModel();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_MILESTONE_TABLE_WHERE_ID + id, null);
+        res.moveToFirst();
+
+        milestoneModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+        milestoneModel.setName(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+        milestoneModel.setAge(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
+        milestoneModel.setType(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE)));
+        milestoneModel.setDescription(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION)));
+        milestoneModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
+        milestoneModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
+        milestoneModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
+        milestoneModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+
+        res.close();
+        return milestoneModel;
+    }
+
+    /**
      * This method to get all selected milestone
      *
      * @return list of selected milestone
@@ -435,8 +487,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<HashMap<String, String>> milestonesList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_TABLE
-                .replace("$1", SQLConstants.MILESTONE_TABLE), null);
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_MILESTONE_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
@@ -571,8 +622,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<HashMap<String, String>> plansList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_TABLE
-                .replace("$1", SQLConstants.PLAN_TABLE), null);
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_PLAN_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
@@ -617,8 +667,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<HashMap<String, String>> plansList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_TABLE
-                .replace("$1", SQLConstants.PLAN_TABLE), null);
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_PLAN_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
@@ -745,6 +794,36 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method to get plan details
+     *
+     * @param id id of current plan
+     * @return plan details
+     */
+    public PlanModel getPlanDetails(int id) {
+        PlanModel planModel = new PlanModel();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_PLAN_TABLE_WHERE_ID + id, null);
+        res.moveToFirst();
+
+        planModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+        planModel.setPlanName(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+        planModel.setPlanType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
+        planModel.setPaymentType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
+        planModel.setPremiumStartAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)));
+        planModel.setPaymentAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)));
+        planModel.setPlanDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION)));
+        planModel.setPayoutAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE)));
+        planModel.setPayoutDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
+        planModel.setPayoutAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)));
+        planModel.setPlanStatus(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
+        planModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+
+        res.close();
+        return planModel;
+    }
+
+    /**
      * This method to return number of rows in the table
      *
      * @return number of rows
@@ -755,26 +834,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method to get Data based on id
-     *
-     * @param tableName Table name in db
-     * @param id        ID of current row in the table
-     * @return Cursor
-     */
-    public Cursor getData(String tableName, int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery(SQLConstants.SELECT_ALL_FROM_TABLE_WHERE_ID.replace("$1", tableName)
-                .replace("$2", id + ""), null);
-    }
-
-    /**
      * This method to delete all records
      */
     public void deleteAllRecords() {
         SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL(SQLConstants.DELETE_TABLE.replace("$1", SQLConstants.USER_TABLE));
-//        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
-//        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
-//        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
+        db.execSQL(SQLConstants.DELETE_USER_TABLE);
+        //tod need to uncomment
+        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
     }
 }

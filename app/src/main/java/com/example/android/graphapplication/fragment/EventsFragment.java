@@ -26,12 +26,12 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.RecyclerViewTouchListener;
 import com.example.android.graphapplication.activity.EventActivity;
-import com.example.android.graphapplication.adapter.CommonAdapter;
+import com.example.android.graphapplication.adapter.CommonTitleAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.CommonTitleModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +45,8 @@ public class EventsFragment extends Fragment {
     private TextView mToolbarTitle;
     private TextView mEmptyRecyclerTextView;
 
-    private CommonAdapter mEventsAdapter;
-    private List<CommonModel> eventsModelList = new ArrayList<>();
+    private CommonTitleAdapter mEventsAdapter;
+    private List<CommonTitleModel> eventsModelList = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -122,7 +122,7 @@ public class EventsFragment extends Fragment {
 
         final List<HashMap<String, String>> eventsList = mydb.getAllEvent();
         for (HashMap<String, String> event : eventsList) {
-            this.eventsModelList.add(new CommonModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            this.eventsModelList.add(new CommonTitleModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME)));
         }
 
         if (eventsModelList.size() == 0) {
@@ -131,8 +131,8 @@ public class EventsFragment extends Fragment {
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
-        //Recycler View Setup for CommonModel
-        mEventsAdapter = new CommonAdapter(this.eventsModelList);
+        //Recycler View Setup for CommonTitleModel
+        mEventsAdapter = new CommonTitleAdapter(this.eventsModelList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mEventsRecyclerView.setLayoutManager(layoutManager);

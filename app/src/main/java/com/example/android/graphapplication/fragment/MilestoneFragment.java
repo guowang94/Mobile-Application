@@ -26,12 +26,12 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.RecyclerViewTouchListener;
 import com.example.android.graphapplication.activity.MilestoneActivity;
-import com.example.android.graphapplication.adapter.CommonAdapter;
+import com.example.android.graphapplication.adapter.CommonTitleAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.CommonTitleModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +45,8 @@ public class MilestoneFragment extends Fragment {
     private TextView mToolbarTitle;
     private TextView mEmptyRecyclerTextView;
 
-    private CommonAdapter mMilestonesAdapter;
-    private List<CommonModel> milestonesModelList = new ArrayList<>();
+    private CommonTitleAdapter mMilestonesAdapter;
+    private List<CommonTitleModel> milestonesModelList = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -124,7 +124,7 @@ public class MilestoneFragment extends Fragment {
         final List<HashMap<String, String>> milestoneList = mydb.getAllMilestone();
         if (milestonesModelList.size() == 0) {
             for (HashMap<String, String> milestone : milestoneList) {
-                this.milestonesModelList.add(new CommonModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+                this.milestonesModelList.add(new CommonTitleModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
             }
         }
 
@@ -134,8 +134,8 @@ public class MilestoneFragment extends Fragment {
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
-        //Recycler View Setup for CommonModel
-        mMilestonesAdapter = new CommonAdapter(this.milestonesModelList);
+        //Recycler View Setup for CommonTitleModel
+        mMilestonesAdapter = new CommonTitleAdapter(this.milestonesModelList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mMilestonesRecyclerView.setLayoutManager(layoutManager);

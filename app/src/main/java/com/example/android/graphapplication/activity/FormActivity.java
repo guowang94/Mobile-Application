@@ -67,6 +67,7 @@ public class FormActivity extends AppCompatActivity {
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
+        //tod need to comment
 //        mNameInput.getEditText().setText("wang");
 //        mAgeInput.getEditText().setText("24");
 //        mRetirementAgeInput.getEditText().setText("30");

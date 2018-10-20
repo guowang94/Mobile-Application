@@ -26,12 +26,12 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.RecyclerViewTouchListener;
 import com.example.android.graphapplication.activity.PlanActivity;
-import com.example.android.graphapplication.adapter.CommonAdapter;
+import com.example.android.graphapplication.adapter.CommonTitleAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.CommonTitleModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +45,8 @@ public class PlansFragment extends Fragment {
     private TextView mToolbarTitle;
     private TextView mEmptyRecyclerTextView;
 
-    private CommonAdapter mPlansAdapter;
-    private List<CommonModel> plansModelList = new ArrayList<>();
+    private CommonTitleAdapter mPlansAdapter;
+    private List<CommonTitleModel> plansModelList = new ArrayList<>();
     private boolean isViewShown = false;
     private boolean isViewLoaded = false;
     private boolean isDataLoaded = false;
@@ -124,7 +124,7 @@ public class PlansFragment extends Fragment {
         final List<HashMap<String, String>> plansList = mydb.getAllPlan();
         if (plansModelList.size() == 0) {
             for (HashMap<String, String> plan : plansList) {
-                this.plansModelList.add(new CommonModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+                this.plansModelList.add(new CommonTitleModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME)));
             }
         }
 
@@ -134,8 +134,8 @@ public class PlansFragment extends Fragment {
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
-        //Recycler View Setup for CommonModel
-        mPlansAdapter = new CommonAdapter(this.plansModelList);
+        //Recycler View Setup for CommonTitleModel
+        mPlansAdapter = new CommonTitleAdapter(this.plansModelList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
         mPlansRecyclerView.setLayoutManager(layoutManager);

@@ -2,7 +2,6 @@ package com.example.android.graphapplication.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
@@ -22,9 +21,9 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.validations.Validation;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
@@ -164,24 +163,18 @@ public class PlanActivity extends AppCompatActivity {
     private void displayData() {
         Log.d(TAG, "displayData: in");
 
-        Cursor rs = mydb.getData(SQLConstants.PLAN_TABLE, currentPlanID);
-        rs.moveToFirst();
+        PlanModel planModel = mydb.getPlanDetails(currentPlanID);
 
-        String planName = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME));
-        String planType = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE));
-        String paymentType = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE));
-        String premiumStartAge = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)));
-        String paymentAmount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)));
-        String planduration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION)));
-        String payoutAge = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE)));
-        String payoutAmount = String.valueOf(rs.getFloat(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)));
-        String payoutDuration = String.valueOf(rs.getInt(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
-        String planStatus = rs.getString(rs.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS));
-
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        String planName = planModel.getPlanName();
+        String planType = planModel.getPlanType();
+        String paymentType = planModel.getPaymentType();
+        String premiumStartAge = String.valueOf(planModel.getPremiumStartAge());
+        String paymentAmount = String.valueOf(planModel.getPaymentAmount());
+        String planduration = String.valueOf(planModel.getPlanDuration());
+        String payoutAge = String.valueOf(planModel.getPayoutAge());
+        String payoutAmount = String.valueOf(planModel.getPayoutAmount());
+        String payoutDuration = String.valueOf(planModel.getPayoutDuration());
+        String planStatus = planModel.getPlanStatus();
 
         Log.d(TAG, "displayData: " + planName);
 
