@@ -23,6 +23,7 @@ import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.CommonModel;
 import com.example.android.graphapplication.model.ScenarioModel;
 import com.example.android.graphapplication.model.ScenarioSectionModel;
 
@@ -43,7 +44,7 @@ public class ScenarioActivity extends AppCompatActivity {
     private List<ScenarioModel> milestonesModelList = new ArrayList<>();
     private List<ScenarioModel> plansModelList = new ArrayList<>();
     private ScenarioSectionAdapter scenarioSectionAdapter;
-    private List<HashMap<String, String>> eventsList;
+    private List<CommonModel> eventsList;
     private List<HashMap<String, String>> milestonesList;
     private List<HashMap<String, String>> plansList;
 
@@ -80,9 +81,8 @@ public class ScenarioActivity extends AppCompatActivity {
         }
 
         eventsList = mydb.getAllEvent();
-        for (HashMap<String, String> event : eventsList) {
-            eventsModelList.add(new ScenarioModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME),
-                    Integer.valueOf(event.get(SQLConstants.IS_SELECTED)) == 1));
+        for (CommonModel event : eventsList) {
+            eventsModelList.add(new ScenarioModel(event.getName(), event.getIsSelected() == 1));
         }
 
         milestonesList = mydb.getAllMilestone();
@@ -160,8 +160,7 @@ public class ScenarioActivity extends AppCompatActivity {
 //                            ", is selected: " + scenarioSectionModel.getScenarioModelList().get(i).isSelected() +
 //                            ", event id: " + eventsList.get(i).get(SQLConstants.TABLE_ID));
 
-                                mydb.updateEventIsSelectedStatus(eventsList.get(i)
-                                                .get(SQLConstants.TABLE_ID),
+                                mydb.updateEventIsSelectedStatus(eventsList.get(i).getId(),
                                         scenarioSectionModel.getScenarioModelList().get(i).isSelected()
                                                 ? 1 : 0);
                             }

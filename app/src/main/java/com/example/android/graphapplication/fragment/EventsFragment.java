@@ -28,13 +28,12 @@ import com.example.android.graphapplication.RecyclerViewTouchListener;
 import com.example.android.graphapplication.activity.EventActivity;
 import com.example.android.graphapplication.adapter.CommonTitleAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.CommonModel;
 import com.example.android.graphapplication.model.CommonTitleModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class EventsFragment extends Fragment {
@@ -120,9 +119,9 @@ public class EventsFragment extends Fragment {
 
         final Context context = getActivity().getApplicationContext();
 
-        final List<HashMap<String, String>> eventsList = mydb.getAllEvent();
-        for (HashMap<String, String> event : eventsList) {
-            this.eventsModelList.add(new CommonTitleModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+        final List<CommonModel> eventsList = mydb.getAllEvent();
+        for (CommonModel event : eventsList) {
+            this.eventsModelList.add(new CommonTitleModel(event.getName()));
         }
 
         if (eventsModelList.size() == 0) {
@@ -144,13 +143,11 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Log.d(TAG, "onClick: position, " + position);
-                Log.d(TAG, "onClick: event TABLE_ID, " + eventsList.get(position)
-                        .get(SQLConstants.TABLE_ID));
+                Log.d(TAG, "onClick: event TABLE_ID, " + eventsList.get(position).getId());
                 startActivity(new Intent(context, EventActivity.class)
                         .putExtra(KeyConstants.INTENT_KEY_ACTION, KeyConstants.INTENT_KEY_VALUE_EDIT)
                         .putExtra(KeyConstants.INTENT_KEY_RECYCLER_VIEW_POSITION,
-                                Integer.valueOf(eventsList.get(position)
-                                        .get(SQLConstants.TABLE_ID))));
+                                Integer.valueOf(eventsList.get(position).getId())));
             }
 
             @Override
@@ -167,8 +164,7 @@ public class EventsFragment extends Fragment {
                 alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke YES event
-                        mydb.deleteEvent(Integer.valueOf(eventsList.get(position)
-                                .get(SQLConstants.TABLE_ID)));
+                        mydb.deleteEvent(eventsList.get(position).getId());
                         mEventsAdapter.removeItem(position);
                     }
                 });

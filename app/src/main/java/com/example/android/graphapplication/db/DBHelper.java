@@ -211,13 +211,13 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param eventID    ID of the edited event
      * @param isSelected Updated status of isSelected variable
      */
-    public void updateEventIsSelectedStatus(String eventID, int isSelected) {
+    public void updateEventIsSelectedStatus(int eventID, int isSelected) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.IS_SELECTED, isSelected);
         db.update(SQLConstants.EVENT_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
-                new String[]{eventID});
+                new String[]{String.valueOf(eventID)});
     }
 
     /**
@@ -235,32 +235,24 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of events
      */
-    public List<HashMap<String, String>> getAllEvent() {
-        List<HashMap<String, String>> eventsList = new ArrayList<>();
+    public List<CommonModel> getAllEvent() {
+        List<CommonModel> eventsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_EVENT_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> event = new HashMap<>();
-            event.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_AGE,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_STATUS,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
-            event.put(SQLConstants.EVENT_TABLE_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT))));
-            event.put(SQLConstants.EVENT_TABLE_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION))));
-            event.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            eventsList.add(event);
+            CommonModel eventModel = new CommonModel();
+            eventModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            eventModel.setName(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            eventModel.setAge(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+            eventModel.setType(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
+            eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
+            eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
+            eventModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
+            eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+            eventsList.add(eventModel);
             res.moveToNext();
         }
         res.close();
@@ -839,9 +831,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteAllRecords() {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
-        //tod need to uncomment
-        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
-        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
-        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
+        //todo need to uncomment
+//        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+//        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+//        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
     }
 }

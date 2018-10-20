@@ -67,17 +67,17 @@ public class FormActivity extends AppCompatActivity {
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
-        //tod need to comment
-//        mNameInput.getEditText().setText("wang");
-//        mAgeInput.getEditText().setText("24");
-//        mRetirementAgeInput.getEditText().setText("30");
-//        mExpectancyInput.getEditText().setText("34");
-//        mIncomeInput.getEditText().setText("1000");
-//        mIncrementInput.getEditText().setText("5");
-//        mFixedExpensesInput.getEditText().setText("100");
-//        mVariableExpensesInput.getEditText().setText("100");
-//        mInflationInput.getEditText().setText("5");
-//        mAssets.getEditText().setText("10000");
+        //todo need to comment
+        mNameInput.getEditText().setText("wang");
+        mAgeInput.getEditText().setText("24");
+        mRetirementAgeInput.getEditText().setText("30");
+        mExpectancyInput.getEditText().setText("34");
+        mIncomeInput.getEditText().setText("1000");
+        mIncrementInput.getEditText().setText("5");
+        mFixedExpensesInput.getEditText().setText("100");
+        mVariableExpensesInput.getEditText().setText("100");
+        mInflationInput.getEditText().setText("5");
+        mAssets.getEditText().setText("10000");
 
         initData();
         Log.d(TAG, "onCreate: out");
