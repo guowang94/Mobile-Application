@@ -69,12 +69,12 @@ public class FormActivity extends AppCompatActivity {
 
 //        mNameInput.getEditText().setText("wang");
 //        mAgeInput.getEditText().setText("24");
-//        mRetirementAgeInput.getEditText().setText("55");
-//        mExpectancyInput.getEditText().setText("90");
-//        mIncomeInput.getEditText().setText("4000");
-//        mIncrementInput.getEditText().setText("8");
-//        mFixedExpensesInput.getEditText().setText("400");
-//        mVariableExpensesInput.getEditText().setText("800");
+//        mRetirementAgeInput.getEditText().setText("30");
+//        mExpectancyInput.getEditText().setText("34");
+//        mIncomeInput.getEditText().setText("1000");
+//        mIncrementInput.getEditText().setText("5");
+//        mFixedExpensesInput.getEditText().setText("100");
+//        mVariableExpensesInput.getEditText().setText("100");
 //        mInflationInput.getEditText().setText("5");
 //        mAssets.getEditText().setText("10000");
 

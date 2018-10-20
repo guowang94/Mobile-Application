@@ -1,7 +1,6 @@
 package com.example.android.graphapplication.fragment;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +33,7 @@ import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.SelectedScenarioModel;
+import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -282,30 +282,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
         });
 
-        Cursor rs = mydb.getData(SQLConstants.USER_TABLE, 1);
-        rs.moveToFirst();
-
-        float assets = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INITIAL_ASSETS));
-        float monthlyIncome = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_INCOME));
-        float fixedExpenses = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_FIXED_EXPENSES));
-        float variableExpenses = rs.getFloat(rs.getColumnIndex(SQLConstants.USER_TABLE_VARIABLE_EXPENSES));
-        int age = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_AGE));
-        int retirementAge = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTED_RETIREMENT_AGE));
-        int expectancy = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_EXPECTANCY));
-        int increment = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_INCREMENT));
-        int inflation = rs.getInt(rs.getColumnIndex(SQLConstants.USER_TABLE_INFLATION));
-
-        if (!rs.isClosed()) {
-            rs.close();
-        }
+        UserModel userModel = mydb.getAllUser().get(0);
 
         CombinedData data;
         eventsList = mydb.getAllSelectedEvent();
         milestonesList = mydb.getAllSelectedMilestone();
         plansList = mydb.getAllSelectedPlan();
 
-        data = getGraphData(assets, monthlyIncome, fixedExpenses, variableExpenses, age,
-                retirementAge, expectancy, increment, inflation);
+        data = getGraphData(userModel);
 
         mChart.getDescription().setEnabled(false);
         mChart.setPinchZoom(true);
@@ -318,8 +302,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisMinimum(age - 1);
-        xAxis.setAxisMaximum(expectancy + 1);
+        xAxis.setAxisMinimum(userModel.getAge() - 1);
+        xAxis.setAxisMaximum(userModel.getExpectancy() + 1);
 
         YAxis yAxis = mChart.getAxisLeft();
         yAxis.setValueFormatter(new MyAxisValueFormatter());
@@ -345,44 +329,42 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     /**
      * This method will calculate and return the data for the graph
      *
-     * @param assets           The current amount that the user has
-     * @param grossIncome      The monthly income of the user
-     * @param fixedExpenses    e.g. Bills, Loans, etc
-     * @param variableExpenses e.g. Food, Entertainment, Transport, etc
-     * @param age              The current age of the user
-     * @param retirementAge    The age when the user stop working
-     * @param expectancy       The age when the user is tired of living on earth
-     * @param increment        Salary Increment rate
-     * @param inflation        Currency Inflation rate
+     * @param userModel Contains details of the user
      * @return CombinedData for the graph
      */
-    private CombinedData getGraphData(float assets, float grossIncome, float fixedExpenses,
-                                      float variableExpenses, int age, int retirementAge,
-                                      int expectancy, int increment, int inflation) {
+    private CombinedData getGraphData(UserModel userModel) {
         Log.d(TAG, "getGraphData: in");
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<Entry> lineEntries = new ArrayList<>();
 
-        float firstYearIncome = grossIncome * (12 - (Calendar.getInstance().get(Calendar.MONTH))) * 0.8f;
-        float firstYearExpenses = (fixedExpenses + variableExpenses) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
-        float subsequentAnnualIncome = grossIncome * 12 * 0.8f;
-        float subsequentAnnualExpenses = (fixedExpenses + variableExpenses) * 12;
+        float assets = userModel.getInitialAssets();
+        float firstYearIncome = userModel.getMonthlyIncome() * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
+        float firstYearExpenses = (userModel.getFixedExpenses() + userModel.getVariableExpenses()) * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
+        float subsequentAnnualIncome = userModel.getMonthlyIncome() * 12;
+        float subsequentAnnualExpenses = (userModel.getFixedExpenses() + userModel.getVariableExpenses()) * 12;
         float annualIncome = 0f;
         float annualExpenses = 0f;
+        float annualIncomeAfterDeductCPF = 0f;
         float balance = 0f;
         float cpfOrdinaryAccount = 0f;
         float cpfSpecialAccount = 0f;
         float cpfMedisaveAccount = 0f;
         int shortfallAge = -1;
         int expensesExceededIncomeAge = -1;
+        int age = userModel.getAge();
+        int retirementAge = userModel.getExpectedRetirementAge();
+        int expectancy = userModel.getExpectancy();
+        int increment = userModel.getIncrement();
+        int inflation = userModel.getInflation();
         List<Float> selectedScenarioValuesList = getCombineSelectedList(expectancy);
 
         for (int currentAge = age; currentAge <= expectancy; currentAge++) {
             if (currentAge <= retirementAge) {
 
+                // Income Increment Calculation
                 if (currentAge == age) {
 //                    Log.i(TAG, "getGraphData: first year");
-                    annualIncome = firstYearIncome * 0.8f;
+                    annualIncome = firstYearIncome;
                     annualExpenses = firstYearExpenses;
                     Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
                     Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
@@ -399,15 +381,25 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                 }
 
-                List<Float> cpfDistribution = getCPFDistribution(getCPFContribution(annualIncome, currentAge),
-                        currentAge);
-                cpfOrdinaryAccount += cpfDistribution.get(0);
-                cpfSpecialAccount += cpfDistribution.get(1);
-                cpfMedisaveAccount += cpfDistribution.get(2);
+                //CPF Calculation
+                if (!ScreenConstants.SEGMENTED_BUTTON_VALUE_SELF_EMPLOYED.equals(userModel.getJobStatus()) &&
+                        !ScreenConstants.SEGMENTED_BUTTON_VALUE_FOREIGNER_OR_PR.equals(userModel.getCitizenship())) {
+                    List<Float> calculatedValues = getCPFContribution(annualIncome, currentAge);
+                    List<Float> cpfDistribution = getCPFDistribution(calculatedValues.get(1), currentAge);
+
+                    cpfOrdinaryAccount += cpfDistribution.get(0);
+                    cpfSpecialAccount += cpfDistribution.get(1);
+                    cpfMedisaveAccount += cpfDistribution.get(2);
+                    annualIncomeAfterDeductCPF = calculatedValues.get(0);
+                    Log.d(TAG, "getGraphData: income after deduct cpf: " + annualIncome + " at " + currentAge);
+                } else {
+                    //Update the value of annualIncomeAfterDeductCPF as it will be used for graph calculation
+                    annualIncomeAfterDeductCPF = annualIncome;
+                }
 
                 //-------------Calculation for the graph---------------
 
-                float remainder = annualIncome - annualExpenses;
+                float remainder = annualIncomeAfterDeductCPF - annualExpenses;
 
                 if (remainder < 0) {
                     assets += remainder;
@@ -458,7 +450,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 }
             }
 
-            if (annualExpenses > annualIncome) {
+            if (annualExpenses > annualIncomeAfterDeductCPF) {
                 if (expensesExceededIncomeAge == -1) {
                     expensesExceededIncomeAge = currentAge;
                 }
@@ -511,36 +503,49 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     }
 
     /**
-     * this method will get the CPF Contribution
+     * this method will get Annual Income(after deduction of cpf) and CPF Contribution
      *
      * @param annualIncome Annual Income
      * @param currentAge   Current age
-     * @return CPF Contribution
+     * @return CalculatedValues
+     * <ul>
+     * <li>0 - Annual Income after deducted for CPF</li>
+     * <li>1 - CPF Contribution</li>
+     * </ul>
      */
-    public float getCPFContribution(float annualIncome, int currentAge) {
+    public List<Float> getCPFContribution(float annualIncome, int currentAge) {
+        List<Float> calculatedValues = new ArrayList<>();
         float cpfContribution;
         if (currentAge <= 55) {
+            //CPF Contribution from employer
             cpfContribution = annualIncome * 0.37f;
+            //Annual income after deducted for CPR
+            annualIncome = annualIncome * 0.8f;
             if (cpfContribution > 2200 * 12) {
                 cpfContribution = 2200 * 12;
             }
         } else if (currentAge <= 60) {
             cpfContribution = annualIncome * 0.26f;
+            annualIncome = annualIncome * 0.87f;
             if (cpfContribution > 1560 * 12) {
                 cpfContribution = 1560 * 12;
             }
         } else if (currentAge <= 65) {
             cpfContribution = annualIncome * 0.165f;
+            annualIncome = annualIncome * 0.925f;
             if (cpfContribution > 990 * 12) {
                 cpfContribution = 990 * 12;
             }
         } else {
             cpfContribution = annualIncome * 0.125f;
+            annualIncome = annualIncome * 0.95f;
             if (cpfContribution > 750 * 12) {
                 cpfContribution = 750 * 12;
             }
         }
-        return cpfContribution;
+        calculatedValues.add(annualIncome);
+        calculatedValues.add(cpfContribution);
+        return calculatedValues;
     }
 
     /**
@@ -835,7 +840,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             SelectedScenarioAdapter selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
             RecyclerView.LayoutManager mLayoutManager = null;
             if (getActivity() != null) {
-                 mLayoutManager= new LinearLayoutManager(
+                mLayoutManager = new LinearLayoutManager(
                         getActivity().getApplicationContext());
             }
             mRecyclerView.setLayoutManager(mLayoutManager);

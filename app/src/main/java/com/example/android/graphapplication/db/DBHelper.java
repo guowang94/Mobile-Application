@@ -132,6 +132,13 @@ public class DBHelper extends SQLiteOpenHelper {
             userModel.setBalance(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_BALANCE)));
             userModel.setShortfall(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_SHORTFALL)));
             userModel.setShortfallAge(res.getInt(res.getColumnIndex(SQLConstants.USER_TABLE_SHORTFALL_AGE)));
+            userModel.setSpecialAccount(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_SPECIAL_ACCOUNT)));
+            userModel.setMedisaveAccount(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_MEDISAVE_ACCOUNT)));
+            userModel.setExpensesExceededIncomeAge(res.getInt(res.getColumnIndex(SQLConstants.USER_TABLE_EXPENSES_EXCEEDED_INCOME_AGE)));
+            userModel.setFixedExpenses(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_FIXED_EXPENSES)));
+            userModel.setVariableExpenses(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_VARIABLE_EXPENSES)));
+            userModel.setIncrement(res.getInt(res.getColumnIndex(SQLConstants.USER_TABLE_INCREMENT)));
+            userModel.setInflation(res.getInt(res.getColumnIndex(SQLConstants.USER_TABLE_INFLATION)));
             userModelList.add(userModel);
             res.moveToNext();
         }
