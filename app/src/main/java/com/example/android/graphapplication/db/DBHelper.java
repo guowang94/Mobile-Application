@@ -14,7 +14,6 @@ import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.UserModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -158,7 +157,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount           Amount of money to pay
      * @param duration         Duration of the event
      */
-    public void insertEvent(String eventName, String eventType, String eventAge, String eventDescription,
+    public void insertEvent(String eventName, String eventType, int eventAge, String eventDescription,
                             String eventStatus, float amount, int duration) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -186,7 +185,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount           Edited amount to pay
      * @param duration         Edited duration of event
      */
-    public void updateEvent(int eventID, String eventName, String eventType, String eventAge,
+    public void updateEvent(int eventID, String eventName, String eventType, int eventAge,
                             String eventDescription, String eventStatus, float amount,
                             int duration) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -246,7 +245,7 @@ public class DBHelper extends SQLiteOpenHelper {
             CommonModel eventModel = new CommonModel();
             eventModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
             eventModel.setName(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
-            eventModel.setAge(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+            eventModel.setAge(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
             eventModel.setType(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
             eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
             eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
@@ -274,7 +273,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         eventModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
         eventModel.setName(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
-        eventModel.setAge(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+        eventModel.setAge(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
         eventModel.setType(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
         eventModel.setDescription(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_DESCRIPTION)));
         eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
@@ -291,36 +290,28 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of selected event
      */
-    public List<HashMap<String, String>> getAllSelectedEvent() {
-        List<HashMap<String, String>> eventsList = new ArrayList<>();
+    public List<CommonModel> getAllSelectedEvent() {
+        List<CommonModel> eventModelsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_EVENT_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> event = new HashMap<>();
-            event.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_AGE,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
-            event.put(SQLConstants.EVENT_TABLE_EVENT_STATUS,
-                    res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
-            event.put(SQLConstants.EVENT_TABLE_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT))));
-            event.put(SQLConstants.EVENT_TABLE_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION))));
-            event.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            eventsList.add(event);
+            CommonModel eventModel = new CommonModel();
+            eventModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            eventModel.setName(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            eventModel.setAge(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+            eventModel.setType(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
+            eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
+            eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
+            eventModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
+            eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+            eventModelsList.add(eventModel);
             res.moveToNext();
         }
         res.close();
-        return eventsList;
+        return eventModelsList;
     }
 
     /**
@@ -334,7 +325,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount               Amount to pay
      * @param duration             Duration of milestone
      */
-    public void insertMilestone(String milestoneName, String milestoneType, String milestoneAge, String milestoneDescription,
+    public void insertMilestone(String milestoneName, String milestoneType, int milestoneAge, String milestoneDescription,
                                 String milestoneStatus, float amount, int duration) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -362,7 +353,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param amount               Edited amount to pay
      * @param duration             Edited duration of milestone
      */
-    public void updateMilestone(int milestoneID, String milestoneName, String milestoneType, String milestoneAge,
+    public void updateMilestone(int milestoneID, String milestoneName, String milestoneType, int milestoneAge,
                                 String milestoneDescription, String milestoneStatus, float amount,
                                 int duration) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -387,13 +378,13 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param milestoneID ID of edited milestone
      * @param isSelected  Updated status of isSelected variable
      */
-    public void updateMilestoneIsSelectedStatus(String milestoneID, int isSelected) {
+    public void updateMilestoneIsSelectedStatus(int milestoneID, int isSelected) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.IS_SELECTED, isSelected);
         db.update(SQLConstants.MILESTONE_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
-                new String[]{milestoneID});
+                new String[]{String.valueOf(milestoneID)});
     }
 
     /**
@@ -411,36 +402,28 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of Milestones
      */
-    public List<HashMap<String, String>> getAllMilestone() {
-        List<HashMap<String, String>> milestonesList = new ArrayList<>();
+    public List<CommonModel> getAllMilestone() {
+        List<CommonModel> milestoneModelsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_MILESTONE_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> milestone = new HashMap<>();
-            milestone.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT))));
-            milestone.put(SQLConstants.MILESTONE_TABLE_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION))));
-            milestone.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            milestonesList.add(milestone);
+            CommonModel milestoneModel = new CommonModel();
+            milestoneModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            milestoneModel.setName(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            milestoneModel.setAge(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
+            milestoneModel.setType(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE)));
+            milestoneModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
+            milestoneModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
+            milestoneModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
+            milestoneModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+            milestoneModelsList.add(milestoneModel);
             res.moveToNext();
         }
         res.close();
-        return milestonesList;
+        return milestoneModelsList;
     }
 
     /**
@@ -458,7 +441,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         milestoneModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
         milestoneModel.setName(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
-        milestoneModel.setAge(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
+        milestoneModel.setAge(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
         milestoneModel.setType(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE)));
         milestoneModel.setDescription(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_DESCRIPTION)));
         milestoneModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
@@ -475,36 +458,29 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of selected milestone
      */
-    public List<HashMap<String, String>> getAllSelectedMilestone() {
-        List<HashMap<String, String>> milestonesList = new ArrayList<>();
+    public List<CommonModel> getAllSelectedMilestone() {
+        List<CommonModel> milestoneModelsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_MILESTONE_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> milestone = new HashMap<>();
-            milestone.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS,
-                    res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
-            milestone.put(SQLConstants.MILESTONE_TABLE_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT))));
-            milestone.put(SQLConstants.MILESTONE_TABLE_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION))));
-            milestone.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            milestonesList.add(milestone);
+            CommonModel milestoneModel = new CommonModel();
+            milestoneModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            milestoneModel.setName(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME)));
+            milestoneModel.setAge(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)));
+            milestoneModel.setType(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE)));
+            milestoneModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)));
+            milestoneModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_AMOUNT)));
+            milestoneModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.MILESTONE_TABLE_DURATION)));
+            milestoneModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+
+            milestoneModelsList.add(milestoneModel);
             res.moveToNext();
         }
         res.close();
-        return milestonesList;
+        return milestoneModelsList;
     }
 
     /**
@@ -586,13 +562,13 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param planID     ID of edited plan
      * @param isSelected Updated status of isSelected variable
      */
-    public void updatePlanIsSelectedStatus(String planID, int isSelected) {
+    public void updatePlanIsSelectedStatus(int planID, int isSelected) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.IS_SELECTED, isSelected);
         db.update(SQLConstants.PLAN_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
-                new String[]{planID});
+                new String[]{String.valueOf(planID)});
     }
 
     /**
@@ -610,44 +586,33 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of Plans
      */
-    public List<HashMap<String, String>> getAllPlan() {
-        List<HashMap<String, String>> plansList = new ArrayList<>();
+    public List<PlanModel> getAllPlan() {
+        List<PlanModel> planModelsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_PLAN_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> plan = new HashMap<>();
-            plan.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_STATUS,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS))));
-            plan.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            plansList.add(plan);
+            PlanModel planModel = new PlanModel();
+            planModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            planModel.setPlanName(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            planModel.setPlanType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
+            planModel.setPaymentType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
+            planModel.setPremiumStartAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)));
+            planModel.setPaymentAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)));
+            planModel.setPlanDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION)));
+            planModel.setPayoutAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE)));
+            planModel.setPayoutAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)));
+            planModel.setPayoutDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
+            planModel.setPlanStatus(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
+            planModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+
+            planModelsList.add(planModel);
             res.moveToNext();
         }
         res.close();
-        return plansList;
+        return planModelsList;
     }
 
     /**
@@ -655,44 +620,32 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of selected plan
      */
-    public List<HashMap<String, String>> getAllSelectedPlan() {
-        List<HashMap<String, String>> plansList = new ArrayList<>();
+    public List<PlanModel> getAllSelectedPlan() {
+        List<PlanModel> planModelsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_FROM_PLAN_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> plan = new HashMap<>();
-            plan.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_STATUS,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
-            plan.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            plansList.add(plan);
+            PlanModel planModel = new PlanModel();
+            planModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            planModel.setPlanName(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            planModel.setPlanType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
+            planModel.setPaymentType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
+            planModel.setPremiumStartAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)));
+            planModel.setPaymentAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)));
+            planModel.setPlanDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION)));
+            planModel.setPayoutAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE)));
+            planModel.setPayoutAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)));
+            planModel.setPayoutDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
+            planModel.setPlanStatus(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
+            planModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+            planModelsList.add(planModel);
             res.moveToNext();
         }
         res.close();
-        return plansList;
+        return planModelsList;
     }
 
     /**
@@ -700,44 +653,32 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of selected plan
      */
-    public List<HashMap<String, String>> getAllExistingPlan() {
-        List<HashMap<String, String>> plansList = new ArrayList<>();
+    public List<PlanModel> getAllExistingPlan() {
+        List<PlanModel> planModelsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_EXISTING_FROM_PLAN_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> plan = new HashMap<>();
-            plan.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_STATUS,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
-            plan.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            plansList.add(plan);
+            PlanModel planModel = new PlanModel();
+            planModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            planModel.setPlanName(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            planModel.setPlanType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
+            planModel.setPaymentType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
+            planModel.setPremiumStartAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)));
+            planModel.setPaymentAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)));
+            planModel.setPlanDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION)));
+            planModel.setPayoutAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE)));
+            planModel.setPayoutAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)));
+            planModel.setPayoutDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
+            planModel.setPlanStatus(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
+            planModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+            planModelsList.add(planModel);
             res.moveToNext();
         }
         res.close();
-        return plansList;
+        return planModelsList;
     }
 
     /**
@@ -745,44 +686,32 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return list of selected plan
      */
-    public List<HashMap<String, String>> getAllNonExistingPlan() {
-        List<HashMap<String, String>> plansList = new ArrayList<>();
+    public List<PlanModel> getAllNonExistingPlan() {
+        List<PlanModel> planModelsList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_NON_EXISTING_FROM_PLAN_TABLE, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            HashMap<String, String> plan = new HashMap<>();
-            plan.put(SQLConstants.TABLE_ID,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_NAME,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_TYPE,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
-            plan.put(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AGE,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_DURATION,
-                    String.valueOf(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
-            plan.put(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT,
-                    String.valueOf(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT))));
-            plan.put(SQLConstants.PLAN_TABLE_PLAN_STATUS,
-                    res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
-            plan.put(SQLConstants.IS_SELECTED,
-                    res.getString(res.getColumnIndex(SQLConstants.IS_SELECTED)));
-            plansList.add(plan);
+            PlanModel planModel = new PlanModel();
+            planModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            planModel.setPlanName(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_NAME)));
+            planModel.setPlanType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_TYPE)));
+            planModel.setPaymentType(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)));
+            planModel.setPremiumStartAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)));
+            planModel.setPaymentAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)));
+            planModel.setPlanDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_DURATION)));
+            planModel.setPayoutAge(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AGE)));
+            planModel.setPayoutAmount(res.getFloat(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)));
+            planModel.setPayoutDuration(res.getInt(res.getColumnIndex(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
+            planModel.setPlanStatus(res.getString(res.getColumnIndex(SQLConstants.PLAN_TABLE_PLAN_STATUS)));
+            planModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+            planModelsList.add(planModel);
             res.moveToNext();
         }
         res.close();
-        return plansList;
+        return planModelsList;
     }
 
     /**
@@ -831,9 +760,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteAllRecords() {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
-        //todo need to uncomment
-//        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
-//        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
-//        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
+        //tod need to uncomment
+        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
     }
 }

@@ -31,10 +31,11 @@ import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.adapter.ExportAdapter;
 import com.example.android.graphapplication.constants.ExportConstant;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.CommonModel;
 import com.example.android.graphapplication.model.ExportModel;
+import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.utils.PermissionUtil;
 import com.itextpdf.text.Document;
@@ -49,7 +50,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -251,8 +251,8 @@ public class ExportActivity extends AppCompatActivity {
     /**
      * This method will check if permission is granted and perform relevant action
      *
-     * @param requestCode Created in KeyConstant
-     * @param permissions Permissions
+     * @param requestCode  Created in KeyConstant
+     * @param permissions  Permissions
      * @param grantResults Grant result array
      */
     @Override
@@ -283,9 +283,9 @@ public class ExportActivity extends AppCompatActivity {
      */
     private void setupReportRecyclerView() {
         UserModel userModel = mydb.getAllUser().get(0);
-        List<HashMap<String, String>> milestoneList = mydb.getAllSelectedMilestone();
-        List<HashMap<String, String>> existingPlanList = mydb.getAllExistingPlan();
-        List<HashMap<String, String>> nonExistingPlanList = mydb.getAllNonExistingPlan();
+        List<CommonModel> milestoneList = mydb.getAllSelectedMilestone();
+        List<PlanModel> existingPlanList = mydb.getAllExistingPlan();
+        List<PlanModel> nonExistingPlanList = mydb.getAllNonExistingPlan();
         mydb.close();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
@@ -297,22 +297,18 @@ public class ExportActivity extends AppCompatActivity {
         String shortfallAge = userModel.getShortfallAge() == -1 ?
                 "N/A" : String.valueOf(userModel.getShortfallAge());
 
-        for (HashMap<String, String> milestone : milestoneList) {
-            totalMilestoneCost = totalMilestoneCost +
-                    (Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_AMOUNT)) *
-                            Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_DURATION)));
+        for (CommonModel milestone : milestoneList) {
+            totalMilestoneCost = totalMilestoneCost + (milestone.getAmount() * milestone.getDuration());
         }
 
-        for (HashMap<String, String> existingPlan : existingPlanList) {
+        for (PlanModel existingPlan : existingPlanList) {
             totalExistingCoverage = totalExistingCoverage +
-                    (Float.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)) *
-                            Float.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
+                    (existingPlan.getPayoutAmount() * existingPlan.getPayoutDuration());
         }
 
-        for (HashMap<String, String> nonExistingPlan : nonExistingPlanList) {
+        for (PlanModel nonExistingPlan : nonExistingPlanList) {
             totalNonExistingCoverage = totalNonExistingCoverage +
-                    (Float.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)) *
-                            Float.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)));
+                    (nonExistingPlan.getPayoutAmount() * nonExistingPlan.getPayoutDuration());
         }
 
 
@@ -348,33 +344,33 @@ public class ExportActivity extends AppCompatActivity {
 
         //Milestone Details
         if (milestoneList.size() > 0) {
+            //Header and Total Section
             exportModelList.add(new ExportModel(ExportConstant.MILESTONE_DETAILS, ExportModel.REPORT_HEADER));
             exportModelList.add(new ExportModel(ExportConstant.TOTAL_MILESTONE_COST,
                     String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                             .format(totalMilestoneCost)), ExportModel.REPORT_TOTAL_SECTION));
 
-            for (HashMap<String, String> milestone : milestoneList) {
+            //Display all Milestone
+            for (CommonModel milestone : milestoneList) {
                 String ageRange;
-                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS))) {
-                    ageRange = milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE);
+                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(milestone.getStatus())) {
+                    ageRange = String.valueOf(milestone.getAge());
                 } else {
-                    ageRange = milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE) + " - " +
-                            (Integer.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)) +
-                                    Integer.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_DURATION)) - 1);
+                    ageRange = milestone.getAge() + " - " + (milestone.getAge() + milestone.getDuration() - 1);
                 }
 
-                exportModelList.add(new ExportModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
-                        milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE),
-                        ageRange, milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS),
+                //Add milestone to list
+                exportModelList.add(new ExportModel(milestone.getName(), milestone.getType(),
+                        ageRange, milestone.getStatus(),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_AMOUNT)) *
-                                        Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_DURATION)))),
+                                .format(milestone.getAmount() * milestone.getDuration())),
                         ExportModel.MILESTONE_DETAIL));
             }
         }
 
         //Existing Plan Details
         if (existingPlanList.size() > 0) {
+            //Header and Total Section
             exportModelList.add(new ExportModel(ExportConstant.PLANS_EXISTING
                     .replace("$1", String.valueOf(existingPlanList.size())), ExportModel.REPORT_HEADER));
             exportModelList.add(new ExportModel(ExportConstant.TOTAL_COVERAGE,
@@ -382,63 +378,68 @@ public class ExportActivity extends AppCompatActivity {
                             .format(totalExistingCoverage)), ExportModel.REPORT_TOTAL_SECTION));
 
 
-            for (HashMap<String, String> existingPlan : existingPlanList) {
+            for (PlanModel existingPlan : existingPlanList) {
                 String premiumAgeRange;
                 String payoutAgeRange;
 
-                String payoutStatus = existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION).equals("1") ?
+                String payoutStatus = existingPlan.getPayoutDuration() == 1 ?
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
                         ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
 
-                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(existingPlan.get(SQLConstants.PLAN_TABLE_PAYMENT_TYPE))) {
-                    premiumAgeRange = existingPlan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE);
+                //Display age if it is One Time else display age range
+                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(existingPlan.getPaymentType())) {
+                    premiumAgeRange = String.valueOf(existingPlan.getPremiumStartAge());
                 } else {
-                    premiumAgeRange = existingPlan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE) + " - " +
-                            (Integer.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)) +
-                                    Integer.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION)) - 1);
+                    premiumAgeRange = existingPlan.getPremiumStartAge() + " - " +
+                            (existingPlan.getPremiumStartAge() + existingPlan.getPlanDuration() - 1);
                 }
 
+                //Display age if it is One Time else display age range
                 if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(payoutStatus)) {
-                    payoutAgeRange = existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE);
+                    payoutAgeRange = String.valueOf(existingPlan.getPayoutAge());
                 } else {
-                    payoutAgeRange = existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE) + " - " +
-                            (Integer.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE)) +
-                                    Integer.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)) - 1);
+                    payoutAgeRange = existingPlan.getPayoutAge() + " - " +
+                            (existingPlan.getPayoutAge() + existingPlan.getPayoutDuration() - 1);
                 }
 
+                //Split Plan Category and sort
                 List<ExportModel> planTypeModelList = new ArrayList<>();
-                String[] planType = existingPlan.get(SQLConstants.PLAN_TABLE_PLAN_TYPE).split(", ");
+                String[] planType = existingPlan.getPlanType().split(", ");
                 String[] allPlanType = getResources().getStringArray(R.array.plan_type_array);
                 Arrays.sort(planType);
                 Arrays.sort(allPlanType);
 
+                // Generate Plan Category and amount
                 for (String type : allPlanType) {
-                    String planTypeAmount = "0";
+                    float planTypeAmount = 0f;
 
                     for (String selectedType : planType) {
                         if (selectedType.equals(type)) {
-                            planTypeAmount = existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT);
+                            planTypeAmount = existingPlan.getPayoutAmount();
                             break;
                         }
                     }
-                    planTypeAmount = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(Float.valueOf(planTypeAmount)));
-                    planTypeModelList.add(new ExportModel(type, planTypeAmount, ExportModel.PLAN_TYPE_DETAIL));
+                    String amount = NumberFormat.getCurrencyInstance(Locale.US).format(planTypeAmount);
+
+                    //Add all plan category into a list
+                    planTypeModelList.add(new ExportModel(type, amount, ExportModel.PLAN_TYPE_DETAIL));
                 }
 
-                exportModelList.add(new ExportModel(existingPlan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
-                        premiumAgeRange, existingPlan.get(SQLConstants.PLAN_TABLE_PAYMENT_TYPE),
+                //Add plan to list
+                exportModelList.add(new ExportModel(existingPlan.getPlanName(), premiumAgeRange,
+                        existingPlan.getPaymentType(),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)) *
-                                        Float.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION)))),
-                        payoutAgeRange, payoutStatus, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                        .format(Float.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)) *
-                                Float.valueOf(existingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)))),
+                                .format(existingPlan.getPaymentAmount() * existingPlan.getPlanDuration())),
+                        payoutAgeRange, payoutStatus,
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                                .format(existingPlan.getPayoutAmount() * existingPlan.getPayoutDuration())),
                         planTypeModelList, ExportModel.PLAN_DETAIL));
             }
         }
 
         //Non-Existing Plan Details
         if (nonExistingPlanList.size() > 0) {
+            //Header and Total Section
             exportModelList.add(new ExportModel(ExportConstant.PLANS_NON_EXISTING
                     .replace("$1", String.valueOf(nonExistingPlanList.size())), ExportModel.REPORT_HEADER));
             exportModelList.add(new ExportModel(ExportConstant.TOTAL_COVERAGE,
@@ -446,56 +447,61 @@ public class ExportActivity extends AppCompatActivity {
                             .format(totalNonExistingCoverage)), ExportModel.REPORT_TOTAL_SECTION));
 
 
-            for (HashMap<String, String> nonExistingPlan : nonExistingPlanList) {
-                List<ExportModel> planTypeModelList = new ArrayList<>();
+            for (PlanModel nonExistingPlan : nonExistingPlanList) {
                 String premiumAgeRange;
                 String payoutAgeRange;
-                String[] planType = nonExistingPlan.get(SQLConstants.PLAN_TABLE_PLAN_TYPE).split(", ");
+
+                String payoutStatus = nonExistingPlan.getPayoutDuration() == 1 ?
+                        ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
+                        ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
+
+                //Display age if it is One Time else display age range
+                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(nonExistingPlan.getPaymentType())) {
+                    premiumAgeRange = String.valueOf(nonExistingPlan.getPremiumStartAge());
+                } else {
+                    premiumAgeRange = nonExistingPlan.getPremiumStartAge() + " - " +
+                            (nonExistingPlan.getPremiumStartAge() + nonExistingPlan.getPlanDuration() - 1);
+                }
+
+                //Display age if it is One Time else display age range
+                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(payoutStatus)) {
+                    payoutAgeRange = String.valueOf(nonExistingPlan.getPayoutAge());
+                } else {
+                    payoutAgeRange = nonExistingPlan.getPayoutAge() + " - " +
+                            (nonExistingPlan.getPayoutAge() + nonExistingPlan.getPayoutDuration() - 1);
+                }
+
+                //Split Plan Category and sort
+                List<ExportModel> planTypeModelList = new ArrayList<>();
+                String[] planType = nonExistingPlan.getPlanType().split(", ");
                 String[] allPlanType = getResources().getStringArray(R.array.plan_type_array);
                 Arrays.sort(planType);
                 Arrays.sort(allPlanType);
 
-                String payoutStatus = nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION).equals("1") ?
-                        ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME :
-                        ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
-
-                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYMENT_TYPE))) {
-                    premiumAgeRange = nonExistingPlan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE);
-                } else {
-                    premiumAgeRange = nonExistingPlan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE) + " - " +
-                            (Integer.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)) +
-                                    Integer.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION)) - 1);
-                }
-
-                if (ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(payoutStatus)) {
-                    payoutAgeRange = nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE);
-                } else {
-                    payoutAgeRange = nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE) + " - " +
-                            (Integer.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE)) +
-                                    Integer.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)) - 1);
-                }
-
+                // Generate Plan Category and amount
                 for (String type : allPlanType) {
-                    String planTypeAmount = "0";
+                    float planTypeAmount = 0f;
 
                     for (String selectedType : planType) {
                         if (selectedType.equals(type)) {
-                            planTypeAmount = nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT);
+                            planTypeAmount = nonExistingPlan.getPayoutAmount();
                             break;
                         }
                     }
-                    planTypeAmount = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(Float.valueOf(planTypeAmount)));
-                    planTypeModelList.add(new ExportModel(type, planTypeAmount, ExportModel.PLAN_TYPE_DETAIL));
+                    String amount = NumberFormat.getCurrencyInstance(Locale.US).format(planTypeAmount);
+
+                    //Add all plan category into a list
+                    planTypeModelList.add(new ExportModel(type, amount, ExportModel.PLAN_TYPE_DETAIL));
                 }
 
-                exportModelList.add(new ExportModel(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
-                        premiumAgeRange, nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYMENT_TYPE),
+                //Add plan to list
+                exportModelList.add(new ExportModel(nonExistingPlan.getPlanName(), premiumAgeRange,
+                        nonExistingPlan.getPaymentType(),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)) *
-                                        Float.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION)))),
-                        payoutAgeRange, payoutStatus, String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                        .format(Float.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)) *
-                                Float.valueOf(nonExistingPlan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)))),
+                                .format(nonExistingPlan.getPaymentAmount() * nonExistingPlan.getPlanDuration())),
+                        payoutAgeRange, payoutStatus,
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
+                                .format(nonExistingPlan.getPayoutAmount() * nonExistingPlan.getPayoutDuration())),
                         planTypeModelList, ExportModel.PLAN_DETAIL));
             }
         }

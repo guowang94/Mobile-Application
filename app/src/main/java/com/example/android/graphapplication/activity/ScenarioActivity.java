@@ -20,15 +20,14 @@ import android.widget.TextView;
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.adapter.ScenarioSectionAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.ScenarioModel;
 import com.example.android.graphapplication.model.ScenarioSectionModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ScenarioActivity extends AppCompatActivity {
@@ -45,8 +44,8 @@ public class ScenarioActivity extends AppCompatActivity {
     private List<ScenarioModel> plansModelList = new ArrayList<>();
     private ScenarioSectionAdapter scenarioSectionAdapter;
     private List<CommonModel> eventsList;
-    private List<HashMap<String, String>> milestonesList;
-    private List<HashMap<String, String>> plansList;
+    private List<CommonModel> milestonesList;
+    private List<PlanModel> plansList;
 
     private DBHelper mydb;
 
@@ -86,15 +85,13 @@ public class ScenarioActivity extends AppCompatActivity {
         }
 
         milestonesList = mydb.getAllMilestone();
-        for (HashMap<String, String> milestone : milestonesList) {
-            milestonesModelList.add(new ScenarioModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
-                    Integer.valueOf(milestone.get(SQLConstants.IS_SELECTED)) == 1));
+        for (CommonModel milestone : milestonesList) {
+            milestonesModelList.add(new ScenarioModel(milestone.getName(), milestone.getIsSelected() == 1));
         }
 
         plansList = mydb.getAllPlan();
-        for (HashMap<String, String> plan : plansList) {
-            plansModelList.add(new ScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
-                    Integer.valueOf(plan.get(SQLConstants.IS_SELECTED)) == 1));
+        for (PlanModel plan : plansList) {
+            plansModelList.add(new ScenarioModel(plan.getPlanName(), plan.getIsSelected() == 1));
         }
 
         if (eventsModelList.size() > 0) {
@@ -169,8 +166,7 @@ public class ScenarioActivity extends AppCompatActivity {
                         if (ScreenConstants.TOOLBAR_TITLE_MILESTONES.equals(scenarioSectionModel.getTitle())) {
                             for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
 
-                                mydb.updateMilestoneIsSelectedStatus(milestonesList.get(i)
-                                                .get(SQLConstants.TABLE_ID),
+                                mydb.updateMilestoneIsSelectedStatus(milestonesList.get(i).getId(),
                                         scenarioSectionModel.getScenarioModelList().get(i).isSelected()
                                                 ? 1 : 0);
                             }
@@ -179,8 +175,7 @@ public class ScenarioActivity extends AppCompatActivity {
                         if (ScreenConstants.TOOLBAR_TITLE_PLANS.equals(scenarioSectionModel.getTitle())) {
                             for (int i = 0; i < scenarioSectionModel.getScenarioModelList().size(); i++) {
 
-                                mydb.updatePlanIsSelectedStatus(plansList.get(i)
-                                                .get(SQLConstants.TABLE_ID),
+                                mydb.updatePlanIsSelectedStatus(plansList.get(i).getId(),
                                         scenarioSectionModel.getScenarioModelList().get(i).isSelected()
                                                 ? 1 : 0);
                             }

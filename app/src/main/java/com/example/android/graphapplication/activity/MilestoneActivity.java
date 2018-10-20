@@ -52,7 +52,7 @@ public class MilestoneActivity extends AppCompatActivity implements
     private DBHelper mydb;
 
     private String milestoneTypeSpinnerValue;
-    private String ageSpinnerValue;
+    private int ageSpinnerValue;
     private String milestoneAction;
     private int currentMilestoneID;
     private String ageRange[];
@@ -149,7 +149,7 @@ public class MilestoneActivity extends AppCompatActivity implements
 
         String milestoneName = milestoneModel.getName();
         String milestoneType = milestoneModel.getType();
-        String ageOccurred = milestoneModel.getAge();
+        String ageOccurred = String.valueOf(milestoneModel.getAge());
         String description = milestoneModel.getDescription();
         String milestoneStatus = milestoneModel.getStatus();
         String amount = String.valueOf(milestoneModel.getAmount());
@@ -322,7 +322,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             case R.id.age_spinner:
                 Log.i(TAG, "onItemChosen: " + mAgeSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
-                ageSpinnerValue = mAgeSpinner.getSpinner().getItemAtPosition(position).toString();
+                ageSpinnerValue = Integer.valueOf(mAgeSpinner.getSpinner().getItemAtPosition(position).toString());
                 break;
 
             default:

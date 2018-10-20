@@ -24,6 +24,7 @@ import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.PlanModel;
+import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
@@ -270,7 +271,7 @@ public class PlanActivity extends AppCompatActivity {
                 }
 
                 if (!validation.blankFieldValidation(mPayoutAgeInputLayout)) {
-                    validation.negativeValueValidation(mPayoutAgeInputLayout);
+                    ageValidation();
                 }
 
                 if (!validation.blankFieldValidation(mPayoutAmountInputLayout)) {
@@ -416,11 +417,18 @@ public class PlanActivity extends AppCompatActivity {
      * This method will validate the age input
      */
     private void ageValidation() {
+
+        UserModel userModel = mydb.getAllUser().get(0);
+        int userAge = userModel.getAge();
+        int expectancy = userModel.getExpectancy();
+
         //validate premium start age
         try {
             if (mPremiumStartAgeInputLayout.getEditText() != null) {
                 if (mPremiumStartAgeInputLayout.getEditText().getText().toString().isEmpty()) {
                     mPremiumStartAgeInputLayout.setErrorEnabled(false);
+                } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) > expectancy) {
+                    mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY);
                 } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) > 999) {
                     mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
                 } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) < 18) {
@@ -442,22 +450,13 @@ public class PlanActivity extends AppCompatActivity {
                     mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
                 } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) < 18) {
                     mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
-                }
-//                else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) < 999 &&
-//                        Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) > 18) {
-//                    mPayoutAgeInputLayout.setErrorEnabled(false);
-//                }
-                else {
+                } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) > expectancy) {
+                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY);
+                } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) <
+                        Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString())) {
+                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_PAYOUT_AGE);
+                } else {
                     mPayoutAgeInputLayout.setErrorEnabled(false);
-                }
-
-                if (!mPayoutAgeInputLayout.isErrorEnabled()) {
-                    if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) <
-                            Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString())) {
-                        mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_PAYOUT_AGE);
-                    } else {
-                        mPayoutAgeInputLayout.setErrorEnabled(false);
-                    }
                 }
             }
         } catch (NumberFormatException e) {

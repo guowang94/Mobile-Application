@@ -53,7 +53,7 @@ public class EventActivity extends AppCompatActivity implements
     private DBHelper mydb;
 
     private String eventTypeSpinnerValue;
-    private String yearSpinnerValue;
+    private int ageSpinnerValue;
     private String eventAction;
     private int currentEventID;
     private String ageRange[];
@@ -151,7 +151,7 @@ public class EventActivity extends AppCompatActivity implements
 
         String eventName = eventModel.getName();
         String eventType = eventModel.getType();
-        String ageOccurred = eventModel.getAge();
+        String ageOccurred = String.valueOf(eventModel.getAge());
         String description = eventModel.getDescription();
         String eventStatus = eventModel.getStatus();
         String amount = String.valueOf(eventModel.getAmount());
@@ -324,7 +324,7 @@ public class EventActivity extends AppCompatActivity implements
             case R.id.age_spinner:
                 Log.i(TAG, "onItemChosen: " + mAgeSpinner.getSpinner()
                         .getItemAtPosition(position).toString());
-                yearSpinnerValue = mAgeSpinner.getSpinner().getItemAtPosition(position).toString();
+                ageSpinnerValue = Integer.valueOf(mAgeSpinner.getSpinner().getItemAtPosition(position).toString());
                 break;
 
             default:
@@ -438,12 +438,12 @@ public class EventActivity extends AppCompatActivity implements
 
                     if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
 
-                        mydb.insertEvent(eventName, eventTypeSpinnerValue, yearSpinnerValue, description,
+                        mydb.insertEvent(eventName, eventTypeSpinnerValue, ageSpinnerValue, description,
                                 eventStatus, amount, duration);
 
                     } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)) {
 
-                        mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, yearSpinnerValue,
+                        mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, ageSpinnerValue,
                                 description, eventStatus, amount, duration);
                     }
 

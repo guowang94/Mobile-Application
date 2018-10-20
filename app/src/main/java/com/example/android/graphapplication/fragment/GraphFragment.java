@@ -29,9 +29,10 @@ import com.example.android.graphapplication.activity.ExportActivity;
 import com.example.android.graphapplication.activity.ScenarioActivity;
 import com.example.android.graphapplication.adapter.SelectedScenarioAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
-import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
+import com.example.android.graphapplication.model.CommonModel;
+import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.SelectedScenarioModel;
 import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
@@ -74,9 +75,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private boolean isDataLoaded = false;
 
     private List<SelectedScenarioModel> selectedScenarioModelList = new ArrayList<>();
-    private List<HashMap<String, String>> eventsList = new ArrayList<>();
-    private List<HashMap<String, String>> milestonesList = new ArrayList<>();
-    private List<HashMap<String, String>> plansList = new ArrayList<>();
+    private List<CommonModel> eventsList = new ArrayList<>();
+    private List<CommonModel> milestonesList = new ArrayList<>();
+    private List<PlanModel> plansList = new ArrayList<>();
 
     private DBHelper mydb;
 
@@ -656,23 +657,20 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
             //if event status is Recurring, add current age and duration else current age
             //Note: all duration -1 because it starts from current year
-            if (eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_STATUS)
-                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(eventsList.get(i).getStatus())) {
 
                 eventHashmap.put(KeyConstants.KEY_EVENT_START_AGE,
-                        eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                        String.valueOf(eventsList.get(i).getAge()));
                 eventHashmap.put(KeyConstants.KEY_EVENT_TILL_AGE, String.valueOf(
-                        Integer.valueOf(eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE)) +
-                                Integer.valueOf(eventsList.get(i).get(SQLConstants.EVENT_TABLE_DURATION)) - 1));
+                        eventsList.get(i).getAge() + eventsList.get(i).getDuration() - 1));
             } else {
                 eventHashmap.put(KeyConstants.KEY_EVENT_START_AGE,
-                        eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                        String.valueOf(eventsList.get(i).getAge()));
                 eventHashmap.put(KeyConstants.KEY_EVENT_TILL_AGE,
-                        eventsList.get(i).get(SQLConstants.EVENT_TABLE_EVENT_AGE));
+                        String.valueOf(eventsList.get(i).getAge()));
             }
             eventHashmap.put(KeyConstants.KEY_EVENT_RECURRING,
-                    String.valueOf(0 - Float.valueOf(eventsList.get(i)
-                            .get(SQLConstants.EVENT_TABLE_AMOUNT))));
+                    String.valueOf(0 - eventsList.get(i).getAmount()));
 
             hashMapList.add(eventHashmap);
         }
@@ -681,23 +679,20 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             HashMap<String, String> milestoneHashmap = new HashMap<>();
 
             //if milestone status is Recurring, add current age and duration else current age
-            if (milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_STATUS)
-                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(milestonesList.get(i).getStatus())) {
 
                 milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE,
-                        milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
+                        String.valueOf(milestonesList.get(i).getAge()));
                 milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE, String.valueOf(
-                        Integer.valueOf(milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE)) +
-                                Integer.valueOf(milestonesList.get(i).get(SQLConstants.MILESTONE_TABLE_DURATION)) - 1));
+                        milestonesList.get(i).getAge() + milestonesList.get(i).getDuration() - 1));
             } else {
-                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE, milestonesList.get(i).
-                        get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
-                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE, milestonesList.get(i).
-                        get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_START_AGE,
+                        String.valueOf(milestonesList.get(i).getAge()));
+                milestoneHashmap.put(KeyConstants.KEY_MILESTONE_TILL_AGE,
+                        String.valueOf(milestonesList.get(i).getAge()));
             }
             milestoneHashmap.put(KeyConstants.KEY_MILESTONE_RECURRING,
-                    String.valueOf(0 - Float.valueOf(milestonesList.get(i)
-                            .get(SQLConstants.MILESTONE_TABLE_AMOUNT))));
+                    String.valueOf(0 - milestonesList.get(i).getAmount()));
 
             hashMapList.add(milestoneHashmap);
         }
@@ -706,34 +701,30 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             HashMap<String, String> planHashmap = new HashMap<>();
 
             //if plan status is Recurring, add current age and duration else current age
-            if (plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYMENT_TYPE)
-                    .equals(ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING)) {
+            if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(plansList.get(i).getPaymentType())) {
 
                 planHashmap.put(KeyConstants.KEY_PLAN_START_AGE,
-                        plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                        String.valueOf(plansList.get(i).getPremiumStartAge()));
                 planHashmap.put(KeyConstants.KEY_PLAN_TILL_AGE, String.valueOf(
-                        Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE)) +
-                                Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PLAN_DURATION)) - 1));
+                        plansList.get(i).getPremiumStartAge() +
+                                plansList.get(i).getPlanDuration() - 1));
             } else {
                 planHashmap.put(KeyConstants.KEY_PLAN_START_AGE,
-                        plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                        String.valueOf(plansList.get(i).getPremiumStartAge()));
                 planHashmap.put(KeyConstants.KEY_PLAN_TILL_AGE,
-                        plansList.get(i).get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE));
+                        String.valueOf(plansList.get(i).getPremiumStartAge()));
             }
             planHashmap.put(KeyConstants.KEY_PLAN_RECURRING,
-                    String.valueOf(0 - Float.valueOf(plansList.get(i)
-                            .get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT))));
+                    String.valueOf(0 - plansList.get(i).getPaymentAmount()));
 
             planHashmap.put(KeyConstants.KEY_PAYOUT_START_AGE,
-                    plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AGE));
+                    String.valueOf(plansList.get(i).getPayoutAge()));
 
             planHashmap.put(KeyConstants.KEY_PAYOUT_TILL_AGE, String.valueOf(
-                    Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AGE)) +
-                            Integer.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION)) - 1));
+                    plansList.get(i).getPayoutAge() + plansList.get(i).getPayoutDuration() - 1));
 
             planHashmap.put(KeyConstants.KEY_PAYOUT_RECURRING, String.valueOf(
-                    Float.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)) /
-                            Float.valueOf(plansList.get(i).get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION))));
+                    plansList.get(i).getPayoutAmount() / plansList.get(i).getPayoutDuration()));
 
             hashMapList.add(planHashmap);
         }
@@ -789,13 +780,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             selectedScenarioModelList.add(new SelectedScenarioModel(
                     ScreenConstants.TOOLBAR_TITLE_EVENTS, SelectedScenarioModel.SECTION_HEADER));
 
-            for (HashMap<String, String> event : eventsList) {
-                selectedScenarioModelList.add(new SelectedScenarioModel(event.get(SQLConstants.EVENT_TABLE_EVENT_NAME),
-                        event.get(SQLConstants.EVENT_TABLE_EVENT_TYPE),
-                        event.get(SQLConstants.EVENT_TABLE_EVENT_AGE),
-                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(event.get(SQLConstants.EVENT_TABLE_AMOUNT)))),
-                        event.get(SQLConstants.EVENT_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+            for (CommonModel event : eventsList) {
+                selectedScenarioModelList.add(new SelectedScenarioModel(event.getName(),
+                        event.getType(), String.valueOf(event.getAge()),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(event.getAmount())),
+                        String.valueOf(event.getDuration()), SelectedScenarioModel.OTHER_SCENARIO));
             }
         }
 
@@ -803,13 +792,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             selectedScenarioModelList.add(new SelectedScenarioModel(
                     ScreenConstants.TOOLBAR_TITLE_MILESTONES, SelectedScenarioModel.SECTION_HEADER));
 
-            for (HashMap<String, String> milestone : milestonesList) {
-                selectedScenarioModelList.add(new SelectedScenarioModel(milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_NAME),
-                        milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_TYPE),
-                        milestone.get(SQLConstants.MILESTONE_TABLE_MILESTONE_AGE),
-                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(milestone.get(SQLConstants.MILESTONE_TABLE_AMOUNT)))),
-                        milestone.get(SQLConstants.MILESTONE_TABLE_DURATION), SelectedScenarioModel.OTHER_SCENARIO));
+            for (CommonModel milestone : milestonesList) {
+                selectedScenarioModelList.add(new SelectedScenarioModel(milestone.getName(),
+                        milestone.getType(), String.valueOf(milestone.getAge()),
+                        String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(milestone.getAmount())),
+                        String.valueOf(milestone.getDuration()), SelectedScenarioModel.OTHER_SCENARIO));
             }
 
         }
@@ -818,19 +805,16 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             selectedScenarioModelList.add(new SelectedScenarioModel(
                     ScreenConstants.TOOLBAR_TITLE_PLANS, SelectedScenarioModel.SECTION_HEADER));
 
-            for (HashMap<String, String> plan : plansList) {
-                Log.d(TAG, "recyclerViewSetup: plan status: " + plan.get(SQLConstants.PLAN_TABLE_PLAN_STATUS));
-                selectedScenarioModelList.add(new SelectedScenarioModel(plan.get(SQLConstants.PLAN_TABLE_PLAN_NAME),
-                        plan.get(SQLConstants.PLAN_TABLE_PLAN_TYPE),
-                        plan.get(SQLConstants.PLAN_TABLE_PREMIUM_START_AGE),
+            for (PlanModel plan : plansList) {
+                Log.d(TAG, "recyclerViewSetup: plan status: " + plan.getPlanStatus());
+                selectedScenarioModelList.add(new SelectedScenarioModel(plan.getPlanName(),
+                        plan.getPlanType(), String.valueOf(plan.getPremiumStartAge()),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYMENT_AMOUNT)))),
-                        plan.get(SQLConstants.PLAN_TABLE_PLAN_DURATION),
-                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AGE),
+                                .format(plan.getPaymentAmount())),
+                        String.valueOf(plan.getPlanDuration()), String.valueOf(plan.getPayoutAge()),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                                .format(Float.valueOf(plan.get(SQLConstants.PLAN_TABLE_PAYOUT_AMOUNT)))),
-                        plan.get(SQLConstants.PLAN_TABLE_PAYOUT_DURATION),
-                        plan.get(SQLConstants.PLAN_TABLE_PLAN_STATUS),
+                                .format(plan.getPayoutAmount())),
+                        String.valueOf(plan.getPayoutDuration()), plan.getPlanStatus(),
                         SelectedScenarioModel.PLAN_SCENARIO));
             }
         }

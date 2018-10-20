@@ -5,7 +5,7 @@ public class CommonModel {
     private int id;
     private String name;
     private String type;
-    private String age;
+    private int age;
     private String description;
     private String status;
     private float amount;
@@ -36,11 +36,11 @@ public class CommonModel {
         this.type = type;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
