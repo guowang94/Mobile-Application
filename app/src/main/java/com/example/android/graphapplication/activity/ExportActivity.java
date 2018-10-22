@@ -61,6 +61,7 @@ public class ExportActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
     private List<ExportModel> exportModelList = new ArrayList<>();
+    private UserModel userModel;
 
     private DBHelper mydb;
 
@@ -206,7 +207,10 @@ public class ExportActivity extends AppCompatActivity {
                 Log.d(TAG, "onOptionsItemSelected: Folder already exists");
             }
 
-            PdfWriter.getInstance(document, new FileOutputStream(directoryPath + fileName));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(directoryPath + fileName));
+            //First parameter is user password and second parameter is admin password
+            writer.setEncryption("1234".getBytes(), "admin".getBytes(), PdfWriter.ALLOW_COPY, PdfWriter.STANDARD_ENCRYPTION_40);
+            writer.createXmpMetadata();
 
             document.open();
 
@@ -216,8 +220,18 @@ public class ExportActivity extends AppCompatActivity {
 
             mRecyclerView.draw(new Canvas(bm));
 
-            float scaler = ((document.getPageSize().getHeight() - document.topMargin()
-                    - document.bottomMargin() - 0) / image.getHeight()) * 100; // 0 means you have no indentation. If you have any, change it.
+            float scaler;
+            //If Image height is less than image width then scale by width else scale by height
+            if (image.getHeight() > image.getWidth()) {
+                scaler = ((document.getPageSize().getHeight() - document.topMargin()
+                        - document.bottomMargin() - 0) / image.getHeight()) * 100; // 0 means you have no indentation. If you have any, change it.
+                Log.d(TAG, "exportPDFToEmailApp: in if()");
+            } else {
+                Log.d(TAG, "exportPDFToEmailApp: in else()");
+                scaler = ((document.getPageSize().getWidth() - document.leftMargin()
+                        - document.rightMargin() - 0) / image.getWidth()) * 100;
+            }
+
             image.scalePercent(scaler);
             image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
 
@@ -239,10 +253,11 @@ public class ExportActivity extends AppCompatActivity {
 
         /* Fill it with Data */
         emailIntent.setType("plain/text");
-        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"nickloh94@gmail.com"});
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject");
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
-        emailIntent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
+        //tod extra_email to be commented
+//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"nickloh94@gmail.com"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Graph Application " + userModel.getName() + "'s report");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Sent from graph application");
+        emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
         /* Send it off to the Activity-Chooser */
         this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
@@ -282,7 +297,7 @@ public class ExportActivity extends AppCompatActivity {
      * This method will setup Report RecyclerView
      */
     private void setupReportRecyclerView() {
-        UserModel userModel = mydb.getAllUser().get(0);
+        userModel = mydb.getAllUser().get(0);
         List<CommonModel> milestoneList = mydb.getAllSelectedMilestone();
         List<PlanModel> existingPlanList = mydb.getAllExistingPlan();
         List<PlanModel> nonExistingPlanList = mydb.getAllNonExistingPlan();
