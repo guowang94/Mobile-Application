@@ -255,8 +255,8 @@ public class ExportActivity extends AppCompatActivity {
         emailIntent.setType("plain/text");
         //tod extra_email to be commented
 //        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"nickloh94@gmail.com"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Graph Application " + userModel.getName() + "'s report");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Sent from graph application");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name) + " " + userModel.getName() + "'s report");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Sent from " + getResources().getString(R.string.app_name));
         emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
         /* Send it off to the Activity-Chooser */
