@@ -97,8 +97,8 @@ public class Validation {
                         case R.id.plan_name_input_layout:
                         case R.id.plan_type_input_layout:
                         case R.id.premium_start_age_input_layout:
-                        case R.id.payment_amount_input_layout:
-                        case R.id.plan_duration_input_layout:
+                        case R.id.premium_amount_input_layout:
+                        case R.id.premium_duration_input_layout:
                         case R.id.payout_age_input_layout:
                         case R.id.payout_amount_input_layout:
                         case R.id.payout_duration_input_layout:
@@ -128,8 +128,8 @@ public class Validation {
                         case R.id.plan_name_input_layout:
                         case R.id.plan_type_input_layout:
                         case R.id.premium_start_age_input_layout:
-                        case R.id.payment_amount_input_layout:
-                        case R.id.plan_duration_input_layout:
+                        case R.id.premium_amount_input_layout:
+                        case R.id.premium_duration_input_layout:
                         case R.id.payout_age_input_layout:
                         case R.id.payout_amount_input_layout:
                         case R.id.payout_duration_input_layout:
@@ -166,8 +166,8 @@ public class Validation {
                         case R.id.amount_input_layout:
                         case R.id.duration_input_layout:
                         case R.id.cost_per_year_input_layout:
-                        case R.id.payment_amount_input_layout:
-                        case R.id.plan_duration_input_layout:
+                        case R.id.premium_amount_input_layout:
+                        case R.id.premium_duration_input_layout:
                         case R.id.payout_amount_input_layout:
                         case R.id.payout_duration_input_layout:
                             textInputLayout.setErrorEnabled(false);
@@ -205,10 +205,10 @@ public class Validation {
                         case R.id.cost_per_year_input_layout:
                             textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_COST_PER_YEAR);
                             break;
-                        case R.id.payment_amount_input_layout:
+                        case R.id.premium_amount_input_layout:
                             textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_PAYMENT_AMOUNT);
                             break;
-                        case R.id.plan_duration_input_layout:
+                        case R.id.premium_duration_input_layout:
                             textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_DURATION);
                             break;
                         case R.id.payout_amount_input_layout:
@@ -232,8 +232,8 @@ public class Validation {
                         case R.id.amount_input_layout:
                         case R.id.duration_input_layout:
                         case R.id.cost_per_year_input_layout:
-                        case R.id.payment_amount_input_layout:
-                        case R.id.plan_duration_input_layout:
+                        case R.id.premium_amount_input_layout:
+                        case R.id.premium_duration_input_layout:
                         case R.id.payout_amount_input_layout:
                         case R.id.payout_duration_input_layout:
                             textInputLayout.setErrorEnabled(false);
@@ -273,10 +273,10 @@ public class Validation {
                 case R.id.cost_per_year_input_layout:
                     textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_COST_PER_YEAR);
                     break;
-                case R.id.payment_amount_input_layout:
+                case R.id.premium_amount_input_layout:
                     textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_PAYMENT_AMOUNT);
                     break;
-                case R.id.plan_duration_input_layout:
+                case R.id.premium_duration_input_layout:
                     textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_DURATION);
                     break;
                 case R.id.payout_amount_input_layout:

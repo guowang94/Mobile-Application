@@ -760,7 +760,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteAllRecords() {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
-        //tod need to uncomment
+        //todo need to uncomment
         db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
         db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
         db.execSQL(SQLConstants.DELETE_PLAN_TABLE);

@@ -1,6 +1,7 @@
 package com.example.android.graphapplication.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.adapter.ExportAdapter;
+import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.ExportConstant;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
@@ -64,6 +67,7 @@ public class ExportActivity extends AppCompatActivity {
     private UserModel userModel;
 
     private DBHelper mydb;
+    private String userPassword = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -162,7 +166,7 @@ public class ExportActivity extends AppCompatActivity {
 
                             @Override
                             public void onPermissionGranted() {
-                                exportPDFToEmailApp();
+                                promptUserForPassword();
                             }
                         });
 
@@ -177,17 +181,19 @@ public class ExportActivity extends AppCompatActivity {
      * This method will take a screenshot of the RecyclerView and save as PDF and attached the pdf in the email
      */
     private void exportPDFToEmailApp() {
+        //Scroll to top and take a screenshot
         mRecyclerView.getLayoutManager().scrollToPosition(0);
         mRecyclerView.measure(
                 View.MeasureSpec.makeMeasureSpec(mRecyclerView.getWidth(), View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
-        Bitmap bm = Bitmap.createBitmap(mRecyclerView.getWidth(), mRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        final Bitmap bm = Bitmap.createBitmap(mRecyclerView.getWidth(), mRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         mRecyclerView.draw(new Canvas(bm));
 
         ImageView im = new ImageView(this);
         im.setImageBitmap(bm);
 
+        //Create new PDF Document
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyyHHmmss", Locale.getDefault());
         String directoryPath = null;
         String fileName = "Financial_Report-" + simpleDateFormat.format(new Date()) + ".pdf";
@@ -195,7 +201,8 @@ public class ExportActivity extends AppCompatActivity {
             Document document = new Document();
 
             // Create 'GraphApplication' folder in Downloads if it does not exist
-            directoryPath = android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/GraphApplication/";
+            directoryPath = android.os.Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS).toString() + "/" + getResources().getString(R.string.app_name) + "/";
             File f = new File(directoryPath);
             if (!f.exists()) {
                 if (!f.mkdir()) {
@@ -208,8 +215,9 @@ public class ExportActivity extends AppCompatActivity {
             }
 
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(directoryPath + fileName));
+            userPassword = userPassword == null ? "1234" : userPassword;
             //First parameter is user password and second parameter is admin password
-            writer.setEncryption("1234".getBytes(), "admin".getBytes(), PdfWriter.ALLOW_COPY, PdfWriter.STANDARD_ENCRYPTION_40);
+            writer.setEncryption(userPassword.getBytes(), "admin".getBytes(), PdfWriter.ALLOW_COPY, PdfWriter.STANDARD_ENCRYPTION_40);
             writer.createXmpMetadata();
 
             document.open();
@@ -223,11 +231,10 @@ public class ExportActivity extends AppCompatActivity {
             float scaler;
             //If Image height is less than image width then scale by width else scale by height
             if (image.getHeight() > image.getWidth()) {
+                // 0 means you have no indentation. If you have any, change it.
                 scaler = ((document.getPageSize().getHeight() - document.topMargin()
-                        - document.bottomMargin() - 0) / image.getHeight()) * 100; // 0 means you have no indentation. If you have any, change it.
-                Log.d(TAG, "exportPDFToEmailApp: in if()");
+                        - document.bottomMargin() - 0) / image.getHeight()) * 100;
             } else {
-                Log.d(TAG, "exportPDFToEmailApp: in else()");
                 scaler = ((document.getPageSize().getWidth() - document.leftMargin()
                         - document.rightMargin() - 0) / image.getWidth()) * 100;
             }
@@ -248,12 +255,12 @@ public class ExportActivity extends AppCompatActivity {
         Log.d(TAG, "onOptionsItemSelected: dir: " + directoryPath + fileName);
 
         File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(root, "GraphApplication/" + fileName);
+        File file = new File(root, getResources().getString(R.string.app_name) + "/" + fileName);
         Uri uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
 
         /* Fill it with Data */
         emailIntent.setType("plain/text");
-        //tod extra_email to be commented
+        //todo extra_email to be commented
 //        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"nickloh94@gmail.com"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name) + " " + userModel.getName() + "'s report");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Sent from " + getResources().getString(R.string.app_name));
@@ -261,6 +268,33 @@ public class ExportActivity extends AppCompatActivity {
 
         /* Send it off to the Activity-Chooser */
         this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+    }
+
+    private void promptUserForPassword() {
+        //Prompt user for PDF file password
+        @SuppressLint("InflateParams") final View view = this.getLayoutInflater().inflate(R.layout.alert_dialog_edittext, null);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final TextInputLayout textInputLayout = view.findViewById(R.id.password_input_layout);
+//        alert.setMessage("Please enter a password for PDF document");
+        alert.setTitle("Set Password");
+
+        alert.setView(textInputLayout);
+
+        alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (textInputLayout.getEditText() != null) {
+                    if (!textInputLayout.getEditText().getText().toString().isEmpty()) {
+                        userPassword = textInputLayout.getEditText().getText().toString();
+                        exportPDFToEmailApp();
+                    } else {
+                        textInputLayout.setError(ErrorMsgConstants.ERR_MSG_PASSWORD_CANNOT_BE_BLANK);
+                    }
+                }
+            }
+        });
+
+        alert.setView(view);
+        alert.show();
     }
 
     /**
@@ -280,7 +314,7 @@ public class ExportActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    exportPDFToEmailApp();
+                    promptUserForPassword();
                 }
                 /*else {
                     // permission denied, boo! Disable the

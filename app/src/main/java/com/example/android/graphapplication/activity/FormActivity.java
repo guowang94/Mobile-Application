@@ -67,11 +67,11 @@ public class FormActivity extends AppCompatActivity {
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
-        //tod need to comment
+        //todo static text to be commented
 //        mNameInput.getEditText().setText("wang");
-//        mAgeInput.getEditText().setText("24");
+//        mAgeInput.getEditText().setText("20");
 //        mRetirementAgeInput.getEditText().setText("30");
-//        mExpectancyInput.getEditText().setText("34");
+//        mExpectancyInput.getEditText().setText("40");
 //        mIncomeInput.getEditText().setText("1000");
 //        mIncrementInput.getEditText().setText("5");
 //        mFixedExpensesInput.getEditText().setText("100");
