@@ -41,7 +41,7 @@ public class FormActivity extends AppCompatActivity {
     private ConstraintLayout mLayout;
     private TextView mToolbarTitle;
 
-    private Validation validation = new Validation();
+    private Validation validation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +87,8 @@ public class FormActivity extends AppCompatActivity {
      * This method will setup toolbar and set onClickListener
      */
     private void initData() {
+        validation = new Validation();
+
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this toolbar
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ENTER_USER_DETAILS);

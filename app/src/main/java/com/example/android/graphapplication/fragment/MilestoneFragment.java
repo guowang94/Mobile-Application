@@ -45,10 +45,10 @@ public class MilestoneFragment extends Fragment {
     private TextView mEmptyRecyclerTextView;
 
     private CommonTitleAdapter mMilestonesAdapter;
-    private List<CommonTitleModel> milestonesModelList = new ArrayList<>();
-    private boolean isViewShown = false;
-    private boolean isViewLoaded = false;
-    private boolean isDataLoaded = false;
+    private List<CommonTitleModel> milestonesModelList;
+    private boolean isViewShown;
+    private boolean isViewLoaded;
+    private boolean isDataLoaded;
     private DBHelper mydb;
 
     @Override
@@ -113,6 +113,8 @@ public class MilestoneFragment extends Fragment {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        milestonesModelList = new ArrayList<>();
+
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         }

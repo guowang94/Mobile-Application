@@ -38,10 +38,6 @@ public class ScenarioActivity extends AppCompatActivity {
     private TextView mToolbarTitle;
     private ConstraintLayout mLayout;
 
-    private List<ScenarioSectionModel> scenarioSectionModelList = new ArrayList<>();
-    private List<ScenarioModel> eventsModelList = new ArrayList<>();
-    private List<ScenarioModel> milestonesModelList = new ArrayList<>();
-    private List<ScenarioModel> plansModelList = new ArrayList<>();
     private ScenarioSectionAdapter scenarioSectionAdapter;
     private List<CommonModel> eventsList;
     private List<CommonModel> milestonesList;
@@ -60,8 +56,6 @@ public class ScenarioActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler_view);
         mLayout = findViewById(R.id.layout);
 
-        mydb = new DBHelper(getApplicationContext());
-
         initData();
         Log.d(TAG, "onCreate: out");
     }
@@ -71,6 +65,11 @@ public class ScenarioActivity extends AppCompatActivity {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        mydb = new DBHelper(getApplicationContext());
+        List<ScenarioSectionModel> scenarioSectionModelList = new ArrayList<>();
+        List<ScenarioModel> eventsModelList = new ArrayList<>();
+        List<ScenarioModel> milestonesModelList = new ArrayList<>();
+        List<ScenarioModel> plansModelList = new ArrayList<>();
 
         setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_SCENARIO);

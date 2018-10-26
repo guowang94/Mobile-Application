@@ -84,9 +84,6 @@ public class MilestoneActivity extends AppCompatActivity implements
         mCostEditText = new EditText(this);
         mDurationEditText = new EditText(this);
 
-        mydb = new DBHelper(getApplicationContext());
-        validation = new Validation();
-
         if (getIntent() != null) {
             milestoneAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
             currentMilestoneID = getIntent().getIntExtra(
@@ -102,6 +99,9 @@ public class MilestoneActivity extends AppCompatActivity implements
      * This method will initialise the data for the activity
      */
     private void initData() {
+        mydb = new DBHelper(getApplicationContext());
+        validation = new Validation();
+
         Log.d(TAG, "initData: in");
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar

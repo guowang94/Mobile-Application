@@ -37,9 +37,9 @@ public class SummaryFragment extends Fragment {
     private TextView mToolbarTitle;
 
     private List<SummaryModel> summaryModelList;
-    private boolean isViewShown = false;
-    private boolean isViewLoaded = false;
-    private boolean isDataLoaded = false;
+    private boolean isViewShown;
+    private boolean isViewLoaded;
+    private boolean isDataLoaded;
 
     private DBHelper mydb;
 

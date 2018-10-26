@@ -63,11 +63,11 @@ public class ExportActivity extends AppCompatActivity {
     private TextView mToolbarTitle;
     private RecyclerView mRecyclerView;
 
-    private List<ExportModel> exportModelList = new ArrayList<>();
+    private List<ExportModel> exportModelList;
     private UserModel userModel;
 
     private DBHelper mydb;
-    private String userPassword = null;
+    private String userPassword;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,8 +78,6 @@ public class ExportActivity extends AppCompatActivity {
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mRecyclerView = findViewById(R.id.recycler_view);
 
-        mydb = new DBHelper(getApplicationContext());
-
         initData();
         Log.d(TAG, "onCreate: out");
     }
@@ -88,6 +86,9 @@ public class ExportActivity extends AppCompatActivity {
      * This method will initialise the data for the activity
      */
     private void initData() {
+        mydb = new DBHelper(getApplicationContext());
+        exportModelList = new ArrayList<>();
+
         setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EXPORT_PREVIEW);
         ActionBar actionBar = getSupportActionBar();

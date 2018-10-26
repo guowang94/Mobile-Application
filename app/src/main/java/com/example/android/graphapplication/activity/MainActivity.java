@@ -19,6 +19,8 @@ import com.example.android.graphapplication.fragment.MilestoneFragment;
 import com.example.android.graphapplication.fragment.PlansFragment;
 import com.example.android.graphapplication.fragment.SummaryFragment;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -53,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
      * This method will setup the TabLayout
      */
     private void setupTabIcons() {
-        mTabLayout.getTabAt(0).setCustomView(getCustomTab(0));
-        mTabLayout.getTabAt(1).setCustomView(getCustomTab(1));
-        mTabLayout.getTabAt(2).setCustomView(getCustomTab(2));
-        mTabLayout.getTabAt(3).setCustomView(getCustomTab(3));
-        mTabLayout.getTabAt(4).setCustomView(getCustomTab(4));
+        Objects.requireNonNull(mTabLayout.getTabAt(0)).setCustomView(getCustomTab(0));
+        Objects.requireNonNull(mTabLayout.getTabAt(1)).setCustomView(getCustomTab(1));
+        Objects.requireNonNull(mTabLayout.getTabAt(2)).setCustomView(getCustomTab(2));
+        Objects.requireNonNull(mTabLayout.getTabAt(3)).setCustomView(getCustomTab(3));
+        Objects.requireNonNull(mTabLayout.getTabAt(4)).setCustomView(getCustomTab(4));
     }
 
     /**

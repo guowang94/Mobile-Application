@@ -76,9 +76,6 @@ public class PlanActivity extends AppCompatActivity {
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
 
-        mydb = new DBHelper(getApplicationContext());
-        validation = new Validation();
-
         if (getIntent() != null) {
             planAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
             currentPlanID = getIntent().getIntExtra(
@@ -95,6 +92,9 @@ public class PlanActivity extends AppCompatActivity {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        mydb = new DBHelper(getApplicationContext());
+        validation = new Validation();
+
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();
