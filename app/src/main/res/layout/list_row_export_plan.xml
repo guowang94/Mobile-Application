@@ -37,7 +37,7 @@
         android:autoSizeTextType="uniform"
         android:gravity="center_vertical|end"
         android:maxLines="1"
-        android:text="@string/export_payment_start_end"
+        android:text="@string/export_premium_start_end"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView14"
         app:layout_constraintEnd_toStartOf="@+id/textView18"
         app:layout_constraintHorizontal_bias="0.5"

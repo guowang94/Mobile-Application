@@ -38,8 +38,8 @@ public class PlanActivity extends AppCompatActivity {
     private TextInputLayout mPlanNameInputLayout;
     private TextInputLayout mPlanTypeInputLayout;
     private TextInputLayout mPremiumStartAgeInputLayout;
-    private TextInputLayout mPaymentAmountInputLayout;
-    private TextInputLayout mPlanDurationInputLayout;
+    private TextInputLayout mPremiumAmountInputLayout;
+    private TextInputLayout mPremiumDurationInputLayout;
     private TextInputLayout mPayoutAgeInputLayout;
     private TextInputLayout mPayoutAmountInputLayout;
     private TextInputLayout mPayoutDurationInputLayout;
@@ -65,8 +65,8 @@ public class PlanActivity extends AppCompatActivity {
         mPlanNameInputLayout = findViewById(R.id.plan_name_input_layout);
         mPlanTypeInputLayout = findViewById(R.id.plan_type_input_layout);
         mPremiumStartAgeInputLayout = findViewById(R.id.premium_start_age_input_layout);
-        mPaymentAmountInputLayout = findViewById(R.id.payment_amount_input_layout);
-        mPlanDurationInputLayout = findViewById(R.id.plan_duration_input_layout);
+        mPremiumAmountInputLayout = findViewById(R.id.premium_amount_input_layout);
+        mPremiumDurationInputLayout = findViewById(R.id.premium_duration_input_layout);
         mPayoutAgeInputLayout = findViewById(R.id.payout_age_input_layout);
         mPayoutAmountInputLayout = findViewById(R.id.payout_amount_input_layout);
         mPayoutDurationInputLayout = findViewById(R.id.payout_duration_input_layout);
@@ -75,9 +75,6 @@ public class PlanActivity extends AppCompatActivity {
         mShowDialogButton = findViewById(R.id.showDialogButton);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
-
-        mydb = new DBHelper(getApplicationContext());
-        validation = new Validation();
 
         if (getIntent() != null) {
             planAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
@@ -95,6 +92,9 @@ public class PlanActivity extends AppCompatActivity {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        mydb = new DBHelper(getApplicationContext());
+        validation = new Validation();
+
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();
@@ -110,8 +110,8 @@ public class PlanActivity extends AppCompatActivity {
         mShowDialogButton.setOnClickListener(onClickListenerForShowDialog());
 
         // Default selection for Plan Status is One-Time therefore Plan Duration is set to disabled
-        mPlanDurationInputLayout.setEnabled(false);
-        mPlanDurationInputLayout.setAlpha(.5f);
+        mPremiumDurationInputLayout.setEnabled(false);
+        mPremiumDurationInputLayout.setAlpha(.5f);
 
         mPaymentTypeSegmentedButton.setOnPositionChangedListener(
                 new SegmentedButtonGroup.OnPositionChangedListener() {
@@ -119,11 +119,11 @@ public class PlanActivity extends AppCompatActivity {
                     public void onPositionChanged(int position) {
                         Log.d(TAG, "onPositionChanged: " + position);
                         if (position == 0) {
-                            mPlanDurationInputLayout.setEnabled(false);
-                            mPlanDurationInputLayout.setAlpha(.5f);
+                            mPremiumDurationInputLayout.setEnabled(false);
+                            mPremiumDurationInputLayout.setAlpha(.5f);
                         } else {
-                            mPlanDurationInputLayout.setEnabled(true);
-                            mPlanDurationInputLayout.setAlpha(1f);
+                            mPremiumDurationInputLayout.setEnabled(true);
+                            mPremiumDurationInputLayout.setAlpha(1f);
                         }
                     }
                 });
@@ -135,18 +135,19 @@ public class PlanActivity extends AppCompatActivity {
         if (mPlanTypeInputLayout.getEditText() != null)
             mPlanTypeInputLayout.getEditText().setOnFocusChangeListener(
                     validation.onFocusChangeListenerForBlankFieldValidation(mPlanTypeInputLayout));
-        if (mPaymentAmountInputLayout.getEditText() != null)
-            mPaymentAmountInputLayout.getEditText().setOnFocusChangeListener(
-                    validation.onFocusChangeListenerForNegativeValueValidation(mPaymentAmountInputLayout));
-        if (mPlanDurationInputLayout.getEditText() != null)
-            mPlanDurationInputLayout.getEditText().setOnFocusChangeListener(
-                    validation.onFocusChangeListenerForNegativeValueValidation(mPlanDurationInputLayout));
+        if (mPremiumAmountInputLayout.getEditText() != null)
+            mPremiumAmountInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForNegativeValueValidation(mPremiumAmountInputLayout));
         if (mPayoutAmountInputLayout.getEditText() != null)
             mPayoutAmountInputLayout.getEditText().setOnFocusChangeListener(
                     validation.onFocusChangeListenerForNegativeValueValidation(mPayoutAmountInputLayout));
+
+        if (mPremiumDurationInputLayout.getEditText() != null)
+            mPremiumDurationInputLayout.getEditText().setOnFocusChangeListener(
+                    onFocusChangeListenerForDurationValidation());
         if (mPayoutDurationInputLayout.getEditText() != null)
             mPayoutDurationInputLayout.getEditText().setOnFocusChangeListener(
-                    validation.onFocusChangeListenerForNegativeValueValidation(mPayoutDurationInputLayout));
+                    onFocusChangeListenerForDurationValidation());
         if (mPremiumStartAgeInputLayout.getEditText() != null)
             mPremiumStartAgeInputLayout.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
         if (mPayoutAgeInputLayout.getEditText() != null)
@@ -185,8 +186,8 @@ public class PlanActivity extends AppCompatActivity {
             mPlanTypeInputLayout.getEditText().setText(planType);
         if (mPremiumStartAgeInputLayout.getEditText() != null)
             mPremiumStartAgeInputLayout.getEditText().setText(premiumStartAge);
-        if (mPaymentAmountInputLayout.getEditText() != null)
-            mPaymentAmountInputLayout.getEditText().setText(paymentAmount);
+        if (mPremiumAmountInputLayout.getEditText() != null)
+            mPremiumAmountInputLayout.getEditText().setText(paymentAmount);
         if (mPayoutAgeInputLayout.getEditText() != null)
             mPayoutAgeInputLayout.getEditText().setText(payoutAge);
         if (mPayoutAmountInputLayout.getEditText() != null)
@@ -199,8 +200,8 @@ public class PlanActivity extends AppCompatActivity {
         } else {
             mPaymentTypeSegmentedButton.setPosition(1);
             if (!planduration.equals("0")) {
-                if (mPlanDurationInputLayout.getEditText() != null)
-                    mPlanDurationInputLayout.getEditText().setText(planduration);
+                if (mPremiumDurationInputLayout.getEditText() != null)
+                    mPremiumDurationInputLayout.getEditText().setText(planduration);
             }
         }
 
@@ -259,14 +260,14 @@ public class PlanActivity extends AppCompatActivity {
                     ageValidation();
                 }
 
-                if (!validation.blankFieldValidation(mPaymentAmountInputLayout)) {
-                    validation.negativeValueValidation(mPaymentAmountInputLayout);
+                if (!validation.blankFieldValidation(mPremiumAmountInputLayout)) {
+                    validation.negativeValueValidation(mPremiumAmountInputLayout);
                 }
 
                 //If payment type is recurring then validate duration TextInputLayout
                 if (mPaymentTypeSegmentedButton.getPosition() == 1) {
-                    if (!validation.blankFieldValidation(mPlanDurationInputLayout)) {
-                        validation.negativeValueValidation(mPlanDurationInputLayout);
+                    if (!validation.blankFieldValidation(mPremiumDurationInputLayout)) {
+                        durationValidation();
                     }
                 }
 
@@ -279,12 +280,12 @@ public class PlanActivity extends AppCompatActivity {
                 }
 
                 if (!validation.blankFieldValidation(mPayoutDurationInputLayout)) {
-                    validation.negativeValueValidation(mPayoutDurationInputLayout);
+                    durationValidation();
                 }
 
                 if (mPlanNameInputLayout.isErrorEnabled() || mPlanTypeInputLayout.isErrorEnabled() ||
-                        mPremiumStartAgeInputLayout.isErrorEnabled() || mPaymentAmountInputLayout.isErrorEnabled() ||
-                        mPlanDurationInputLayout.isErrorEnabled() || mPayoutAgeInputLayout.isErrorEnabled() ||
+                        mPremiumStartAgeInputLayout.isErrorEnabled() || mPremiumAmountInputLayout.isErrorEnabled() ||
+                        mPremiumDurationInputLayout.isErrorEnabled() || mPayoutAgeInputLayout.isErrorEnabled() ||
                         mPayoutAmountInputLayout.isErrorEnabled() || mPayoutDurationInputLayout.isErrorEnabled()) {
                     Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
                             Snackbar.LENGTH_LONG).show();
@@ -311,8 +312,8 @@ public class PlanActivity extends AppCompatActivity {
                     if (mPremiumStartAgeInputLayout.getEditText() != null)
                         premiumStartAge = Integer.valueOf(mPremiumStartAgeInputLayout
                                 .getEditText().getText().toString());
-                    if (mPaymentAmountInputLayout.getEditText() != null)
-                        paymentAmount = Float.valueOf(mPaymentAmountInputLayout
+                    if (mPremiumAmountInputLayout.getEditText() != null)
+                        paymentAmount = Float.valueOf(mPremiumAmountInputLayout
                                 .getEditText().getText().toString());
                     if (mPayoutAgeInputLayout.getEditText() != null)
                         payoutAge = Integer.valueOf(mPayoutAgeInputLayout
@@ -326,7 +327,7 @@ public class PlanActivity extends AppCompatActivity {
 
 
                     if (ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING.equals(paymentType)) {
-                        planDuration = Integer.valueOf(mPlanDurationInputLayout
+                        planDuration = Integer.valueOf(mPremiumDurationInputLayout
                                 .getEditText().getText().toString());
                     }
 
@@ -417,9 +418,7 @@ public class PlanActivity extends AppCompatActivity {
      * This method will validate the age input
      */
     private void ageValidation() {
-
         UserModel userModel = mydb.getAllUser().get(0);
-        int userAge = userModel.getAge();
         int expectancy = userModel.getExpectancy();
 
         //validate premium start age
@@ -428,11 +427,12 @@ public class PlanActivity extends AppCompatActivity {
                 if (mPremiumStartAgeInputLayout.getEditText().getText().toString().isEmpty()) {
                     mPremiumStartAgeInputLayout.setErrorEnabled(false);
                 } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) > expectancy) {
-                    mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY);
-                } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) > 999) {
-                    mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
-                } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) < 18) {
-                    mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
+                    mPremiumStartAgeInputLayout.getEditText().setText(String.valueOf(expectancy));
+                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY,
+                            Snackbar.LENGTH_LONG).show();
+                    mPayoutAgeInputLayout.setErrorEnabled(false);
+                } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) < 0) {
+                    mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_PREMIUM_AGE_CANNOT_BE_LESS_THAN_0);
                 } else {
                     mPremiumStartAgeInputLayout.setErrorEnabled(false);
                 }
@@ -446,17 +446,82 @@ public class PlanActivity extends AppCompatActivity {
             if (mPayoutAgeInputLayout.getEditText() != null) {
                 if (mPayoutAgeInputLayout.getEditText().getText().toString().isEmpty()) {
                     mPayoutAgeInputLayout.setErrorEnabled(false);
-                } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) > 999) {
-                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
-                } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) < 18) {
-                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
+                } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) < 1) {
+                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_PAYOUT_AGE_CANNOT_BE_LESS_THAN_1);
                 } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) > expectancy) {
-                    mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY);
+                    mPayoutAgeInputLayout.getEditText().setText(String.valueOf(expectancy));
+                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY,
+                            Snackbar.LENGTH_LONG).show();
+                    mPayoutAgeInputLayout.setErrorEnabled(false);
                 } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) <
                         Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString())) {
                     mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_PAYOUT_AGE);
                 } else {
                     mPayoutAgeInputLayout.setErrorEnabled(false);
+                }
+            }
+        } catch (NumberFormatException e) {
+            //Do nothing
+        }
+    }
+
+    /**
+     * This method will validate duration
+     */
+    private void durationValidation() {
+        UserModel userModel = mydb.getAllUser().get(0);
+        int expectancy = userModel.getExpectancy();
+        int premiumAge = 0;
+        int payoutAge = 0;
+
+        if (mPremiumStartAgeInputLayout.getEditText() != null) {
+            if (!mPremiumStartAgeInputLayout.getEditText().getText().toString().isEmpty())
+                premiumAge = Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString());
+        }
+
+        if (mPayoutAgeInputLayout.getEditText() != null) {
+            if (!mPayoutAgeInputLayout.getEditText().getText().toString().isEmpty())
+                payoutAge = Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString());
+        }
+
+        //validate premium duration age
+        try {
+            if (mPremiumDurationInputLayout.getEditText() != null) {
+                if (mPremiumDurationInputLayout.getEditText().getText().toString().isEmpty()) {
+                    mPremiumDurationInputLayout.setErrorEnabled(false);
+                } else if (Integer.valueOf(mPremiumDurationInputLayout.getEditText().getText().toString()) < 1) {
+                    mPremiumDurationInputLayout.setError(ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_BE_LESS_THAN_1);
+                } else if (premiumAge + Integer.valueOf(mPremiumDurationInputLayout.getEditText().getText().toString()) > expectancy) {
+                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_EXCEED_EXPECTANCY,
+                            Snackbar.LENGTH_LONG).show();
+                    int duration = expectancy - premiumAge;
+                    duration = duration == 0 ? 1 : duration;
+                    mPremiumDurationInputLayout.getEditText().setText(String.valueOf(duration));
+                    mPremiumDurationInputLayout.setErrorEnabled(false);
+                } else {
+                    mPremiumDurationInputLayout.setErrorEnabled(false);
+                }
+            }
+        } catch (NumberFormatException e) {
+            //Do nothing
+        }
+
+        //validate payout duration age
+        try {
+            if (mPayoutDurationInputLayout.getEditText() != null) {
+                if (mPayoutDurationInputLayout.getEditText().getText().toString().isEmpty()) {
+                    mPayoutDurationInputLayout.setErrorEnabled(false);
+                } else if (Integer.valueOf(mPayoutDurationInputLayout.getEditText().getText().toString()) < 1) {
+                    mPayoutDurationInputLayout.setError(ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_BE_LESS_THAN_1);
+                } else if (payoutAge + Integer.valueOf(mPayoutDurationInputLayout.getEditText().getText().toString()) > expectancy) {
+                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_EXCEED_EXPECTANCY,
+                            Snackbar.LENGTH_LONG).show();
+                    int duration = expectancy - payoutAge;
+                    duration = duration == 0 ? 1 : duration;
+                    mPayoutDurationInputLayout.getEditText().setText(String.valueOf(duration));
+                    mPayoutDurationInputLayout.setErrorEnabled(false);
+                } else {
+                    mPayoutDurationInputLayout.setErrorEnabled(false);
                 }
             }
         } catch (NumberFormatException e) {
@@ -475,6 +540,22 @@ public class PlanActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     ageValidation();
+                }
+            }
+        };
+    }
+
+    /**
+     * This method will return onFocusChangeListener for duration validation
+     *
+     * @return onFocusChangeListener
+     */
+    private View.OnFocusChangeListener onFocusChangeListenerForDurationValidation() {
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    durationValidation();
                 }
             }
         };

@@ -70,14 +70,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private TextView mEmptyRecyclerTextView;
     private RecyclerView mRecyclerView;
 
-    private boolean isViewShown = false;
-    private boolean isViewLoaded = false;
-    private boolean isDataLoaded = false;
+    private boolean isViewShown;
+    private boolean isViewLoaded;
+    private boolean isDataLoaded;
 
-    private List<SelectedScenarioModel> selectedScenarioModelList = new ArrayList<>();
-    private List<CommonModel> eventsList = new ArrayList<>();
-    private List<CommonModel> milestonesList = new ArrayList<>();
-    private List<PlanModel> plansList = new ArrayList<>();
+    private List<SelectedScenarioModel> selectedScenarioModelList;
+    private List<CommonModel> eventsList;
+    private List<CommonModel> milestonesList;
+    private List<PlanModel> plansList;
 
     private DBHelper mydb;
 
@@ -145,6 +145,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        selectedScenarioModelList = new ArrayList<>();
+        eventsList = new ArrayList<>();
+        milestonesList = new ArrayList<>();
+        plansList = new ArrayList<>();
+
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         }

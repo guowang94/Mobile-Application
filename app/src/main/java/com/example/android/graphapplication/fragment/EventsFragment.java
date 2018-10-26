@@ -45,10 +45,10 @@ public class EventsFragment extends Fragment {
     private TextView mEmptyRecyclerTextView;
 
     private CommonTitleAdapter mEventsAdapter;
-    private List<CommonTitleModel> eventsModelList = new ArrayList<>();
-    private boolean isViewShown = false;
-    private boolean isViewLoaded = false;
-    private boolean isDataLoaded = false;
+    private List<CommonTitleModel> eventsModelList;
+    private boolean isViewShown;
+    private boolean isViewLoaded;
+    private boolean isDataLoaded;
     private DBHelper mydb;
 
     @Override
@@ -113,6 +113,8 @@ public class EventsFragment extends Fragment {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        eventsModelList = new ArrayList<>();
+
         if (getActivity() != null)
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);

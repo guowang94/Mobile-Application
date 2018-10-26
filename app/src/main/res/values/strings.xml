@@ -61,8 +61,8 @@
     <string name="plan_name">Plan Name</string>
     <string name="plan_type">Plan Type</string>
     <string name="premium_start_age">Premium Start Age</string>
-    <string name="payment_amount">Payment Amount</string>
-    <string name="plan_duration">Plan Duration</string>
+    <string name="premium_amount">Premium Amount</string>
+    <string name="premium_duration">Premium Duration</string>
     <string name="payout_age">Payout Age</string>
     <string name="payout_amount">Payout Amount</string>
     <string name="payout_duration">Payout Duration</string>
@@ -80,7 +80,7 @@
     <!--Export Header-->
     <string name="export_report_title">Analysis Report</string>
     <string name="export_plan_name">Plan Name</string>
-    <string name="export_payment_start_end">Payment Start-End</string>
+    <string name="export_premium_start_end">Premium Start-End</string>
     <string name="export_premium_status">Premium Status</string>
     <string name="export_total_premium_payment">Total Premium Payment</string>
     <string name="export_payout_start_end">Payout Start-End</string>
@@ -91,5 +91,8 @@
     <string name="action_apply_scenarios">Apply Scenarios</string>
     <string name="action_export">Export</string>
     <string name="save">Save</string>
+
+    <!--Export Alert Dialog's EditText-->
+    <string name="alert_dialog_password">Please enter a password for PDF document</string>
 
 </resources>

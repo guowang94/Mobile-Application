@@ -45,10 +45,10 @@ public class PlansFragment extends Fragment {
     private TextView mEmptyRecyclerTextView;
 
     private CommonTitleAdapter mPlansAdapter;
-    private List<CommonTitleModel> plansModelList = new ArrayList<>();
-    private boolean isViewShown = false;
-    private boolean isViewLoaded = false;
-    private boolean isDataLoaded = false;
+    private List<CommonTitleModel> plansModelList;
+    private boolean isViewShown;
+    private boolean isViewLoaded;
+    private boolean isDataLoaded;
     private DBHelper mydb;
 
     @Override
@@ -113,6 +113,8 @@ public class PlansFragment extends Fragment {
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        plansModelList = new ArrayList<>();
+
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         }

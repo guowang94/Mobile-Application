@@ -85,9 +85,6 @@ public class EventActivity extends AppCompatActivity implements
         mCostEditText = new EditText(this);
         mDurationEditText = new EditText(this);
 
-        mydb = new DBHelper(getApplicationContext());
-        validation = new Validation();
-
         if (getIntent() != null) {
             eventAction = getIntent().getStringExtra(KeyConstants.INTENT_KEY_ACTION);
             currentEventID = getIntent().getIntExtra(
@@ -104,6 +101,9 @@ public class EventActivity extends AppCompatActivity implements
      */
     private void initData() {
         Log.d(TAG, "initData: in");
+        mydb = new DBHelper(getApplicationContext());
+        validation = new Validation();
+
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();

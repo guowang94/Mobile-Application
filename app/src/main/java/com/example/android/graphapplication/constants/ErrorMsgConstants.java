@@ -22,4 +22,9 @@ public interface ErrorMsgConstants {
     String ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18 = "Age cannot be less than 18";
     String ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999 = "Age cannot be more than 999 years old";
     String ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY = "Age cannot be more than Expectancy";
+    String ERR_MSG_PREMIUM_AGE_CANNOT_BE_LESS_THAN_0 = "Premium age cannot be less than 0";
+    String ERR_MSG_PAYOUT_AGE_CANNOT_BE_LESS_THAN_1 = "Payout age cannot be less than 1";
+    String ERR_MSG_DURATION_CANNOT_EXCEED_EXPECTANCY = "Duration cannot exceed life expectancy";
+    String ERR_MSG_DURATION_CANNOT_BE_LESS_THAN_1 = "Duration cannot be less than 1";
+    String ERR_MSG_PASSWORD_CANNOT_BE_BLANK = "Password cannot be blank";
 }

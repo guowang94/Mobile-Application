@@ -132,7 +132,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/payment_amount_input_layout"
+            android:id="@+id/premium_amount_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -146,12 +146,12 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/payment_amount"
+                android:hint="@string/premium_amount"
                 android:inputType="numberDecimal" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/plan_duration_input_layout"
+            android:id="@+id/premium_duration_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -160,12 +160,12 @@
             android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/payment_amount_input_layout">
+            app:layout_constraintTop_toBottomOf="@+id/premium_amount_input_layout">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/plan_duration"
+                android:hint="@string/premium_duration"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -179,7 +179,7 @@
             android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/plan_duration_input_layout">
+            app:layout_constraintTop_toBottomOf="@+id/premium_duration_input_layout">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
