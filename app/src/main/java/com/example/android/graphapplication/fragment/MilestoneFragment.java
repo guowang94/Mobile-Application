@@ -192,7 +192,8 @@ public class MilestoneFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        milestonesModelList.clear();
+        if (milestonesModelList != null)
+            milestonesModelList.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }

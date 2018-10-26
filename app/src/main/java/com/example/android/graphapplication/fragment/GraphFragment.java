@@ -272,10 +272,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         super.onPause();
         isDataLoaded = false;
         isViewLoaded = false;
-        eventsList.clear();
-        milestonesList.clear();
-        plansList.clear();
-        selectedScenarioModelList.clear();
+        if (eventsList != null)
+            eventsList.clear();
+        if (milestonesList != null)
+            milestonesList.clear();
+        if (plansList != null)
+            plansList.clear();
+        if (selectedScenarioModelList != null)
+            selectedScenarioModelList.clear();
         Log.d(TAG, "onPause: out");
     }
 
