@@ -192,7 +192,8 @@ public class PlansFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        plansModelList.clear();
+        if (plansModelList != null)
+            plansModelList.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }

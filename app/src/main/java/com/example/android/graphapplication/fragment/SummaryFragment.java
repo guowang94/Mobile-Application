@@ -173,7 +173,8 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        summaryModelList.clear();
+        if (summaryModelList != null)
+            summaryModelList.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }

@@ -116,7 +116,7 @@ public class EventsFragment extends Fragment {
         eventsModelList = new ArrayList<>();
 
         if (getActivity() != null)
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);
 
         final Context context = getActivity().getApplicationContext();
@@ -189,7 +189,8 @@ public class EventsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        eventsModelList.clear();
+        if (eventsModelList != null)
+            eventsModelList.clear();
         isViewLoaded = false;
         isDataLoaded = false;
     }
