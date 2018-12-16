@@ -11,14 +11,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.ScenarioSectionModel;
+import com.example.android.graphapplication.viewHolder.ScenarioSectionViewHolder;
 
 import java.util.List;
 
 public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSectionAdapter.MyViewHolder> {
 
     private Context context;
-    private List<ScenarioSectionModel> scenarioSectionModelList;
+    private List<ScenarioSectionViewHolder> mScenarioSectionViewHolderList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
@@ -33,9 +33,9 @@ public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSection
 
     }
 
-    public ScenarioSectionAdapter(Context context, List<ScenarioSectionModel> scenarioSectionModelList) {
+    public ScenarioSectionAdapter(Context context, List<ScenarioSectionViewHolder> scenarioSectionViewHolderList) {
         this.context = context;
-        this.scenarioSectionModelList = scenarioSectionModelList;
+        this.mScenarioSectionViewHolderList = scenarioSectionViewHolderList;
     }
 
     @Override
@@ -47,8 +47,8 @@ public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSection
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        final ScenarioSectionModel scenarioSectionModel = scenarioSectionModelList.get(position);
-        holder.mTitle.setText(scenarioSectionModel.getTitle());
+        final ScenarioSectionViewHolder scenarioSectionViewHolder = mScenarioSectionViewHolderList.get(position);
+        holder.mTitle.setText(scenarioSectionViewHolder.getTitle());
 
         //recycler view for items
         holder.mRecyclerView.setHasFixedSize(true);
@@ -57,16 +57,16 @@ public class ScenarioSectionAdapter extends RecyclerView.Adapter<ScenarioSection
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.mRecyclerView.setLayoutManager(linearLayoutManager);
         holder.mRecyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
-        ScenarioAdapter scenarioAdapter = new ScenarioAdapter(scenarioSectionModel.getScenarioModelList());
+        ScenarioAdapter scenarioAdapter = new ScenarioAdapter(scenarioSectionViewHolder.getScenarioViewHolderList());
         holder.mRecyclerView.setAdapter(scenarioAdapter);
     }
 
     @Override
     public int getItemCount() {
-        return scenarioSectionModelList.size();
+        return mScenarioSectionViewHolderList.size();
     }
 
-    public List<ScenarioSectionModel> getAllScenario() {
-        return scenarioSectionModelList;
+    public List<ScenarioSectionViewHolder> getAllScenario() {
+        return mScenarioSectionViewHolderList;
     }
 }

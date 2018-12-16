@@ -30,8 +30,8 @@ import com.example.android.graphapplication.adapter.CommonTitleAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
-import com.example.android.graphapplication.model.CommonTitleModel;
 import com.example.android.graphapplication.model.PlanModel;
+import com.example.android.graphapplication.viewHolder.CommonTitleViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class PlansFragment extends Fragment {
     private TextView mEmptyRecyclerTextView;
 
     private CommonTitleAdapter mPlansAdapter;
-    private List<CommonTitleModel> plansModelList;
+    private List<CommonTitleViewHolder> plansModelList;
     private boolean isViewShown;
     private boolean isViewLoaded;
     private boolean isDataLoaded;
@@ -125,7 +125,7 @@ public class PlansFragment extends Fragment {
         final List<PlanModel> plansList = mydb.getAllPlan();
         if (plansModelList.size() == 0) {
             for (PlanModel plan : plansList) {
-                this.plansModelList.add(new CommonTitleModel(plan.getPlanName()));
+                this.plansModelList.add(new CommonTitleViewHolder(plan.getPlanName()));
             }
         }
 
@@ -135,7 +135,7 @@ public class PlansFragment extends Fragment {
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
-        //Recycler View Setup for CommonTitleModel
+        //Recycler View Setup for CommonTitleViewHolder
         mPlansAdapter = new CommonTitleAdapter(this.plansModelList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());

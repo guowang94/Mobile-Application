@@ -37,10 +37,10 @@ import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.CommonModel;
-import com.example.android.graphapplication.model.ExportModel;
 import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.utils.PermissionUtil;
+import com.example.android.graphapplication.viewHolder.ExportViewHolder;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -63,7 +63,7 @@ public class ExportActivity extends AppCompatActivity {
     private TextView mToolbarTitle;
     private RecyclerView mRecyclerView;
 
-    private List<ExportModel> exportModelList;
+    private List<ExportViewHolder> mExportViewHolderList;
     private UserModel userModel;
 
     private DBHelper mydb;
@@ -87,7 +87,7 @@ public class ExportActivity extends AppCompatActivity {
      */
     private void initData() {
         mydb = new DBHelper(getApplicationContext());
-        exportModelList = new ArrayList<>();
+        mExportViewHolderList = new ArrayList<>();
 
         setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EXPORT_PREVIEW);
@@ -363,42 +363,42 @@ public class ExportActivity extends AppCompatActivity {
 
 
         //Setting data for Recycler View
-        exportModelList.add(new ExportModel(currentDate, ExportModel.REPORT_TITLE));
+        mExportViewHolderList.add(new ExportViewHolder(currentDate, ExportViewHolder.REPORT_TITLE));
 
         //Client Details
-        exportModelList.add(new ExportModel(ExportConstant.CLIENT_DETAILS, ExportModel.REPORT_HEADER));
-        exportModelList.add(new ExportModel(ExportConstant.TOTAL_SHORTFALL,
-                String.valueOf(userModel.getTotalAssets()), ExportModel.REPORT_TOTAL_SECTION_WITH_COLOR));
-        exportModelList.add(new ExportModel(ExportConstant.CLIENT_NAME,
-                userModel.getName(), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.GROSS_MONTHLY_INCOME,
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CLIENT_DETAILS, ExportViewHolder.REPORT_HEADER));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.TOTAL_SHORTFALL,
+                String.valueOf(userModel.getTotalAssets()), ExportViewHolder.REPORT_TOTAL_SECTION_WITH_COLOR));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CLIENT_NAME,
+                userModel.getName(), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.GROSS_MONTHLY_INCOME,
                 String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                        .format(userModel.getMonthlyIncome())), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.CURRENT_AVAILABLE_ASSETS,
+                        .format(userModel.getMonthlyIncome())), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CURRENT_AVAILABLE_ASSETS,
                 String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                        .format(userModel.getInitialAssets())), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.JOB_STATUS,
-                userModel.getJobStatus(), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.CITIZENSHIP_STATUS,
-                userModel.getCitizenship(), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.CURRENT_AGE,
-                String.valueOf(userModel.getAge()), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.RETIREMENT_AGE,
-                String.valueOf(userModel.getExpectedRetirementAge()), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.EXPECTANCY_AGE,
-                String.valueOf(userModel.getExpectancy()), ExportModel.CLIENT_DETAIL));
-        exportModelList.add(new ExportModel(ExportConstant.CASHFLOW_AVAILABLE_AT_RETIREMENT,
-                String.valueOf(userModel.getBalance()), ExportModel.ROW_VALUE_WITH_COLOR));
-        exportModelList.add(new ExportModel(ExportConstant.AGE_WHERE_SHORTFALL_OCCURS,
-                shortfallAge, ExportModel.CLIENT_DETAIL));
+                        .format(userModel.getInitialAssets())), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.JOB_STATUS,
+                userModel.getJobStatus(), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CITIZENSHIP_STATUS,
+                userModel.getCitizenship(), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CURRENT_AGE,
+                String.valueOf(userModel.getAge()), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.RETIREMENT_AGE,
+                String.valueOf(userModel.getExpectedRetirementAge()), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.EXPECTANCY_AGE,
+                String.valueOf(userModel.getExpectancy()), ExportViewHolder.CLIENT_DETAIL));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CASHFLOW_AVAILABLE_AT_RETIREMENT,
+                String.valueOf(userModel.getBalance()), ExportViewHolder.ROW_VALUE_WITH_COLOR));
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.AGE_WHERE_SHORTFALL_OCCURS,
+                shortfallAge, ExportViewHolder.CLIENT_DETAIL));
 
         //Milestone Details
         if (milestoneList.size() > 0) {
             //Header and Total Section
-            exportModelList.add(new ExportModel(ExportConstant.MILESTONE_DETAILS, ExportModel.REPORT_HEADER));
-            exportModelList.add(new ExportModel(ExportConstant.TOTAL_MILESTONE_COST,
+            mExportViewHolderList.add(new ExportViewHolder(ExportConstant.MILESTONE_DETAILS, ExportViewHolder.REPORT_HEADER));
+            mExportViewHolderList.add(new ExportViewHolder(ExportConstant.TOTAL_MILESTONE_COST,
                     String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                            .format(totalMilestoneCost)), ExportModel.REPORT_TOTAL_SECTION));
+                            .format(totalMilestoneCost)), ExportViewHolder.REPORT_TOTAL_SECTION));
 
             //Display all Milestone
             for (CommonModel milestone : milestoneList) {
@@ -410,22 +410,22 @@ public class ExportActivity extends AppCompatActivity {
                 }
 
                 //Add milestone to list
-                exportModelList.add(new ExportModel(milestone.getName(), milestone.getType(),
+                mExportViewHolderList.add(new ExportViewHolder(milestone.getName(), milestone.getType(),
                         ageRange, milestone.getStatus(),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(milestone.getAmount() * milestone.getDuration())),
-                        ExportModel.MILESTONE_DETAIL));
+                        ExportViewHolder.MILESTONE_DETAIL));
             }
         }
 
         //Existing Plan Details
         if (existingPlanList.size() > 0) {
             //Header and Total Section
-            exportModelList.add(new ExportModel(ExportConstant.PLANS_EXISTING
-                    .replace("$1", String.valueOf(existingPlanList.size())), ExportModel.REPORT_HEADER));
-            exportModelList.add(new ExportModel(ExportConstant.TOTAL_COVERAGE,
+            mExportViewHolderList.add(new ExportViewHolder(ExportConstant.PLANS_EXISTING
+                    .replace("$1", String.valueOf(existingPlanList.size())), ExportViewHolder.REPORT_HEADER));
+            mExportViewHolderList.add(new ExportViewHolder(ExportConstant.TOTAL_COVERAGE,
                     String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                            .format(totalExistingCoverage)), ExportModel.REPORT_TOTAL_SECTION));
+                            .format(totalExistingCoverage)), ExportViewHolder.REPORT_TOTAL_SECTION));
 
 
             for (PlanModel existingPlan : existingPlanList) {
@@ -453,7 +453,7 @@ public class ExportActivity extends AppCompatActivity {
                 }
 
                 //Split Plan Category and sort
-                List<ExportModel> planTypeModelList = new ArrayList<>();
+                List<ExportViewHolder> planTypeModelList = new ArrayList<>();
                 String[] planType = existingPlan.getPlanType().split(", ");
                 String[] allPlanType = getResources().getStringArray(R.array.plan_type_array);
                 Arrays.sort(planType);
@@ -472,29 +472,29 @@ public class ExportActivity extends AppCompatActivity {
                     String amount = NumberFormat.getCurrencyInstance(Locale.US).format(planTypeAmount);
 
                     //Add all plan category into a list
-                    planTypeModelList.add(new ExportModel(type, amount, ExportModel.PLAN_TYPE_DETAIL));
+                    planTypeModelList.add(new ExportViewHolder(type, amount, ExportViewHolder.PLAN_TYPE_DETAIL));
                 }
 
                 //Add plan to list
-                exportModelList.add(new ExportModel(existingPlan.getPlanName(), premiumAgeRange,
+                mExportViewHolderList.add(new ExportViewHolder(existingPlan.getPlanName(), premiumAgeRange,
                         existingPlan.getPaymentType(),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(existingPlan.getPaymentAmount() * existingPlan.getPlanDuration())),
                         payoutAgeRange, payoutStatus,
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(existingPlan.getPayoutAmount() * existingPlan.getPayoutDuration())),
-                        planTypeModelList, ExportModel.PLAN_DETAIL));
+                        planTypeModelList, ExportViewHolder.PLAN_DETAIL));
             }
         }
 
         //Non-Existing Plan Details
         if (nonExistingPlanList.size() > 0) {
             //Header and Total Section
-            exportModelList.add(new ExportModel(ExportConstant.PLANS_NON_EXISTING
-                    .replace("$1", String.valueOf(nonExistingPlanList.size())), ExportModel.REPORT_HEADER));
-            exportModelList.add(new ExportModel(ExportConstant.TOTAL_COVERAGE,
+            mExportViewHolderList.add(new ExportViewHolder(ExportConstant.PLANS_NON_EXISTING
+                    .replace("$1", String.valueOf(nonExistingPlanList.size())), ExportViewHolder.REPORT_HEADER));
+            mExportViewHolderList.add(new ExportViewHolder(ExportConstant.TOTAL_COVERAGE,
                     String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                            .format(totalNonExistingCoverage)), ExportModel.REPORT_TOTAL_SECTION));
+                            .format(totalNonExistingCoverage)), ExportViewHolder.REPORT_TOTAL_SECTION));
 
 
             for (PlanModel nonExistingPlan : nonExistingPlanList) {
@@ -522,7 +522,7 @@ public class ExportActivity extends AppCompatActivity {
                 }
 
                 //Split Plan Category and sort
-                List<ExportModel> planTypeModelList = new ArrayList<>();
+                List<ExportViewHolder> planTypeModelList = new ArrayList<>();
                 String[] planType = nonExistingPlan.getPlanType().split(", ");
                 String[] allPlanType = getResources().getStringArray(R.array.plan_type_array);
                 Arrays.sort(planType);
@@ -541,22 +541,22 @@ public class ExportActivity extends AppCompatActivity {
                     String amount = NumberFormat.getCurrencyInstance(Locale.US).format(planTypeAmount);
 
                     //Add all plan category into a list
-                    planTypeModelList.add(new ExportModel(type, amount, ExportModel.PLAN_TYPE_DETAIL));
+                    planTypeModelList.add(new ExportViewHolder(type, amount, ExportViewHolder.PLAN_TYPE_DETAIL));
                 }
 
                 //Add plan to list
-                exportModelList.add(new ExportModel(nonExistingPlan.getPlanName(), premiumAgeRange,
+                mExportViewHolderList.add(new ExportViewHolder(nonExistingPlan.getPlanName(), premiumAgeRange,
                         nonExistingPlan.getPaymentType(),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(nonExistingPlan.getPaymentAmount() * nonExistingPlan.getPlanDuration())),
                         payoutAgeRange, payoutStatus,
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(nonExistingPlan.getPayoutAmount() * nonExistingPlan.getPayoutDuration())),
-                        planTypeModelList, ExportModel.PLAN_DETAIL));
+                        planTypeModelList, ExportViewHolder.PLAN_DETAIL));
             }
         }
 
-        ExportAdapter exportAdapter = new ExportAdapter(exportModelList, this);
+        ExportAdapter exportAdapter = new ExportAdapter(mExportViewHolderList, this);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(exportAdapter);

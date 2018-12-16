@@ -33,10 +33,10 @@ import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.CommonModel;
 import com.example.android.graphapplication.model.PlanModel;
-import com.example.android.graphapplication.model.SelectedScenarioModel;
 import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.MyAxisValueFormatter;
 import com.example.android.graphapplication.validations.MyValueFormatter;
+import com.example.android.graphapplication.viewHolder.SelectedScenarioViewHolder;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -74,7 +74,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private boolean isViewLoaded;
     private boolean isDataLoaded;
 
-    private List<SelectedScenarioModel> selectedScenarioModelList;
+    private List<SelectedScenarioViewHolder> mSelectedScenarioViewHolderList;
     private List<CommonModel> eventsList;
     private List<CommonModel> milestonesList;
     private List<PlanModel> plansList;
@@ -145,7 +145,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      */
     private void initData() {
         Log.d(TAG, "initData: in");
-        selectedScenarioModelList = new ArrayList<>();
+        mSelectedScenarioViewHolderList = new ArrayList<>();
         eventsList = new ArrayList<>();
         milestonesList = new ArrayList<>();
         plansList = new ArrayList<>();
@@ -278,8 +278,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             milestonesList.clear();
         if (plansList != null)
             plansList.clear();
-        if (selectedScenarioModelList != null)
-            selectedScenarioModelList.clear();
+        if (mSelectedScenarioViewHolderList != null)
+            mSelectedScenarioViewHolderList.clear();
         Log.d(TAG, "onPause: out");
     }
 
@@ -786,37 +786,37 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      */
     public void recyclerViewSetup() {
         if (eventsList.size() > 0) {
-            selectedScenarioModelList.add(new SelectedScenarioModel(
-                    ScreenConstants.TOOLBAR_TITLE_EVENTS, SelectedScenarioModel.SECTION_HEADER));
+            mSelectedScenarioViewHolderList.add(new SelectedScenarioViewHolder(
+                    ScreenConstants.TOOLBAR_TITLE_EVENTS, SelectedScenarioViewHolder.SECTION_HEADER));
 
             for (CommonModel event : eventsList) {
-                selectedScenarioModelList.add(new SelectedScenarioModel(event.getName(),
+                mSelectedScenarioViewHolderList.add(new SelectedScenarioViewHolder(event.getName(),
                         event.getType(), String.valueOf(event.getAge()),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(event.getAmount())),
-                        String.valueOf(event.getDuration()), SelectedScenarioModel.OTHER_SCENARIO));
+                        String.valueOf(event.getDuration()), SelectedScenarioViewHolder.OTHER_SCENARIO));
             }
         }
 
         if (milestonesList.size() > 0) {
-            selectedScenarioModelList.add(new SelectedScenarioModel(
-                    ScreenConstants.TOOLBAR_TITLE_MILESTONES, SelectedScenarioModel.SECTION_HEADER));
+            mSelectedScenarioViewHolderList.add(new SelectedScenarioViewHolder(
+                    ScreenConstants.TOOLBAR_TITLE_MILESTONES, SelectedScenarioViewHolder.SECTION_HEADER));
 
             for (CommonModel milestone : milestonesList) {
-                selectedScenarioModelList.add(new SelectedScenarioModel(milestone.getName(),
+                mSelectedScenarioViewHolderList.add(new SelectedScenarioViewHolder(milestone.getName(),
                         milestone.getType(), String.valueOf(milestone.getAge()),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US).format(milestone.getAmount())),
-                        String.valueOf(milestone.getDuration()), SelectedScenarioModel.OTHER_SCENARIO));
+                        String.valueOf(milestone.getDuration()), SelectedScenarioViewHolder.OTHER_SCENARIO));
             }
 
         }
 
         if (plansList.size() > 0) {
-            selectedScenarioModelList.add(new SelectedScenarioModel(
-                    ScreenConstants.TOOLBAR_TITLE_PLANS, SelectedScenarioModel.SECTION_HEADER));
+            mSelectedScenarioViewHolderList.add(new SelectedScenarioViewHolder(
+                    ScreenConstants.TOOLBAR_TITLE_PLANS, SelectedScenarioViewHolder.SECTION_HEADER));
 
             for (PlanModel plan : plansList) {
                 Log.d(TAG, "recyclerViewSetup: plan status: " + plan.getPlanStatus());
-                selectedScenarioModelList.add(new SelectedScenarioModel(plan.getPlanName(),
+                mSelectedScenarioViewHolderList.add(new SelectedScenarioViewHolder(plan.getPlanName(),
                         plan.getPlanType(), String.valueOf(plan.getPremiumStartAge()),
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(plan.getPaymentAmount())),
@@ -824,13 +824,13 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                                 .format(plan.getPayoutAmount())),
                         String.valueOf(plan.getPayoutDuration()), plan.getPlanStatus(),
-                        SelectedScenarioModel.PLAN_SCENARIO));
+                        SelectedScenarioViewHolder.PLAN_SCENARIO));
             }
         }
 
-        if (selectedScenarioModelList.size() > 0) {
+        if (mSelectedScenarioViewHolderList.size() > 0) {
             //Setup Recycler View
-            SelectedScenarioAdapter selectedScenarioAdapter = new SelectedScenarioAdapter(selectedScenarioModelList);
+            SelectedScenarioAdapter selectedScenarioAdapter = new SelectedScenarioAdapter(mSelectedScenarioViewHolderList);
             RecyclerView.LayoutManager mLayoutManager = null;
             if (getActivity() != null) {
                 mLayoutManager = new LinearLayoutManager(

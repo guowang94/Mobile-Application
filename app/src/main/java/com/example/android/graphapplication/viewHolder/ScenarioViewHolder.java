@@ -1,11 +1,11 @@
-package com.example.android.graphapplication.model;
+package com.example.android.graphapplication.viewHolder;
 
-public class ScenarioModel {
+public class ScenarioViewHolder {
 
     private String title;
     private boolean isSelected;
 
-    public ScenarioModel(String title, boolean isSelected) {
+    public ScenarioViewHolder(String title, boolean isSelected) {
         this.title = title;
         this.isSelected = isSelected;
     }

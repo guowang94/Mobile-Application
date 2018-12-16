@@ -1,10 +1,10 @@
-package com.example.android.graphapplication.model;
+package com.example.android.graphapplication.viewHolder;
 
-public class CommonTitleModel {
+public class CommonTitleViewHolder {
 
     private String title;
 
-    public CommonTitleModel(String title) {
+    public CommonTitleViewHolder(String title) {
         this.title = title;
     }
 
@@ -18,7 +18,7 @@ public class CommonTitleModel {
 
     @Override
     public String toString() {
-        return "CommonTitleModel{" +
+        return "CommonTitleViewHolder{" +
                 "title='" + title + '\'' +
                 '}';
     }

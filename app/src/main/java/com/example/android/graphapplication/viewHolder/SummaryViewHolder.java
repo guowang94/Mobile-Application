@@ -1,6 +1,6 @@
-package com.example.android.graphapplication.model;
+package com.example.android.graphapplication.viewHolder;
 
-public class SummaryModel {
+public class SummaryViewHolder {
 
     public static final int SECTION_HEADER = 0;
     public static final int CONTENT = 1;
@@ -11,14 +11,14 @@ public class SummaryModel {
     private String sectionTitle;
     private int cellType;
 
-    public SummaryModel(int image, String title, String value, int cellType) {
+    public SummaryViewHolder(int image, String title, String value, int cellType) {
         this.image = image;
         this.title = title;
         this.value = value;
         this.cellType = cellType;
     }
 
-    public SummaryModel(String sectionTitle, int cellType) {
+    public SummaryViewHolder(String sectionTitle, int cellType) {
         this.sectionTitle = sectionTitle;
         this.cellType = cellType;
     }

@@ -31,7 +31,7 @@ import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.model.CommonModel;
-import com.example.android.graphapplication.model.CommonTitleModel;
+import com.example.android.graphapplication.viewHolder.CommonTitleViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class EventsFragment extends Fragment {
     private TextView mEmptyRecyclerTextView;
 
     private CommonTitleAdapter mEventsAdapter;
-    private List<CommonTitleModel> eventsModelList;
+    private List<CommonTitleViewHolder> eventsModelList;
     private boolean isViewShown;
     private boolean isViewLoaded;
     private boolean isDataLoaded;
@@ -123,7 +123,7 @@ public class EventsFragment extends Fragment {
 
         final List<CommonModel> eventsList = mydb.getAllEvent();
         for (CommonModel event : eventsList) {
-            this.eventsModelList.add(new CommonTitleModel(event.getName()));
+            this.eventsModelList.add(new CommonTitleViewHolder(event.getName()));
         }
 
         if (eventsModelList.size() == 0) {
@@ -132,7 +132,7 @@ public class EventsFragment extends Fragment {
             mEmptyRecyclerTextView.setVisibility(View.INVISIBLE);
         }
 
-        //Recycler View Setup for CommonTitleModel
+        //Recycler View Setup for CommonTitleViewHolder
         mEventsAdapter = new CommonTitleAdapter(this.eventsModelList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
