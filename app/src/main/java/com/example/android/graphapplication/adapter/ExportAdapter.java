@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.ExportModel;
+import com.example.android.graphapplication.viewHolder.ExportViewHolder;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -20,11 +20,11 @@ import java.util.Locale;
 public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "ExportAdapter";
-    private List<ExportModel> exportModelList;
+    private List<ExportViewHolder> mExportViewHolderList;
     private Context context;
 
-    public ExportAdapter(List<ExportModel> exportModelList, Context context) {
-        this.exportModelList = exportModelList;
+    public ExportAdapter(List<ExportViewHolder> exportViewHolderList, Context context) {
+        this.mExportViewHolderList = exportViewHolderList;
         this.context = context;
     }
 
@@ -106,25 +106,25 @@ public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        switch (exportModelList.get(position).getExportType()) {
+        switch (mExportViewHolderList.get(position).getExportType()) {
             case 0:
-                return ExportModel.REPORT_TITLE;
+                return ExportViewHolder.REPORT_TITLE;
             case 1:
-                return ExportModel.REPORT_HEADER;
+                return ExportViewHolder.REPORT_HEADER;
             case 2:
-                return ExportModel.REPORT_TOTAL_SECTION;
+                return ExportViewHolder.REPORT_TOTAL_SECTION;
             case 3:
-                return ExportModel.CLIENT_DETAIL;
+                return ExportViewHolder.CLIENT_DETAIL;
             case 4:
-                return ExportModel.MILESTONE_DETAIL;
+                return ExportViewHolder.MILESTONE_DETAIL;
             case 5:
-                return ExportModel.PLAN_DETAIL;
+                return ExportViewHolder.PLAN_DETAIL;
             case 6:
-                return ExportModel.PLAN_TYPE_DETAIL;
+                return ExportViewHolder.PLAN_TYPE_DETAIL;
             case 7:
-                return ExportModel.ROW_VALUE_WITH_COLOR;
+                return ExportViewHolder.ROW_VALUE_WITH_COLOR;
             case 8:
-                return ExportModel.REPORT_TOTAL_SECTION_WITH_COLOR;
+                return ExportViewHolder.REPORT_TOTAL_SECTION_WITH_COLOR;
             default:
                 return -1;
         }
@@ -176,23 +176,23 @@ public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        final ExportModel exportModel = this.exportModelList.get(position);
+        final ExportViewHolder exportViewHolder = this.mExportViewHolderList.get(position);
 
-        Log.i(TAG, "onBindViewHolder: " + exportModel.toString());
-        switch (exportModel.getExportType()) {
+        Log.i(TAG, "onBindViewHolder: " + exportViewHolder.toString());
+        switch (exportViewHolder.getExportType()) {
             case 0:
                 ReportTitleViewHolder reportTitleViewHolder = (ReportTitleViewHolder) holder;
-                reportTitleViewHolder.mTimestamp.setText(exportModel.getHeader());
+                reportTitleViewHolder.mTimestamp.setText(exportViewHolder.getHeader());
                 break;
             case 1:
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-                headerViewHolder.mHeader.setText(exportModel.getHeader());
+                headerViewHolder.mHeader.setText(exportViewHolder.getHeader());
                 break;
             case 2:
                 // Total Title and Value
                 TitleAndValueViewHolder totalSectionViewHolder = (TitleAndValueViewHolder) holder;
-                totalSectionViewHolder.mTitle.setText(exportModel.getTitle());
-                totalSectionViewHolder.mValue.setText(exportModel.getValue());
+                totalSectionViewHolder.mTitle.setText(exportViewHolder.getTitle());
+                totalSectionViewHolder.mValue.setText(exportViewHolder.getValue());
 
                 totalSectionViewHolder.mTitle.setTextAppearance(R.style.export_total_text);
                 totalSectionViewHolder.mValue.setTextAppearance(R.style.export_total_amount);
@@ -200,29 +200,29 @@ public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case 3:
                 // Client Details
                 TitleAndValueViewHolder titleAndValueViewHolder = (TitleAndValueViewHolder) holder;
-                titleAndValueViewHolder.mTitle.setText(exportModel.getTitle());
-                titleAndValueViewHolder.mValue.setText(exportModel.getValue());
+                titleAndValueViewHolder.mTitle.setText(exportViewHolder.getTitle());
+                titleAndValueViewHolder.mValue.setText(exportViewHolder.getValue());
 
                 titleAndValueViewHolder.mTitle.setTextAppearance(R.style.export_title);
                 titleAndValueViewHolder.mValue.setTextAppearance(R.style.export_value);
                 break;
             case 4:
                 MilestoneViewHolder milestoneViewHolder = (MilestoneViewHolder) holder;
-                milestoneViewHolder.mMilestoneName.setText(exportModel.getMilestoneName());
-                milestoneViewHolder.mMilestoneType.setText(exportModel.getMilestoneType());
-                milestoneViewHolder.mMilestoneAge.setText(exportModel.getMilestoneAgeRange());
-                milestoneViewHolder.mMilestoneStatus.setText(exportModel.getMilestoneStatus());
-                milestoneViewHolder.mMilestoneAmount.setText(exportModel.getMilestoneAmount());
+                milestoneViewHolder.mMilestoneName.setText(exportViewHolder.getMilestoneName());
+                milestoneViewHolder.mMilestoneType.setText(exportViewHolder.getMilestoneType());
+                milestoneViewHolder.mMilestoneAge.setText(exportViewHolder.getMilestoneAgeRange());
+                milestoneViewHolder.mMilestoneStatus.setText(exportViewHolder.getMilestoneStatus());
+                milestoneViewHolder.mMilestoneAmount.setText(exportViewHolder.getMilestoneAmount());
                 break;
             case 5:
                 PlanViewHolder planViewHolder = (PlanViewHolder) holder;
-                planViewHolder.mPlanName.setText(exportModel.getPlanName());
-                planViewHolder.mPaymentAge.setText(exportModel.getPaymentAgeRange());
-                planViewHolder.mPremiumStatus.setText(exportModel.getPremiumStatus());
-                planViewHolder.mTotalPremiumPayment.setText(exportModel.getTotalPremiumPayment());
-                planViewHolder.mPayoutAge.setText(exportModel.getPayoutAgeRange());
-                planViewHolder.mPayoutStatus.setText(exportModel.getPayoutStatus());
-                planViewHolder.mTotalPayout.setText(exportModel.getTotalPayout());
+                planViewHolder.mPlanName.setText(exportViewHolder.getPlanName());
+                planViewHolder.mPaymentAge.setText(exportViewHolder.getPaymentAgeRange());
+                planViewHolder.mPremiumStatus.setText(exportViewHolder.getPremiumStatus());
+                planViewHolder.mTotalPremiumPayment.setText(exportViewHolder.getTotalPremiumPayment());
+                planViewHolder.mPayoutAge.setText(exportViewHolder.getPayoutAgeRange());
+                planViewHolder.mPayoutStatus.setText(exportViewHolder.getPayoutStatus());
+                planViewHolder.mTotalPayout.setText(exportViewHolder.getTotalPayout());
 
                 //recycler view for items
                 planViewHolder.mRecyclerView.setHasFixedSize(true);
@@ -230,25 +230,25 @@ public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
                 planViewHolder.mRecyclerView.setLayoutManager(linearLayoutManager);
-                ExportAdapter exportAdapter = new ExportAdapter(exportModel.getPlanTypeList(), context);
+                ExportAdapter exportAdapter = new ExportAdapter(exportViewHolder.getPlanTypeList(), context);
                 planViewHolder.mRecyclerView.setAdapter(exportAdapter);
                 break;
             case 6:
                 // Plan Type
                 TitleAndValueViewHolder planTypeViewHolder = (TitleAndValueViewHolder) holder;
-                planTypeViewHolder.mTitle.setText(exportModel.getTitle());
-                planTypeViewHolder.mValue.setText(exportModel.getValue());
+                planTypeViewHolder.mTitle.setText(exportViewHolder.getTitle());
+                planTypeViewHolder.mValue.setText(exportViewHolder.getValue());
                 break;
             case 7:
                 // Row's value with color
                 TitleAndValueViewHolder valueWithColorViewHolder = (TitleAndValueViewHolder) holder;
-                valueWithColorViewHolder.mTitle.setText(exportModel.getTitle());
+                valueWithColorViewHolder.mTitle.setText(exportViewHolder.getTitle());
                 valueWithColorViewHolder.mValue.setText(String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                        .format(Float.valueOf(exportModel.getValue()))));
+                        .format(Float.valueOf(exportViewHolder.getValue()))));
 
                 valueWithColorViewHolder.mTitle.setTextAppearance(R.style.export_title);
                 valueWithColorViewHolder.mValue.setTextAppearance(R.style.export_value);
-                if (Float.valueOf(exportModel.getValue()) > 0f) {
+                if (Float.valueOf(exportViewHolder.getValue()) > 0f) {
                     valueWithColorViewHolder.mValue.setTextColor(context.getColor(R.color.listRowGreen));
                 } else {
                     valueWithColorViewHolder.mValue.setTextColor(context.getColor(R.color.listRowRed));
@@ -257,14 +257,14 @@ public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case 8:
                 // Total Section's value with color
                 TitleAndValueViewHolder totalSectionValueWithColorViewHolder = (TitleAndValueViewHolder) holder;
-                totalSectionValueWithColorViewHolder.mTitle.setText(exportModel.getTitle());
+                totalSectionValueWithColorViewHolder.mTitle.setText(exportViewHolder.getTitle());
 
                 totalSectionValueWithColorViewHolder.mTitle.setTextAppearance(R.style.export_total_text);
                 totalSectionValueWithColorViewHolder.mValue.setTextAppearance(R.style.export_total_amount);
 
                 String totalValue = String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
-                        .format(Float.valueOf(exportModel.getValue())));
-                if (Float.valueOf(exportModel.getValue()) > 0f) {
+                        .format(Float.valueOf(exportViewHolder.getValue())));
+                if (Float.valueOf(exportViewHolder.getValue()) > 0f) {
                     totalSectionValueWithColorViewHolder.mValue.setTextColor(context.getColor(R.color.listRowGreen));
                     totalValue = "+" + totalValue;
                     totalSectionValueWithColorViewHolder.mValue.setText(totalValue);
@@ -280,6 +280,6 @@ public class ExportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return exportModelList.size();
+        return mExportViewHolderList.size();
     }
 }

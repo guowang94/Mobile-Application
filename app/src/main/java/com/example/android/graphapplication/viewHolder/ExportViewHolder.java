@@ -1,8 +1,8 @@
-package com.example.android.graphapplication.model;
+package com.example.android.graphapplication.viewHolder;
 
 import java.util.List;
 
-public class ExportModel {
+public class ExportViewHolder {
 
     public static final int REPORT_TITLE = 0;
     public static final int REPORT_HEADER = 1;
@@ -34,7 +34,7 @@ public class ExportModel {
     private String payoutAgeRange;
     private String payoutStatus;
     private String totalPayout;
-    private List<ExportModel> planTypeList;
+    private List<ExportViewHolder> planTypeList;
 
     /**
      * This constructor is for (Report Title's timestamp / Report Header)
@@ -42,7 +42,7 @@ public class ExportModel {
      * @param header (Report Title's timestamp / Report Header)
      * @param exportType ExportType
      */
-    public ExportModel(String header, int exportType) {
+    public ExportViewHolder(String header, int exportType) {
         this.header = header;
         this.exportType = exportType;
     }
@@ -54,13 +54,13 @@ public class ExportModel {
      * @param value Value
      * @param exportType ExportType
      */
-    public ExportModel(String title, String value, int exportType) {
+    public ExportViewHolder(String title, String value, int exportType) {
         this.title = title;
         this.value = value;
         this.exportType = exportType;
     }
 
-    public ExportModel(String milestoneName, String milestoneType, String milestoneAgeRange, String milestoneStatus, String milestoneAmount, int exportType) {
+    public ExportViewHolder(String milestoneName, String milestoneType, String milestoneAgeRange, String milestoneStatus, String milestoneAmount, int exportType) {
         this.milestoneName = milestoneName;
         this.milestoneType = milestoneType;
         this.milestoneAgeRange = milestoneAgeRange;
@@ -69,7 +69,7 @@ public class ExportModel {
         this.exportType = exportType;
     }
 
-    public ExportModel(String planName, String paymentAgeRange, String premiumStatus, String totalPremiumPayment, String payoutAgeRange, String payoutStatus, String totalPayout, List<ExportModel> planTypeList, int exportType) {
+    public ExportViewHolder(String planName, String paymentAgeRange, String premiumStatus, String totalPremiumPayment, String payoutAgeRange, String payoutStatus, String totalPayout, List<ExportViewHolder> planTypeList, int exportType) {
         this.planName = planName;
         this.paymentAgeRange = paymentAgeRange;
         this.premiumStatus = premiumStatus;
@@ -93,17 +93,17 @@ public class ExportModel {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
 
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+//    public void setValue(String value) {
+//        this.value = value;
+//    }
 
     public int getExportType() {
         return exportType;
@@ -157,7 +157,7 @@ public class ExportModel {
         return totalPayout;
     }
 
-    public List<ExportModel> getPlanTypeList() {
+    public List<ExportViewHolder> getPlanTypeList() {
         return planTypeList;
     }
 }

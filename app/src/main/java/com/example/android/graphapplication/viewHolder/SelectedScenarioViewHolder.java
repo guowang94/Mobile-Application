@@ -1,6 +1,6 @@
-package com.example.android.graphapplication.model;
+package com.example.android.graphapplication.viewHolder;
 
-public class SelectedScenarioModel {
+public class SelectedScenarioViewHolder {
 
     public static final int OTHER_SCENARIO = 0;
     public static final int PLAN_SCENARIO = 1;
@@ -18,7 +18,7 @@ public class SelectedScenarioModel {
     private String planStatus;
     private String sectionTitle;
 
-    public SelectedScenarioModel(String title, String type, String age, String amount, String duration, int scenarioType) {
+    public SelectedScenarioViewHolder(String title, String type, String age, String amount, String duration, int scenarioType) {
         this.title = title;
         this.type = type;
         this.age = age;
@@ -27,7 +27,7 @@ public class SelectedScenarioModel {
         this.scenarioType = scenarioType;
     }
 
-    public SelectedScenarioModel(String title, String type, String age, String amount, String duration, String poAge, String poAmount, String poDuration, String planStatus, int scenarioType) {
+    public SelectedScenarioViewHolder(String title, String type, String age, String amount, String duration, String poAge, String poAmount, String poDuration, String planStatus, int scenarioType) {
         this.title = title;
         this.type = type;
         this.age = age;
@@ -40,7 +40,7 @@ public class SelectedScenarioModel {
         this.scenarioType = scenarioType;
     }
 
-    public SelectedScenarioModel(String sectionTitle, int scenarioType) {
+    public SelectedScenarioViewHolder(String sectionTitle, int scenarioType) {
         this.scenarioType = scenarioType;
         this.sectionTitle = sectionTitle;
     }

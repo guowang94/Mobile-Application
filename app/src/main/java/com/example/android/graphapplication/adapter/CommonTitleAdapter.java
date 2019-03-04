@@ -9,17 +9,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.CommonTitleModel;
+import com.example.android.graphapplication.viewHolder.CommonTitleViewHolder;
 
 import java.util.List;
 
 public class CommonTitleAdapter extends RecyclerView.Adapter<CommonTitleAdapter.MyViewHolder> {
 
     private static final String TAG = "CommonTitleAdapter";
-    private List<CommonTitleModel> commonTitleModels;
+    private List<CommonTitleViewHolder> mCommonTitleViewHolders;
 
-    public CommonTitleAdapter(List<CommonTitleModel> commonTitleModels) {
-        this.commonTitleModels = commonTitleModels;
+    public CommonTitleAdapter(List<CommonTitleViewHolder> commonTitleViewHolders) {
+        this.mCommonTitleViewHolders = commonTitleViewHolders;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -47,18 +47,18 @@ public class CommonTitleAdapter extends RecyclerView.Adapter<CommonTitleAdapter.
     public void onBindViewHolder(@NonNull CommonTitleAdapter.MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        CommonTitleModel commonTitleModel = this.commonTitleModels.get(position);
-        Log.i(TAG, "onBindViewHolder: " + commonTitleModel.toString());
-        holder.mTitle.setText(commonTitleModel.getTitle());
+        CommonTitleViewHolder commonTitleViewHolder = this.mCommonTitleViewHolders.get(position);
+        Log.i(TAG, "onBindViewHolder: " + commonTitleViewHolder.toString());
+        holder.mTitle.setText(commonTitleViewHolder.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return commonTitleModels.size();
+        return mCommonTitleViewHolders.size();
     }
 
     public void removeItem(int position) {
-        commonTitleModels.remove(position);
+        mCommonTitleViewHolders.remove(position);
         // notify the item removed by position to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
         notifyItemRemoved(position);

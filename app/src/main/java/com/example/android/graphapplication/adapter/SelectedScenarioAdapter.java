@@ -9,17 +9,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.SelectedScenarioModel;
+import com.example.android.graphapplication.viewHolder.SelectedScenarioViewHolder;
 
 import java.util.List;
 
 public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "SelectedScenarioAdapter";
-    private List<SelectedScenarioModel> selectedScenarioModelList;
+    private List<SelectedScenarioViewHolder> mSelectedScenarioViewHolderList;
 
-    public SelectedScenarioAdapter(List<SelectedScenarioModel> selectedScenarioModelList) {
-        this.selectedScenarioModelList = selectedScenarioModelList;
+    public SelectedScenarioAdapter(List<SelectedScenarioViewHolder> selectedScenarioViewHolderList) {
+        this.mSelectedScenarioViewHolderList = selectedScenarioViewHolderList;
     }
 
     public class PlanViewHolder extends RecyclerView.ViewHolder {
@@ -80,13 +80,13 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemViewType(int position) {
-        switch (selectedScenarioModelList.get(position).getScenarioType()) {
+        switch (mSelectedScenarioViewHolderList.get(position).getScenarioType()) {
             case 0:
-                return SelectedScenarioModel.OTHER_SCENARIO;
+                return SelectedScenarioViewHolder.OTHER_SCENARIO;
             case 1:
-                return SelectedScenarioModel.PLAN_SCENARIO;
+                return SelectedScenarioViewHolder.PLAN_SCENARIO;
             case 2:
-                return SelectedScenarioModel.SECTION_HEADER;
+                return SelectedScenarioViewHolder.SECTION_HEADER;
             default:
                 return -1;
         }
@@ -120,33 +120,33 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        final SelectedScenarioModel selectedScenarioModel = this.selectedScenarioModelList.get(position);
+        final SelectedScenarioViewHolder selectedScenarioViewHolder = this.mSelectedScenarioViewHolderList.get(position);
 
-        Log.i(TAG, "onBindViewHolder: " + selectedScenarioModel.toString());
-        switch (selectedScenarioModel.getScenarioType()) {
+        Log.i(TAG, "onBindViewHolder: " + selectedScenarioViewHolder.toString());
+        switch (selectedScenarioViewHolder.getScenarioType()) {
             case 0:
                 OtherViewHolder otherViewHolder = (OtherViewHolder) holder;
-                otherViewHolder.mTitle.setText(selectedScenarioModel.getTitle());
-                otherViewHolder.mType.setText(selectedScenarioModel.getType());
-                otherViewHolder.mAgeOccurred.setText(selectedScenarioModel.getAge());
-                otherViewHolder.mAmount.setText(selectedScenarioModel.getAmount());
-                otherViewHolder.mDuration.setText(selectedScenarioModel.getDuration());
+                otherViewHolder.mTitle.setText(selectedScenarioViewHolder.getTitle());
+                otherViewHolder.mType.setText(selectedScenarioViewHolder.getType());
+                otherViewHolder.mAgeOccurred.setText(selectedScenarioViewHolder.getAge());
+                otherViewHolder.mAmount.setText(selectedScenarioViewHolder.getAmount());
+                otherViewHolder.mDuration.setText(selectedScenarioViewHolder.getDuration());
                 break;
             case 1:
                 PlanViewHolder planViewHolder = (PlanViewHolder) holder;
-                planViewHolder.mTitle.setText(selectedScenarioModel.getTitle());
-                planViewHolder.mType.setText(selectedScenarioModel.getType());
-                planViewHolder.mAgeOccurred.setText(selectedScenarioModel.getAge());
-                planViewHolder.mAmount.setText(selectedScenarioModel.getAmount());
-                planViewHolder.mDuration.setText(selectedScenarioModel.getDuration());
-                planViewHolder.mPOAgeOccurred.setText(selectedScenarioModel.getPoAge());
-                planViewHolder.mPOAmount.setText(selectedScenarioModel.getPoAmount());
-                planViewHolder.mPODuration.setText(selectedScenarioModel.getPoDuration());
-                planViewHolder.mPlanStatus.setText(selectedScenarioModel.getPlanStatus());
+                planViewHolder.mTitle.setText(selectedScenarioViewHolder.getTitle());
+                planViewHolder.mType.setText(selectedScenarioViewHolder.getType());
+                planViewHolder.mAgeOccurred.setText(selectedScenarioViewHolder.getAge());
+                planViewHolder.mAmount.setText(selectedScenarioViewHolder.getAmount());
+                planViewHolder.mDuration.setText(selectedScenarioViewHolder.getDuration());
+                planViewHolder.mPOAgeOccurred.setText(selectedScenarioViewHolder.getPoAge());
+                planViewHolder.mPOAmount.setText(selectedScenarioViewHolder.getPoAmount());
+                planViewHolder.mPODuration.setText(selectedScenarioViewHolder.getPoDuration());
+                planViewHolder.mPlanStatus.setText(selectedScenarioViewHolder.getPlanStatus());
                 break;
             case 2:
                 SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
-                sectionViewHolder.mSectionTitle.setText(selectedScenarioModel.getSectionTitle());
+                sectionViewHolder.mSectionTitle.setText(selectedScenarioViewHolder.getSectionTitle());
                 break;
             default:
                 Log.d(TAG, "onBindViewHolder: in default");
@@ -155,6 +155,6 @@ public class SelectedScenarioAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return selectedScenarioModelList.size();
+        return mSelectedScenarioViewHolderList.size();
     }
 }

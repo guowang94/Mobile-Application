@@ -10,17 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.ScenarioModel;
+import com.example.android.graphapplication.viewHolder.ScenarioViewHolder;
 
 import java.util.List;
 
 public class ScenarioAdapter extends RecyclerView.Adapter<ScenarioAdapter.MyViewHolder> {
 
     private static final String TAG = "ScenarioAdapter";
-    private List<ScenarioModel> scenarioModelList;
+    private List<ScenarioViewHolder> mScenarioViewHolderList;
 
-    ScenarioAdapter(List<ScenarioModel> scenarioModelList) {
-        this.scenarioModelList = scenarioModelList;
+    ScenarioAdapter(List<ScenarioViewHolder> scenarioViewHolderList) {
+        this.mScenarioViewHolderList = scenarioViewHolderList;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -48,23 +48,23 @@ public class ScenarioAdapter extends RecyclerView.Adapter<ScenarioAdapter.MyView
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        final ScenarioModel scenarioModel = this.scenarioModelList.get(position);
+        final ScenarioViewHolder scenarioViewHolder = this.mScenarioViewHolderList.get(position);
 
-        Log.i(TAG, "onBindViewHolder: " + scenarioModel.toString());
-        holder.mTitle.setText(scenarioModel.getTitle());
-        holder.mImageView.setVisibility(scenarioModel.isSelected() ? View.VISIBLE : View.INVISIBLE);
+        Log.i(TAG, "onBindViewHolder: " + scenarioViewHolder.toString());
+        holder.mTitle.setText(scenarioViewHolder.getTitle());
+        holder.mImageView.setVisibility(scenarioViewHolder.isSelected() ? View.VISIBLE : View.INVISIBLE);
 
         holder.mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scenarioModel.setSelected(!scenarioModel.isSelected());
-                holder.mImageView.setVisibility(scenarioModel.isSelected() ? View.VISIBLE : View.INVISIBLE);
+                scenarioViewHolder.setSelected(!scenarioViewHolder.isSelected());
+                holder.mImageView.setVisibility(scenarioViewHolder.isSelected() ? View.VISIBLE : View.INVISIBLE);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return scenarioModelList.size();
+        return mScenarioViewHolderList.size();
     }
 }

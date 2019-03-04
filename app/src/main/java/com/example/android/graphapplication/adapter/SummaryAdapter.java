@@ -10,17 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
-import com.example.android.graphapplication.model.SummaryModel;
+import com.example.android.graphapplication.viewHolder.SummaryViewHolder;
 
 import java.util.List;
 
 public class SummaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "SummaryAdapter";
-    private List<SummaryModel> summaryModelList;
+    private List<SummaryViewHolder> mSummaryViewHolderList;
 
-    public SummaryAdapter(List<SummaryModel> summaryModelList) {
-        this.summaryModelList = summaryModelList;
+    public SummaryAdapter(List<SummaryViewHolder> summaryViewHolderList) {
+        this.mSummaryViewHolderList = summaryViewHolderList;
     }
 
     class SectionViewHolder extends RecyclerView.ViewHolder {
@@ -48,11 +48,11 @@ public class SummaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        switch (summaryModelList.get(position).getCellType()) {
+        switch (mSummaryViewHolderList.get(position).getCellType()) {
             case 0:
-                return SummaryModel.SECTION_HEADER;
+                return SummaryViewHolder.SECTION_HEADER;
             case 1:
-                return SummaryModel.CONTENT;
+                return SummaryViewHolder.CONTENT;
             default:
                 return -1;
         }
@@ -82,19 +82,19 @@ public class SummaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Log.i(TAG, "Element " + position + " set.");
 
-        SummaryModel summaryModel = this.summaryModelList.get(position);
+        SummaryViewHolder summaryViewHolder = this.mSummaryViewHolderList.get(position);
 
-        Log.i(TAG, "onBindViewHolder: " + summaryModel.toString());
-        switch (summaryModel.getCellType()) {
+        Log.i(TAG, "onBindViewHolder: " + summaryViewHolder.toString());
+        switch (summaryViewHolder.getCellType()) {
             case 0:
                 SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
-                sectionViewHolder.mSectionTitle.setText(summaryModel.getSectionTitle());
+                sectionViewHolder.mSectionTitle.setText(summaryViewHolder.getSectionTitle());
                 break;
             case 1:
                 ContentViewHolder contentViewHolder = (ContentViewHolder) holder;
-                contentViewHolder.mTitle.setText(summaryModel.getTitle());
-                contentViewHolder.mValue.setText(summaryModel.getValue());
-                contentViewHolder.mImageView.setImageResource(summaryModel.getImage());
+                contentViewHolder.mTitle.setText(summaryViewHolder.getTitle());
+                contentViewHolder.mValue.setText(summaryViewHolder.getValue());
+                contentViewHolder.mImageView.setImageResource(summaryViewHolder.getImage());
                 break;
             default:
                 Log.d(TAG, "onBindViewHolder: in default");
@@ -103,6 +103,6 @@ public class SummaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return summaryModelList.size();
+        return mSummaryViewHolderList.size();
     }
 }
