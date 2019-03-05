@@ -189,58 +189,66 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 switch (h.getStackIndex()) {
                     case 0:
                         type = ", Negative Value: ";
-                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                        .format(entry.getX()) + type +
-                                        DecimalFormat.getCurrencyInstance(Locale.US)
-                                                .format(entry.getYVals()[h.getStackIndex()]),
-                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Do nothing
-                            }
-                        }).show();
+                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
+                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                            .format(entry.getX()) + type +
+                                            DecimalFormat.getCurrencyInstance(Locale.US)
+                                                    .format(entry.getYVals()[h.getStackIndex()]),
+                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // Do nothing
+                                }
+                            }).show();
+                        }
                         break;
 
                     case 1:
                         type = ", Expenses: ";
-                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                        .format(entry.getX()) + type +
-                                        DecimalFormat.getCurrencyInstance(Locale.US)
-                                                .format(entry.getYVals()[h.getStackIndex()]),
-                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Do nothing
-                            }
-                        }).show();
+                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
+                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                            .format(entry.getX()) + type +
+                                            DecimalFormat.getCurrencyInstance(Locale.US)
+                                                    .format(entry.getYVals()[h.getStackIndex()]),
+                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // Do nothing
+                                }
+                            }).show();
+                        }
                         break;
                     case 2:
                         type = ", Income: ";
-                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                        .format(entry.getX()) + type +
-                                        DecimalFormat.getCurrencyInstance(Locale.US)
-                                                .format(entry.getYVals()[h.getStackIndex()] +
-                                                        entry.getYVals()[1]),
-                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Do nothing
-                            }
-                        }).show();
+                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
+                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                            .format(entry.getX()) + type +
+                                            DecimalFormat.getCurrencyInstance(Locale.US)
+                                                    .format(entry.getYVals()[h.getStackIndex()] +
+                                                            entry.getYVals()[1]),
+                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // Do nothing
+                                }
+                            }).show();
+                        }
                         break;
 
                     case 3:
                         type = ", Positive Value: ";
-                        Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                        .format(entry.getX()) + type +
-                                        DecimalFormat.getCurrencyInstance(Locale.US)
-                                                .format(entry.getYVals()[h.getStackIndex()]),
-                                Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Do nothing
-                            }
-                        }).show();
+                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
+                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+                                            .format(entry.getX()) + type +
+                                            DecimalFormat.getCurrencyInstance(Locale.US)
+                                                    .format(entry.getYVals()[h.getStackIndex()]),
+                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // Do nothing
+                                }
+                            }).show();
+                        }
                         break;
 
                     default:
