@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -216,6 +217,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
             mAmountInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
+            mAmountEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             if (mAmountEditText.getParent() == null) {
                 mAmountInputLayout.addView(mAmountEditText);
             }
@@ -251,6 +253,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mDurationInputLayout.setHint(getResources().getString(R.string.duration_in_year));
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
+            mDurationEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
             if (mDurationEditText.getParent() == null) {
                 mDurationInputLayout.addView(mDurationEditText);
             }
@@ -259,6 +262,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_per_year_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
+            mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
             }
