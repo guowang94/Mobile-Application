@@ -28,8 +28,7 @@ public class FormActivity extends AppCompatActivity {
     private TextInputLayout mAgeInput;
     private TextInputLayout mAssets;
     private TextInputLayout mIncomeInput;
-    private TextInputLayout mFixedExpensesInput;
-    private TextInputLayout mVariableExpensesInput;
+    private TextInputLayout mExpensesInput;
     private TextInputLayout mRetirementAgeInput;
     private TextInputLayout mExpectancyInput;
     private TextInputLayout mIncrementInput;
@@ -54,8 +53,7 @@ public class FormActivity extends AppCompatActivity {
         mAgeInput = findViewById(R.id.age_input_layout);
         mAssets = findViewById(R.id.assets_input_layout);
         mIncomeInput = findViewById(R.id.income_input_layout);
-        mFixedExpensesInput = findViewById(R.id.fixed_expenses_input_layout);
-        mVariableExpensesInput = findViewById(R.id.variable_expenses_input_layout);
+        mExpensesInput = findViewById(R.id.expenses_input_layout);
         mRetirementAgeInput = findViewById(R.id.retirement_age_input_layout);
         mExpectancyInput = findViewById(R.id.expectancy_input_layout);
         mIncrementInput = findViewById(R.id.increment_input_layout);
@@ -68,16 +66,15 @@ public class FormActivity extends AppCompatActivity {
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
         //todo static text to be commented
-//        mNameInput.getEditText().setText("wang");
-//        mAgeInput.getEditText().setText("20");
-//        mRetirementAgeInput.getEditText().setText("30");
-//        mExpectancyInput.getEditText().setText("40");
-//        mIncomeInput.getEditText().setText("1000");
-//        mIncrementInput.getEditText().setText("5");
-//        mFixedExpensesInput.getEditText().setText("100");
-//        mVariableExpensesInput.getEditText().setText("100");
-//        mInflationInput.getEditText().setText("5");
-//        mAssets.getEditText().setText("10000");
+        mNameInput.getEditText().setText("wang");
+        mAgeInput.getEditText().setText("20");
+        mRetirementAgeInput.getEditText().setText("55");
+        mExpectancyInput.getEditText().setText("80");
+        mIncomeInput.getEditText().setText("1000");
+        mIncrementInput.getEditText().setText("5");
+        mExpensesInput.getEditText().setText("100");
+        mInflationInput.getEditText().setText("5");
+        mAssets.getEditText().setText("10000");
 
         initData();
         Log.d(TAG, "onCreate: out");
@@ -102,10 +99,8 @@ public class FormActivity extends AppCompatActivity {
             mAssets.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mAssets));
         if (mIncomeInput.getEditText() != null)
             mIncomeInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mIncomeInput));
-        if (mFixedExpensesInput.getEditText() != null)
-            mFixedExpensesInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mFixedExpensesInput));
-        if (mVariableExpensesInput.getEditText() != null)
-            mVariableExpensesInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mVariableExpensesInput));
+        if (mExpensesInput.getEditText() != null)
+            mExpensesInput.getEditText().setOnFocusChangeListener(validation.onFocusChangeListenerForNegativeValueValidation(mExpensesInput));
         if (mRetirementAgeInput.getEditText() != null)
             mRetirementAgeInput.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
         if (mExpectancyInput.getEditText() != null)
@@ -144,37 +139,32 @@ public class FormActivity extends AppCompatActivity {
                     validation.negativeValueValidation(mAssets);
                 }
 
-                if (!validation.blankFieldValidation(mFixedExpensesInput)) {
-                    //Double check Fixed Expenses Input
-                    validation.negativeValueValidation(mFixedExpensesInput);
-                }
-
-                if (!validation.blankFieldValidation(mVariableExpensesInput)) {
-                    //Double check Variable Expenses Input
-                    validation.negativeValueValidation(mVariableExpensesInput);
+                if (!validation.blankFieldValidation(mExpensesInput)) {
+                    //Double check Expenses Input
+                    validation.negativeValueValidation(mExpensesInput);
                 }
 
                 if (!validation.blankFieldValidation(mIncomeInput)) {
-                    //Double check Gross Income Input
+                    //Double check Income Input
                     validation.negativeValueValidation(mIncomeInput);
                 }
 
                 if (!validation.blankFieldValidation(mIncrementInput)) {
-                    //Double check Gross Income Input
+                    //Double check Increment Input
                     validation.negativeValueValidation(mIncrementInput);
                 }
 
                 if (!validation.blankFieldValidation(mInflationInput)) {
-                    //Double check Gross Income Input
+                    //Double check Inflation Input
                     validation.negativeValueValidation(mInflationInput);
                 }
 
                 //Check if any of the EditText has error
                 if (mNameInput.isErrorEnabled() || mIncomeInput.isErrorEnabled() ||
                         mExpectancyInput.isErrorEnabled() || mAgeInput.isErrorEnabled() ||
-                        mAssets.isErrorEnabled() || mFixedExpensesInput.isErrorEnabled() ||
-                        mVariableExpensesInput.isErrorEnabled() || mRetirementAgeInput.isErrorEnabled() ||
-                        mIncrementInput.isErrorEnabled() || mInflationInput.isErrorEnabled()) {
+                        mAssets.isErrorEnabled() || mExpensesInput.isErrorEnabled() ||
+                        mRetirementAgeInput.isErrorEnabled() || mIncrementInput.isErrorEnabled() ||
+                        mInflationInput.isErrorEnabled()) {
                     Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
                             Snackbar.LENGTH_LONG).show();
                 } else {
@@ -194,8 +184,7 @@ public class FormActivity extends AppCompatActivity {
                             Integer.valueOf(mExpectancyInput.getEditText().getText().toString()),
                             employmentStatus, citizenship,
                             Float.valueOf(mIncomeInput.getEditText().getText().toString()),
-                            Float.valueOf(mFixedExpensesInput.getEditText().getText().toString()),
-                            Float.valueOf(mVariableExpensesInput.getEditText().getText().toString()),
+                            Float.valueOf(mExpensesInput.getEditText().getText().toString()),
                             Float.valueOf(mAssets.getEditText().getText().toString()),
                             Integer.valueOf(mIncrementInput.getEditText().getText().toString()),
                             Integer.valueOf(mInflationInput.getEditText().getText().toString()));

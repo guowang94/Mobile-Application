@@ -1,6 +1,7 @@
 package com.example.android.graphapplication.fragment;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,6 +48,7 @@ public class SummaryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Log.i(TAG, "onCreate: out");
     }
 
@@ -89,6 +91,7 @@ public class SummaryFragment extends Fragment {
             isViewShown = true;
             if (isViewLoaded) {
                 if (!isDataLoaded) {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     initData();
                     isDataLoaded = true;
                 }

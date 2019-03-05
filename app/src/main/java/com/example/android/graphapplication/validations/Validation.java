@@ -84,8 +84,7 @@ public class Validation {
                         case R.id.expectancy_input_layout:
                         case R.id.age_input_layout:
                         case R.id.assets_input_layout:
-                        case R.id.fixed_expenses_input_layout:
-                        case R.id.variable_expenses_input_layout:
+                        case R.id.expenses_input_layout:
                         case R.id.income_input_layout:
                         case R.id.increment_input_layout:
                         case R.id.inflation_input_layout:
@@ -115,8 +114,7 @@ public class Validation {
                         case R.id.expectancy_input_layout:
                         case R.id.age_input_layout:
                         case R.id.assets_input_layout:
-                        case R.id.fixed_expenses_input_layout:
-                        case R.id.variable_expenses_input_layout:
+                        case R.id.expenses_input_layout:
                         case R.id.income_input_layout:
                         case R.id.increment_input_layout:
                         case R.id.inflation_input_layout:
@@ -159,8 +157,7 @@ public class Validation {
                     switch (textInputLayout.getId()) {
                         case R.id.assets_input_layout:
                         case R.id.income_input_layout:
-                        case R.id.fixed_expenses_input_layout:
-                        case R.id.variable_expenses_input_layout:
+                        case R.id.expenses_input_layout:
                         case R.id.increment_input_layout:
                         case R.id.inflation_input_layout:
                         case R.id.amount_input_layout:
@@ -184,11 +181,8 @@ public class Validation {
                         case R.id.income_input_layout:
                             textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
                             break;
-                        case R.id.fixed_expenses_input_layout:
-                            textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_FIXED_EXPENSES);
-                            break;
-                        case R.id.variable_expenses_input_layout:
-                            textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
+                        case R.id.expenses_input_layout:
+                            textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPENSES);
                             break;
                         case R.id.increment_input_layout:
                             textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_INCREMENT);
@@ -225,8 +219,7 @@ public class Validation {
                     switch (textInputLayout.getId()) {
                         case R.id.assets_input_layout:
                         case R.id.income_input_layout:
-                        case R.id.fixed_expenses_input_layout:
-                        case R.id.variable_expenses_input_layout:
+                        case R.id.expenses_input_layout:
                         case R.id.increment_input_layout:
                         case R.id.inflation_input_layout:
                         case R.id.amount_input_layout:
@@ -252,11 +245,8 @@ public class Validation {
                 case R.id.income_input_layout:
                     textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_GROSS_MONTHLY_INCOME);
                     break;
-                case R.id.fixed_expenses_input_layout:
-                    textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_FIXED_EXPENSES);
-                    break;
-                case R.id.variable_expenses_input_layout:
-                    textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_VARIABLE_EXPENSES);
+                case R.id.expenses_input_layout:
+                    textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPENSES);
                     break;
                 case R.id.increment_input_layout:
                     textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_INCREMENT);

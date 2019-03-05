@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
@@ -50,6 +51,7 @@ public class EventActivity extends AppCompatActivity implements
     private EditText mCostEditText;
     private TextInputLayout mDurationInputLayout;
     private EditText mDurationEditText;
+    private Switch mNoIncomeSwitch;
     private DBHelper mydb;
 
     private String eventTypeSpinnerValue;
@@ -72,6 +74,7 @@ public class EventActivity extends AppCompatActivity implements
         mAgeSpinner = findViewById(R.id.age_spinner);
         mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
         mEventStatusSegmentedButton = findViewById(R.id.event_status_segmented_button);
+        mNoIncomeSwitch = findViewById(R.id.no_income_switch);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
 
@@ -156,6 +159,7 @@ public class EventActivity extends AppCompatActivity implements
         String eventStatus = eventModel.getStatus();
         String amount = String.valueOf(eventModel.getAmount());
         String duration = String.valueOf(eventModel.getDuration());
+        int noIncomeStatus = eventModel.getNoIncomeStatus();
 
         Log.d(TAG, "displayData: " + eventName);
 
@@ -196,6 +200,13 @@ public class EventActivity extends AppCompatActivity implements
                 mCostInputLayout.getEditText().setText(amount);
             }
         }
+
+        if (noIncomeStatus == 0) {
+            mNoIncomeSwitch.setChecked(false);
+        } else if (noIncomeStatus == 1) {
+            mNoIncomeSwitch.setChecked(true);
+        }
+
         Log.d(TAG, "displayData: out");
     }
 
@@ -412,6 +423,7 @@ public class EventActivity extends AppCompatActivity implements
                             ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
                     float amount = 0f;
                     int duration = 1;
+                    int noIncomeStatus = mNoIncomeSwitch.isChecked() ? 1 : 0;
 
                     if (mEventNameInputLayout.getEditText() != null) {
                         eventName = mEventNameInputLayout.getEditText().getText().toString();
@@ -439,12 +451,12 @@ public class EventActivity extends AppCompatActivity implements
                     if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
 
                         mydb.insertEvent(eventName, eventTypeSpinnerValue, ageSpinnerValue, description,
-                                eventStatus, amount, duration);
+                                eventStatus, amount, duration, noIncomeStatus);
 
                     } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)) {
 
                         mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, ageSpinnerValue,
-                                description, eventStatus, amount, duration);
+                                description, eventStatus, amount, duration, noIncomeStatus);
                     }
 
                     startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(

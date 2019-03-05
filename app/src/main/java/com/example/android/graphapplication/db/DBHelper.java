@@ -18,8 +18,10 @@ import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    private static final int DATABASE_VERSION = 1;
+
     public DBHelper(Context context) {
-        super(context, SQLConstants.DATABASE_NAME, null, 1);
+        super(context, SQLConstants.DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -48,15 +50,14 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param jobStatus             employed/self-employed
      * @param citizenship           Singaporean/Foreigner
      * @param monthlyIncome         Gross Monthly Income
-     * @param fixedExpenses         eg. bills, loans
-     * @param variableExpenses      eg. entertainment, transport
+     * @param expenses              eg. bills, loans, entertainment, transport
      * @param assets                Current assets
      * @param increment             Salary increment rate
      * @param inflation             Currency inflation rate
      */
     public void insertUser(String name, int age, int expectedRetirementAge, int expectancy,
                            String jobStatus, String citizenship, float monthlyIncome,
-                           float fixedExpenses, float variableExpenses, float assets,
+                           float expenses, float assets,
                            int increment, int inflation) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -68,8 +69,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(SQLConstants.USER_TABLE_JOB_STATUS, jobStatus);
         contentValues.put(SQLConstants.USER_TABLE_CITIZENSHIP, citizenship);
         contentValues.put(SQLConstants.USER_TABLE_INCOME, monthlyIncome);
-        contentValues.put(SQLConstants.USER_TABLE_FIXED_EXPENSES, fixedExpenses);
-        contentValues.put(SQLConstants.USER_TABLE_VARIABLE_EXPENSES, variableExpenses);
+        contentValues.put(SQLConstants.USER_TABLE_EXPENSES, expenses);
         contentValues.put(SQLConstants.USER_TABLE_INITIAL_ASSETS, assets);
         contentValues.put(SQLConstants.USER_TABLE_INCREMENT, increment);
         contentValues.put(SQLConstants.USER_TABLE_INFLATION, inflation);
@@ -135,8 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
             userModel.setSpecialAccount(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_SPECIAL_ACCOUNT)));
             userModel.setMedisaveAccount(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_MEDISAVE_ACCOUNT)));
             userModel.setExpensesExceededIncomeAge(res.getInt(res.getColumnIndex(SQLConstants.USER_TABLE_EXPENSES_EXCEEDED_INCOME_AGE)));
-            userModel.setFixedExpenses(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_FIXED_EXPENSES)));
-            userModel.setVariableExpenses(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_VARIABLE_EXPENSES)));
+            userModel.setExpenses(res.getFloat(res.getColumnIndex(SQLConstants.USER_TABLE_EXPENSES)));
             userModel.setIncrement(res.getInt(res.getColumnIndex(SQLConstants.USER_TABLE_INCREMENT)));
             userModel.setInflation(res.getInt(res.getColumnIndex(SQLConstants.USER_TABLE_INFLATION)));
             userModelList.add(userModel);
@@ -156,9 +155,10 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param eventStatus      One time payment/recurring
      * @param amount           Amount of money to pay
      * @param duration         Duration of the event
+     * @param noIncomeStatus No income status
      */
     public void insertEvent(String eventName, String eventType, int eventAge, String eventDescription,
-                            String eventStatus, float amount, int duration) {
+                            String eventStatus, float amount, int duration, int noIncomeStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_NAME, eventName);
@@ -170,13 +170,13 @@ public class DBHelper extends SQLiteOpenHelper {
         if (!ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
             contentValues.put(SQLConstants.EVENT_TABLE_DURATION, duration);
         }
+        contentValues.put(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS, noIncomeStatus);
         db.insert(SQLConstants.EVENT_TABLE, null, contentValues);
     }
 
     /**
      * This method will update Event details
-     *
-     * @param eventID          ID of the edited event
+     *  @param eventID          ID of the edited event
      * @param eventName        Edited event name
      * @param eventType        Edited event type
      * @param eventAge         Edited age when event occurred
@@ -184,10 +184,11 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param eventStatus      One time payment/recurring
      * @param amount           Edited amount to pay
      * @param duration         Edited duration of event
+     * @param noIncomeStatus Edited no income status
      */
     public void updateEvent(int eventID, String eventName, String eventType, int eventAge,
                             String eventDescription, String eventStatus, float amount,
-                            int duration) {
+                            int duration, int noIncomeStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLConstants.EVENT_TABLE_EVENT_NAME, eventName);
@@ -199,6 +200,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (!ScreenConstants.SEGMENTED_BUTTON_VALUE_ONE_TIME.equals(eventStatus)) {
             contentValues.put(SQLConstants.EVENT_TABLE_DURATION, duration);
         }
+        contentValues.put(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS, noIncomeStatus);
         db.update(SQLConstants.EVENT_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(eventID)});
@@ -250,6 +252,7 @@ public class DBHelper extends SQLiteOpenHelper {
             eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
             eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
             eventModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
+            eventModel.setNoIncomeStatus(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS)));
             eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
             eventsList.add(eventModel);
             res.moveToNext();
@@ -279,6 +282,7 @@ public class DBHelper extends SQLiteOpenHelper {
         eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
         eventModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
         eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
+        eventModel.setNoIncomeStatus(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS)));
         eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
 
         res.close();
@@ -306,6 +310,37 @@ public class DBHelper extends SQLiteOpenHelper {
             eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
             eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
             eventModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
+            eventModel.setNoIncomeStatus(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS)));
+            eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
+            eventModelsList.add(eventModel);
+            res.moveToNext();
+        }
+        res.close();
+        return eventModelsList;
+    }
+
+    /**
+     * This method to get all selected and no income event
+     *
+     * @return list of selected event
+     */
+    public List<CommonModel> getAllSelectedAndNoIncomeEvent() {
+        List<CommonModel> eventModelsList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_IS_SELECTED_AND_NO_INCOME_FROM_EVENT_TABLE, null);
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+            CommonModel eventModel = new CommonModel();
+            eventModel.setId(res.getInt(res.getColumnIndex(SQLConstants.TABLE_ID)));
+            eventModel.setName(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_NAME)));
+            eventModel.setAge(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_AGE)));
+            eventModel.setType(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_TYPE)));
+            eventModel.setStatus(res.getString(res.getColumnIndex(SQLConstants.EVENT_TABLE_EVENT_STATUS)));
+            eventModel.setAmount(res.getFloat(res.getColumnIndex(SQLConstants.EVENT_TABLE_AMOUNT)));
+            eventModel.setDuration(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_DURATION)));
+            eventModel.setNoIncomeStatus(res.getInt(res.getColumnIndex(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS)));
             eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
             eventModelsList.add(eventModel);
             res.moveToNext();
@@ -761,8 +796,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
         //todo need to uncomment
-        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
-        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
-        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
+//        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+//        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+//        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
     }
 }

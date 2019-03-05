@@ -8,8 +8,7 @@ public interface ErrorMsgConstants {
     String ERR_MSG_INVALID_PAYOUT_AGE = "Payout age cannot be less than premium age";
     String ERR_MSG_INVALID_ASSETS = "Assets cannot be less than $0";
     String ERR_MSG_INVALID_GROSS_MONTHLY_INCOME = "Gross Monthly Income cannot be less than $0";
-    String ERR_MSG_INVALID_FIXED_EXPENSES = "Fixed expenses cannot be less than $0";
-    String ERR_MSG_INVALID_VARIABLE_EXPENSES = "Variable expenses cannot be less than $0";
+    String ERR_MSG_INVALID_EXPENSES = "Expenses cannot be less than $0";
     String ERR_MSG_INVALID_INCREMENT = "Increment rate cannot be less than 0";
     String ERR_MSG_INVALID_INFLATION = "Inflation rate cannot be less than 0";
     String ERR_MSG_INVALID_DURATION = "Duration cannot be less than 0";
