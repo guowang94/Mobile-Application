@@ -174,6 +174,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 } else {
                     mToggleGraph.setText(getResources().getString(R.string.expenses_graph));
                 }
+                mChart.clear();
                 graphViewSetup();
             }
         });
@@ -207,8 +208,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 Log.i("VAL SELECTED", "Value: " + entry.getYVals()[h.getStackIndex()]);
 
                 switch (h.getStackIndex()) {
+                    //Green - expenses (baseline) yellow - addiitonal red - uncovered
                     case 0:
-                        type = ", Negative Value: ";
+                        type = ", Expenses Value: ";
                         if (entry.getYVals()[h.getStackIndex()] != 0f) {
                             Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
                                             .format(entry.getX()) + type +
@@ -224,7 +226,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         break;
 
                     case 1:
-                        type = ", Expenses: ";
+                        type = ", Additional Value: ";
                         if (entry.getYVals()[h.getStackIndex()] != 0f) {
                             Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
                                             .format(entry.getX()) + type +
@@ -239,24 +241,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         }
                         break;
                     case 2:
-                        type = ", Income: ";
-                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
-                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                            .format(entry.getX()) + type +
-                                            DecimalFormat.getCurrencyInstance(Locale.US)
-                                                    .format(entry.getYVals()[h.getStackIndex()] +
-                                                            entry.getYVals()[1]),
-                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // Do nothing
-                                }
-                            }).show();
-                        }
-                        break;
-
-                    case 3:
-                        type = ", Positive Value: ";
+                        type = ", Uncovered: ";
                         if (entry.getYVals()[h.getStackIndex()] != 0f) {
                             Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
                                             .format(entry.getX()) + type +
@@ -270,7 +255,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                             }).show();
                         }
                         break;
-
                     default:
                         Log.d(TAG, "onValueSelected: None of the ids have matched. " +
                                 "Current Graph Index: " + h.getStackIndex());
@@ -441,26 +425,52 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
                 //-------------Calculation for the graph---------------
 
-                float remainder = annualIncomeAfterDeductCPF - annualExpenses;
-
-                if (remainder < 0) {
-                    assets += remainder;
-                    remainder = 0;
-                }
+                //Green - expenses (baseline) yellow - addiitonal red - uncovered
 
                 float editedValue = selectedScenarioValuesList.get(currentAge);
+
+                //For graph value only
+                float totalExpenses = annualExpenses + Math.abs(editedValue);
+                float expensesValue = 0f;
+                float additionalValue = 0f;
+                float uncoveredValue = 0f;
+
+                if (totalExpenses < annualIncomeAfterDeductCPF) {
+                    expensesValue = totalExpenses;
+                } else if (totalExpenses > annualIncomeAfterDeductCPF) {
+                    expensesValue = annualIncomeAfterDeductCPF;
+
+                    float exceededIncomeAmount = totalExpenses - annualIncomeAfterDeductCPF;
+
+                    if (exceededIncomeAmount < assets) {
+                        additionalValue = exceededIncomeAmount;
+                    } else if (exceededIncomeAmount > assets) {
+                        if (assets > 0f) {
+                            additionalValue = assets;
+                            uncoveredValue = exceededIncomeAmount - assets;
+                        } else {
+                            uncoveredValue = exceededIncomeAmount - assets;
+                        }
+                    }
+                }
+                Log.d(TAG, "getGraphData: ============================");
+                Log.d(TAG, "getGraphData: Age: " + currentAge);
+                Log.d(TAG, "getGraphData: Expenses: " + expensesValue);
+                Log.d(TAG, "getGraphData: Additional: " + additionalValue);
+                Log.d(TAG, "getGraphData: Uncovered: " + uncoveredValue);
+                Log.d(TAG, "getGraphData: ============================");
+
+                assets += annualIncomeAfterDeductCPF - annualExpenses;
                 assets += editedValue;
 
-                if (editedValue > 0) {
-                    barEntries.add(new BarEntry(currentAge, new float[]{0, annualExpenses, remainder, editedValue}));
+                if (mToggleGraph.isChecked()) {
+                    barEntries.add(new BarEntry(currentAge, new float[]{assets}));
                 } else {
-                    barEntries.add(new BarEntry(currentAge, new float[]{editedValue, annualExpenses, remainder, 0}));
+                    barEntries.add(new BarEntry(currentAge, new float[]{expensesValue, additionalValue, uncoveredValue}));
                 }
-//                lineEntries.add(new Entry(currentAge, assets));
 
                 Log.d(TAG, "getGraphData: assets: " + assets + " at " + currentAge);
 
-                assets += remainder;
 
                 if (currentAge == retirementAge) {
                     balance = assets;
@@ -469,15 +479,38 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             } else {
                 annualExpenses = annualExpenses * (100 + inflation) / 100;
                 float editedValue = selectedScenarioValuesList.get(currentAge);
+
+                //For graph value only
+                float totalExpenses = annualExpenses + Math.abs(editedValue);
+                float expensesValue = 0f;
+                float additionalValue = 0f;
+                float uncoveredValue = 0f;
+
+                if (totalExpenses < assets) {
+                    additionalValue = totalExpenses;
+                } else if (totalExpenses > assets) {
+                    if (assets > 0f) {
+                        additionalValue = assets;
+                        uncoveredValue = totalExpenses - assets;
+                    } else {
+                        uncoveredValue = totalExpenses - assets;
+                    }
+                }
+                Log.d(TAG, "getGraphData: ============================");
+                Log.d(TAG, "getGraphData: Age: " + currentAge);
+                Log.d(TAG, "getGraphData: Expenses: " + expensesValue);
+                Log.d(TAG, "getGraphData: Additional: " + additionalValue);
+                Log.d(TAG, "getGraphData: Uncovered: " + uncoveredValue);
+                Log.d(TAG, "getGraphData: ============================");
+
                 assets -= annualExpenses;
                 assets += editedValue;
 
-                if (editedValue > 0) {
-                    barEntries.add(new BarEntry(currentAge, new float[]{0, annualExpenses, 0, editedValue}));
+                if (mToggleGraph.isChecked()) {
+                    barEntries.add(new BarEntry(currentAge, new float[]{assets}));
                 } else {
-                    barEntries.add(new BarEntry(currentAge, new float[]{editedValue, annualExpenses, 0, 0}));
+                    barEntries.add(new BarEntry(currentAge, new float[]{expensesValue, additionalValue, uncoveredValue}));
                 }
-//                lineEntries.add(new Entry(currentAge, assets));
 
                 Log.d(TAG, "getGraphData: assets: " + assets + " at " + currentAge);
             }
@@ -506,8 +539,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         //----------- Bar Graph ------------
         BarDataSet barDataSet = new BarDataSet(barEntries, null);
-        barDataSet.setColors(Color.RED, ContextCompat.getColor(getActivity().getApplicationContext(), R.color.expensesGraph),
-                ContextCompat.getColor(getActivity().getApplicationContext(), R.color.incomeGraph), Color.GREEN);
+        if (mToggleGraph.isChecked()) {
+            barDataSet.setColors(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.expensesGraph));
+        } else {
+            barDataSet.setColors(Color.GREEN, Color.YELLOW, Color.RED);
+        }
 //        barDataSet.setStackLabels(new String[]{"Negative Value", ScreenConstants.GRAPH_LEGEND_EXPENSES,
 //                ScreenConstants.GRAPH_LEGEND_INCOME, "Positive Value"});
 
