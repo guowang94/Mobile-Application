@@ -42,6 +42,16 @@ public class FormActivity extends AppCompatActivity {
 
     private Validation validation;
 
+    public static final String KEY_NAME = "NAME";
+    public static final String KEY_AGE = "AGE";
+    public static final String KEY_RETIREMENT_AGE = "RETIREMENT_AGE";
+    public static final String KEY_EXPECTANCY = "EXPECTANCY";
+    public static final String KEY_INCOME = "INCOME";
+    public static final String KEY_INCREMENT = "INCREMENT";
+    public static final String KEY_EXPENSES = "EXPENSES";
+    public static final String KEY_INFLATION = "INFLATION";
+    public static final String KEY_ASSETS = "ASSETS";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
@@ -65,19 +75,45 @@ public class FormActivity extends AppCompatActivity {
         mLayout = findViewById(R.id.layout);
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
+        if (savedInstanceState != null) {
+            mNameInput.getEditText().setText(savedInstanceState.getString(KEY_NAME));
+            mAgeInput.getEditText().setText(savedInstanceState.getString(KEY_AGE));
+            mRetirementAgeInput.getEditText().setText(savedInstanceState.getString(KEY_RETIREMENT_AGE));
+            mExpectancyInput.getEditText().setText(savedInstanceState.getString(KEY_EXPECTANCY));
+            mIncomeInput.getEditText().setText(savedInstanceState.getString(KEY_INCOME));
+            mIncrementInput.getEditText().setText(savedInstanceState.getString(KEY_INCREMENT));
+            mExpensesInput.getEditText().setText(savedInstanceState.getString(KEY_EXPENSES));
+            mInflationInput.getEditText().setText(savedInstanceState.getString(KEY_INFLATION));
+            mAssets.getEditText().setText(savedInstanceState.getString(KEY_ASSETS));
+        }
+
         //todo static text to be commented
-//        mNameInput.getEditText().setText("wang");
-//        mAgeInput.getEditText().setText("20");
-//        mRetirementAgeInput.getEditText().setText("25");
-//        mExpectancyInput.getEditText().setText("30");
-//        mIncomeInput.getEditText().setText("1000");
-//        mIncrementInput.getEditText().setText("5");
-//        mExpensesInput.getEditText().setText("100");
-//        mInflationInput.getEditText().setText("5");
-//        mAssets.getEditText().setText("10000");
+        mNameInput.getEditText().setText("wang");
+        mAgeInput.getEditText().setText("20");
+        mRetirementAgeInput.getEditText().setText("25");
+        mExpectancyInput.getEditText().setText("30");
+        mIncomeInput.getEditText().setText("1000");
+        mIncrementInput.getEditText().setText("5");
+        mExpensesInput.getEditText().setText("100");
+        mInflationInput.getEditText().setText("5");
+        mAssets.getEditText().setText("10000");
 
         initData();
         Log.d(TAG, "onCreate: out");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_NAME, mNameInput.getEditText().getText().toString());
+        outState.putString(KEY_AGE, mAgeInput.getEditText().getText().toString());
+        outState.putString(KEY_RETIREMENT_AGE, mRetirementAgeInput.getEditText().getText().toString());
+        outState.putString(KEY_EXPECTANCY, mExpectancyInput.getEditText().getText().toString());
+        outState.putString(KEY_INCOME, mIncomeInput.getEditText().getText().toString());
+        outState.putString(KEY_INCREMENT, mIncrementInput.getEditText().getText().toString());
+        outState.putString(KEY_EXPENSES, mExpensesInput.getEditText().getText().toString());
+        outState.putString(KEY_INFLATION, mInflationInput.getEditText().getText().toString());
+        outState.putString(KEY_ASSETS, mAssets.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -228,12 +264,12 @@ public class FormActivity extends AppCompatActivity {
                     mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
                 } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 18) {
                     mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
-                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 999 &&
-                        Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 18) {
-                    mRetirementAgeInput.setErrorEnabled(false);
                 } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) <
                         Integer.valueOf(mAgeInput.getEditText().getText().toString())) {
                     mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_RETIREMENT_AGE);
+                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 999 &&
+                        Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 18) {
+                    mRetirementAgeInput.setErrorEnabled(false);
                 } else {
                     mRetirementAgeInput.setErrorEnabled(false);
                 }
@@ -251,9 +287,6 @@ public class FormActivity extends AppCompatActivity {
                     mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
                 } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 18) {
                     mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
-                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 999 &&
-                        Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 18) {
-                    mExpectancyInput.setErrorEnabled(false);
                 } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
                         Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
                     mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
@@ -262,6 +295,9 @@ public class FormActivity extends AppCompatActivity {
                         Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
                                 Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
                     mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
+                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 999 &&
+                        Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 18) {
+                    mExpectancyInput.setErrorEnabled(false);
                 } else {
                     mExpectancyInput.setErrorEnabled(false);
                 }

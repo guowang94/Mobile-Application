@@ -62,6 +62,15 @@ public class EventActivity extends AppCompatActivity implements
 
     private Validation validation;
 
+    public static final String KEY_EVENT_NAME = "EVENT_NAME";
+    public static final String KEY_EVENT_TYPE = "EVENT_TYPE";
+    public static final String KEY_EVENT_AGE = "EVENT_AGE";
+    public static final String KEY_EVENT_DESCRIPTION = "EVENT_DESCRIPTION";
+    public static final String KEY_EVENT_AMOUNT = "EVENT_AMOUNT";
+    public static final String KEY_EVENT_DURATION = "EVENT_DURATION";
+    private int savedInstanceStateEventType = -1;
+    private int savedInstanceStateEventAge = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
@@ -95,8 +104,39 @@ public class EventActivity extends AppCompatActivity implements
             Log.d(TAG, "onCreate: displayData, " + currentEventID);
         }
 
+        if (savedInstanceState != null) {
+            savedInstanceStateEventType = savedInstanceState.getInt(KEY_EVENT_TYPE);
+            savedInstanceStateEventAge = savedInstanceState.getInt(KEY_EVENT_AGE);
+            mEventNameInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_NAME));
+            mEventDescriptionInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_DESCRIPTION));
+            if (mEventStatusSegmentedButton.getPosition() == 0) {
+                mAmountInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_AMOUNT));
+            } else {
+                mDurationInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_DURATION));
+                mCostInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_AMOUNT));
+            }
+        }
+
         initData();
         Log.d(TAG, "onCreate: out");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_EVENT_NAME, mEventNameInputLayout.getEditText().getText().toString());
+        outState.putInt(KEY_EVENT_TYPE, mEventTypeSpinner.getSpinner().getSelectedItemPosition());
+        outState.putInt(KEY_EVENT_AGE, mAgeSpinner.getSpinner().getSelectedItemPosition());
+        ;
+        outState.putString(KEY_EVENT_DESCRIPTION, mEventDescriptionInputLayout.getEditText().getText().toString());
+
+        if (mEventStatusSegmentedButton.getPosition() == 0) {
+            outState.putString(KEY_EVENT_AMOUNT, mAmountInputLayout.getEditText().getText().toString());
+        } else {
+            outState.putString(KEY_EVENT_DURATION, mDurationInputLayout.getEditText().getText().toString());
+            outState.putString(KEY_EVENT_AMOUNT, mCostInputLayout.getEditText().getText().toString());
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -130,6 +170,14 @@ public class EventActivity extends AppCompatActivity implements
                 });
 
         setupSpinners();
+
+        if (savedInstanceStateEventType != -1) {
+            mEventTypeSpinner.setSelection(savedInstanceStateEventType);
+        }
+
+        if (savedInstanceStateEventAge != -1) {
+            mAgeSpinner.setSelection(savedInstanceStateEventAge);
+        }
 
         //Validation
         if (mEventNameInputLayout.getEditText() != null) {

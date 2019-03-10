@@ -60,6 +60,15 @@ public class MilestoneActivity extends AppCompatActivity implements
 
     private Validation validation;
 
+    public static final String KEY_MILESTONE_NAME = "MILESTONE_NAME";
+    public static final String KEY_MILESTONE_TYPE = "MILESTONE_TYPE";
+    public static final String KEY_MILESTONE_AGE = "MILESTONE_AGE";
+    public static final String KEY_MILESTONE_DESCRIPTION = "MILESTONE_DESCRIPTION";
+    public static final String KEY_MILESTONE_AMOUNT = "MILESTONE_AMOUNT";
+    public static final String KEY_MILESTONE_DURATION = "MILESTONE_DURATION";
+    private int savedInstanceStateMilestoneType = -1;
+    private int savedInstanceStateMilestoneAge = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
@@ -92,8 +101,36 @@ public class MilestoneActivity extends AppCompatActivity implements
             Log.d(TAG, "onCreate: displayData, " + currentMilestoneID);
         }
 
+        if (savedInstanceState != null) {
+            savedInstanceStateMilestoneType = savedInstanceState.getInt(KEY_MILESTONE_TYPE);
+            savedInstanceStateMilestoneAge = savedInstanceState.getInt(KEY_MILESTONE_AGE);
+            mMilestoneNameInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_NAME));
+            mMilestoneDescriptionInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_DESCRIPTION));
+            if (mMilestoneStatusSegmentedButton.getPosition() == 0) {
+                mAmountInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_AMOUNT));
+            } else {
+                mDurationInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_DURATION));
+                mCostInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_AMOUNT));
+            }
+        }
+
         initData();
         Log.d(TAG, "onCreate: out");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_MILESTONE_NAME, mMilestoneNameInputLayout.getEditText().getText().toString());
+        outState.putInt(KEY_MILESTONE_TYPE, mMilestoneTypeSpinner.getSpinner().getSelectedItemPosition());
+        outState.putInt(KEY_MILESTONE_AGE, mAgeSpinner.getSpinner().getSelectedItemPosition());
+        outState.putString(KEY_MILESTONE_DESCRIPTION, mMilestoneDescriptionInputLayout.getEditText().getText().toString());
+        if (mMilestoneStatusSegmentedButton.getPosition() == 0) {
+            outState.putString(KEY_MILESTONE_AMOUNT, mAmountInputLayout.getEditText().getText().toString());
+        } else {
+            outState.putString(KEY_MILESTONE_DURATION, mDurationInputLayout.getEditText().getText().toString());
+            outState.putString(KEY_MILESTONE_AMOUNT, mCostInputLayout.getEditText().getText().toString());
+        }
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -127,6 +164,14 @@ public class MilestoneActivity extends AppCompatActivity implements
                 });
 
         setupSpinners();
+
+        if (savedInstanceStateMilestoneType != -1) {
+            mMilestoneTypeSpinner.setSelection(savedInstanceStateMilestoneType);
+        }
+
+        if (savedInstanceStateMilestoneAge != -1) {
+            mAgeSpinner.setSelection(savedInstanceStateMilestoneAge);
+        }
 
         //Validation
         if (mMilestoneNameInputLayout.getEditText() != null) {
