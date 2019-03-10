@@ -68,6 +68,8 @@ public class MilestoneActivity extends AppCompatActivity implements
     public static final String KEY_MILESTONE_DURATION = "MILESTONE_DURATION";
     private int savedInstanceStateMilestoneType = -1;
     private int savedInstanceStateMilestoneAge = -1;
+    private String savedInstanceStateAmount;
+    private String savedInstanceStateDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,10 +109,10 @@ public class MilestoneActivity extends AppCompatActivity implements
             mMilestoneNameInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_NAME));
             mMilestoneDescriptionInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_DESCRIPTION));
             if (mMilestoneStatusSegmentedButton.getPosition() == 0) {
-                mAmountInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_AMOUNT));
+                savedInstanceStateAmount = savedInstanceState.getString(KEY_MILESTONE_AMOUNT);
             } else {
-                mDurationInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_DURATION));
-                mCostInputLayout.getEditText().setText(savedInstanceState.getString(KEY_MILESTONE_AMOUNT));
+                savedInstanceStateDuration = savedInstanceState.getString(KEY_MILESTONE_DURATION);
+                savedInstanceStateAmount = savedInstanceState.getString(KEY_MILESTONE_AMOUNT);
             }
         }
 
@@ -171,6 +173,13 @@ public class MilestoneActivity extends AppCompatActivity implements
 
         if (savedInstanceStateMilestoneAge != -1) {
             mAgeSpinner.setSelection(savedInstanceStateMilestoneAge);
+        }
+
+        if (mMilestoneStatusSegmentedButton.getPosition() == 0) {
+            mAmountInputLayout.getEditText().setText(savedInstanceStateAmount);
+        } else {
+            mDurationInputLayout.getEditText().setText(savedInstanceStateDuration);
+            mCostInputLayout.getEditText().setText(savedInstanceStateAmount);
         }
 
         //Validation

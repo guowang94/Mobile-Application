@@ -70,6 +70,8 @@ public class EventActivity extends AppCompatActivity implements
     public static final String KEY_EVENT_DURATION = "EVENT_DURATION";
     private int savedInstanceStateEventType = -1;
     private int savedInstanceStateEventAge = -1;
+    private String savedInstanceStateAmount;
+    private String savedInstanceStateDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +112,10 @@ public class EventActivity extends AppCompatActivity implements
             mEventNameInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_NAME));
             mEventDescriptionInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_DESCRIPTION));
             if (mEventStatusSegmentedButton.getPosition() == 0) {
-                mAmountInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_AMOUNT));
+                savedInstanceStateAmount = savedInstanceState.getString(KEY_EVENT_AMOUNT);
             } else {
-                mDurationInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_DURATION));
-                mCostInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_AMOUNT));
+                savedInstanceStateDuration = savedInstanceState.getString(KEY_EVENT_DURATION);
+                savedInstanceStateAmount = savedInstanceState.getString(KEY_EVENT_AMOUNT);
             }
         }
 
@@ -177,6 +179,13 @@ public class EventActivity extends AppCompatActivity implements
 
         if (savedInstanceStateEventAge != -1) {
             mAgeSpinner.setSelection(savedInstanceStateEventAge);
+        }
+
+        if (mEventStatusSegmentedButton.getPosition() == 0) {
+            mAmountInputLayout.getEditText().setText(savedInstanceStateAmount);
+        } else {
+            mDurationInputLayout.getEditText().setText(savedInstanceStateDuration);
+            mCostInputLayout.getEditText().setText(savedInstanceStateAmount);
         }
 
         //Validation

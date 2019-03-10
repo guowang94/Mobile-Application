@@ -64,6 +64,7 @@ public class PlanActivity extends AppCompatActivity {
     public static final String KEY_PAYOUT_AMOUNT = "PAYOUT_AMOUNT";
     public static final String KEY_PAYOUT_DURATION = "PAYOUT_DURATION";
     public static final String KEY_IS_CHECKED = "IS_CHECKED";
+    public static final String KEY_PAYMENT_STATUS = "PAYMENT_STATUS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class PlanActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mPlanNameInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PLANE_NAME));
             mPlanTypeInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PLAN_TYPE));
+            mPaymentTypeSegmentedButton.setPosition(savedInstanceState.getInt(KEY_PAYMENT_STATUS));
             isChecked = savedInstanceState.getBooleanArray(KEY_IS_CHECKED);
             mPremiumStartAgeInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PREMIUM_START_AGE));
             mPremiumAmountInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PREMIUM_AMOUNT));
@@ -105,7 +107,8 @@ public class PlanActivity extends AppCompatActivity {
             if (mPaymentTypeSegmentedButton.getPosition() == 1) {
                 mPremiumDurationInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PREMIUM_DURATION));
             }
-            Log.d(TAG, "onCreate: premium duration " + savedInstanceState.getString(KEY_PREMIUM_DURATION));
+
+            Log.d(TAG, "onCreate: premium duration " + savedInstanceState.getString(KEY_PREMIUM_DURATION) + ", position " + mPaymentTypeSegmentedButton.getPosition());
         }
 
         initData();
@@ -122,6 +125,7 @@ public class PlanActivity extends AppCompatActivity {
         outState.putString(KEY_PAYOUT_AGE, mPayoutAgeInputLayout.getEditText().getText().toString());
         outState.putString(KEY_PAYOUT_AMOUNT, mPayoutAmountInputLayout.getEditText().getText().toString());
         outState.putString(KEY_PAYOUT_DURATION, mPayoutDurationInputLayout.getEditText().getText().toString());
+        outState.putInt(KEY_PAYMENT_STATUS, mPaymentTypeSegmentedButton.getPosition());
         if (mPaymentTypeSegmentedButton.getPosition() == 1) {
             outState.putString(KEY_PREMIUM_DURATION, mPremiumDurationInputLayout.getEditText().getText().toString());
         }
@@ -152,8 +156,10 @@ public class PlanActivity extends AppCompatActivity {
         mShowDialogButton.setOnClickListener(onClickListenerForShowDialog());
 
         // Default selection for Plan Status is One-Time therefore Plan Duration is set to disabled
-        mPremiumDurationInputLayout.setEnabled(false);
-        mPremiumDurationInputLayout.setAlpha(.5f);
+        if (mPaymentTypeSegmentedButton.getPosition() == 0) {
+            mPremiumDurationInputLayout.setEnabled(false);
+            mPremiumDurationInputLayout.setAlpha(.5f);
+        }
 
         mPaymentTypeSegmentedButton.setOnPositionChangedListener(
                 new SegmentedButtonGroup.OnPositionChangedListener() {
