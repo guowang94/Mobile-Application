@@ -10,8 +10,7 @@ public class UserModel {
     private String jobStatus;
     private String citizenship;
     private float monthlyIncome;
-    private float fixedExpenses;
-    private float variableExpenses;
+    private float expenses;
     private float initialAssets;
     private float totalAssets;
     private float ordinaryAccount;
@@ -88,20 +87,12 @@ public class UserModel {
         this.monthlyIncome = monthlyIncome;
     }
 
-    public float getFixedExpenses() {
-        return fixedExpenses;
+    public float getExpenses() {
+        return expenses;
     }
 
-    public void setFixedExpenses(float fixedExpenses) {
-        this.fixedExpenses = fixedExpenses;
-    }
-
-    public float getVariableExpenses() {
-        return variableExpenses;
-    }
-
-    public void setVariableExpenses(float variableExpenses) {
-        this.variableExpenses = variableExpenses;
+    public void setExpenses(float expenses) {
+        this.expenses = expenses;
     }
 
     public float getInitialAssets() {

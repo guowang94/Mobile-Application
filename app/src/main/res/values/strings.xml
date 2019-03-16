@@ -15,12 +15,16 @@
     <string name="singaporean">Singaporean</string>
     <string name="foreigner_or_pr">Foreigner/PR</string>
     <string name="income">Income</string>
-    <string name="fixed_expenses">Fixed Expenses</string>
+    <string name="expenses">Expenses</string>
     <string name="variable_expenses">Variable Expenses</string>
     <string name="assets">Assets</string>
     <string name="forecast">Forecast</string>
     <string name="increment">Increment</string>
     <string name="inflation_rate">Inflation Rate</string>
+
+    <!--Graph Screen-->
+    <string name="expenses_graph">Expenses</string>
+    <string name="assets_graph">Assets</string>
 
     <!--Summary Screen-->
     <!--Section Header-->
@@ -56,6 +60,7 @@
     <string name="milestone_empty_recycler">Tap on \'+\' to add new Milestone</string>
     <string name="plan_empty_recycler">Tap on \'+\' to add new Plan</string>
     <string name="graph_empty_recycler">Apply Scenario for data to be shown</string>
+    <string name="no_income_event">No Income during this period</string>
 
     <!--Create Plan Screen-->
     <string name="plan_name">Plan Name</string>

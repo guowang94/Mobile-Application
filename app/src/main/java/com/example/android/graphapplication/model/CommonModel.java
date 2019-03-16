@@ -10,6 +10,7 @@ public class CommonModel {
     private String status;
     private float amount;
     private int duration;
+    private int noIncomeStatus;
     private int isSelected;
 
     public int getId() {
@@ -82,5 +83,13 @@ public class CommonModel {
 
     public void setIsSelected(int isSelected) {
         this.isSelected = isSelected;
+    }
+
+    public int getNoIncomeStatus() {
+        return noIncomeStatus;
+    }
+
+    public void setNoIncomeStatus(int noIncomeStatus) {
+        this.noIncomeStatus = noIncomeStatus;
     }
 }

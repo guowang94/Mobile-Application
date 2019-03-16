@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
@@ -50,6 +51,7 @@ public class EventActivity extends AppCompatActivity implements
     private EditText mCostEditText;
     private TextInputLayout mDurationInputLayout;
     private EditText mDurationEditText;
+    private Switch mNoIncomeSwitch;
     private DBHelper mydb;
 
     private String eventTypeSpinnerValue;
@@ -59,6 +61,17 @@ public class EventActivity extends AppCompatActivity implements
     private String ageRange[];
 
     private Validation validation;
+
+    public static final String KEY_EVENT_NAME = "EVENT_NAME";
+    public static final String KEY_EVENT_TYPE = "EVENT_TYPE";
+    public static final String KEY_EVENT_AGE = "EVENT_AGE";
+    public static final String KEY_EVENT_DESCRIPTION = "EVENT_DESCRIPTION";
+    public static final String KEY_EVENT_AMOUNT = "EVENT_AMOUNT";
+    public static final String KEY_EVENT_DURATION = "EVENT_DURATION";
+    private int savedInstanceStateEventType = -1;
+    private int savedInstanceStateEventAge = -1;
+    private String savedInstanceStateAmount;
+    private String savedInstanceStateDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +85,7 @@ public class EventActivity extends AppCompatActivity implements
         mAgeSpinner = findViewById(R.id.age_spinner);
         mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
         mEventStatusSegmentedButton = findViewById(R.id.event_status_segmented_button);
+        mNoIncomeSwitch = findViewById(R.id.no_income_switch);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
 
@@ -92,8 +106,39 @@ public class EventActivity extends AppCompatActivity implements
             Log.d(TAG, "onCreate: displayData, " + currentEventID);
         }
 
+        if (savedInstanceState != null) {
+            savedInstanceStateEventType = savedInstanceState.getInt(KEY_EVENT_TYPE);
+            savedInstanceStateEventAge = savedInstanceState.getInt(KEY_EVENT_AGE);
+            mEventNameInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_NAME));
+            mEventDescriptionInputLayout.getEditText().setText(savedInstanceState.getString(KEY_EVENT_DESCRIPTION));
+            if (mEventStatusSegmentedButton.getPosition() == 0) {
+                savedInstanceStateAmount = savedInstanceState.getString(KEY_EVENT_AMOUNT);
+            } else {
+                savedInstanceStateDuration = savedInstanceState.getString(KEY_EVENT_DURATION);
+                savedInstanceStateAmount = savedInstanceState.getString(KEY_EVENT_AMOUNT);
+            }
+        }
+
         initData();
         Log.d(TAG, "onCreate: out");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_EVENT_NAME, mEventNameInputLayout.getEditText().getText().toString());
+        outState.putInt(KEY_EVENT_TYPE, mEventTypeSpinner.getSpinner().getSelectedItemPosition());
+        outState.putInt(KEY_EVENT_AGE, mAgeSpinner.getSpinner().getSelectedItemPosition());
+        ;
+        outState.putString(KEY_EVENT_DESCRIPTION, mEventDescriptionInputLayout.getEditText().getText().toString());
+
+        if (mEventStatusSegmentedButton.getPosition() == 0) {
+            outState.putString(KEY_EVENT_AMOUNT, mAmountInputLayout.getEditText().getText().toString());
+        } else {
+            outState.putString(KEY_EVENT_DURATION, mDurationInputLayout.getEditText().getText().toString());
+            outState.putString(KEY_EVENT_AMOUNT, mCostInputLayout.getEditText().getText().toString());
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -128,6 +173,21 @@ public class EventActivity extends AppCompatActivity implements
 
         setupSpinners();
 
+        if (savedInstanceStateEventType != -1) {
+            mEventTypeSpinner.setSelection(savedInstanceStateEventType);
+        }
+
+        if (savedInstanceStateEventAge != -1) {
+            mAgeSpinner.setSelection(savedInstanceStateEventAge);
+        }
+
+        if (mEventStatusSegmentedButton.getPosition() == 0) {
+            mAmountInputLayout.getEditText().setText(savedInstanceStateAmount);
+        } else {
+            mDurationInputLayout.getEditText().setText(savedInstanceStateDuration);
+            mCostInputLayout.getEditText().setText(savedInstanceStateAmount);
+        }
+
         //Validation
         if (mEventNameInputLayout.getEditText() != null) {
             mEventNameInputLayout.getEditText().setOnFocusChangeListener(
@@ -156,6 +216,7 @@ public class EventActivity extends AppCompatActivity implements
         String eventStatus = eventModel.getStatus();
         String amount = String.valueOf(eventModel.getAmount());
         String duration = String.valueOf(eventModel.getDuration());
+        int noIncomeStatus = eventModel.getNoIncomeStatus();
 
         Log.d(TAG, "displayData: " + eventName);
 
@@ -196,6 +257,13 @@ public class EventActivity extends AppCompatActivity implements
                 mCostInputLayout.getEditText().setText(amount);
             }
         }
+
+        if (noIncomeStatus == 0) {
+            mNoIncomeSwitch.setChecked(false);
+        } else if (noIncomeStatus == 1) {
+            mNoIncomeSwitch.setChecked(true);
+        }
+
         Log.d(TAG, "displayData: out");
     }
 
@@ -412,6 +480,7 @@ public class EventActivity extends AppCompatActivity implements
                             ScreenConstants.SEGMENTED_BUTTON_VALUE_RECURRING;
                     float amount = 0f;
                     int duration = 1;
+                    int noIncomeStatus = mNoIncomeSwitch.isChecked() ? 1 : 0;
 
                     if (mEventNameInputLayout.getEditText() != null) {
                         eventName = mEventNameInputLayout.getEditText().getText().toString();
@@ -439,12 +508,12 @@ public class EventActivity extends AppCompatActivity implements
                     if (KeyConstants.INTENT_KEY_VALUE_CREATE.equalsIgnoreCase(eventAction)) {
 
                         mydb.insertEvent(eventName, eventTypeSpinnerValue, ageSpinnerValue, description,
-                                eventStatus, amount, duration);
+                                eventStatus, amount, duration, noIncomeStatus);
 
                     } else if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction)) {
 
                         mydb.updateEvent(currentEventID, eventName, eventTypeSpinnerValue, ageSpinnerValue,
-                                description, eventStatus, amount, duration);
+                                description, eventStatus, amount, duration, noIncomeStatus);
                     }
 
                     startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(

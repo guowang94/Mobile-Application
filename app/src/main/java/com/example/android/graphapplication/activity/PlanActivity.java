@@ -55,6 +55,17 @@ public class PlanActivity extends AppCompatActivity {
 
     private Validation validation;
 
+    public static final String KEY_PLANE_NAME = "PLAN_NAME";
+    public static final String KEY_PLAN_TYPE = "PLAN_TYPE";
+    public static final String KEY_PREMIUM_START_AGE = "PREMIUM_START_AGE";
+    public static final String KEY_PREMIUM_AMOUNT = "PREMIUM_AMOUNT";
+    public static final String KEY_PREMIUM_DURATION = "PREMIUM_DURATION";
+    public static final String KEY_PAYOUT_AGE = "PAYOUT_AGE";
+    public static final String KEY_PAYOUT_AMOUNT = "PAYOUT_AMOUNT";
+    public static final String KEY_PAYOUT_DURATION = "PAYOUT_DURATION";
+    public static final String KEY_IS_CHECKED = "IS_CHECKED";
+    public static final String KEY_PAYMENT_STATUS = "PAYMENT_STATUS";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: in");
@@ -83,8 +94,42 @@ public class PlanActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: displayData, " + currentPlanID);
         }
 
+        if (savedInstanceState != null) {
+            mPlanNameInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PLANE_NAME));
+            mPlanTypeInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PLAN_TYPE));
+            mPaymentTypeSegmentedButton.setPosition(savedInstanceState.getInt(KEY_PAYMENT_STATUS));
+            isChecked = savedInstanceState.getBooleanArray(KEY_IS_CHECKED);
+            mPremiumStartAgeInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PREMIUM_START_AGE));
+            mPremiumAmountInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PREMIUM_AMOUNT));
+            mPayoutAgeInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PAYOUT_AGE));
+            mPayoutAmountInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PAYOUT_AMOUNT));
+            mPayoutDurationInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PAYOUT_DURATION));
+            if (mPaymentTypeSegmentedButton.getPosition() == 1) {
+                mPremiumDurationInputLayout.getEditText().setText(savedInstanceState.getString(KEY_PREMIUM_DURATION));
+            }
+
+            Log.d(TAG, "onCreate: premium duration " + savedInstanceState.getString(KEY_PREMIUM_DURATION) + ", position " + mPaymentTypeSegmentedButton.getPosition());
+        }
+
         initData();
         Log.d(TAG, "onCreate: out");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_PLANE_NAME, mPlanNameInputLayout.getEditText().getText().toString());
+        outState.putString(KEY_PLAN_TYPE, mPlanTypeInputLayout.getEditText().getText().toString());
+        outState.putBooleanArray(KEY_IS_CHECKED, isChecked);
+        outState.putString(KEY_PREMIUM_START_AGE, mPremiumStartAgeInputLayout.getEditText().getText().toString());
+        outState.putString(KEY_PREMIUM_AMOUNT, mPremiumAmountInputLayout.getEditText().getText().toString());
+        outState.putString(KEY_PAYOUT_AGE, mPayoutAgeInputLayout.getEditText().getText().toString());
+        outState.putString(KEY_PAYOUT_AMOUNT, mPayoutAmountInputLayout.getEditText().getText().toString());
+        outState.putString(KEY_PAYOUT_DURATION, mPayoutDurationInputLayout.getEditText().getText().toString());
+        outState.putInt(KEY_PAYMENT_STATUS, mPaymentTypeSegmentedButton.getPosition());
+        if (mPaymentTypeSegmentedButton.getPosition() == 1) {
+            outState.putString(KEY_PREMIUM_DURATION, mPremiumDurationInputLayout.getEditText().getText().toString());
+        }
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -105,13 +150,16 @@ public class PlanActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        isChecked = new boolean[getResources().getTextArray(R.array.plan_type_array).length];
+        isChecked = isChecked != null ? isChecked :
+                new boolean[getResources().getTextArray(R.array.plan_type_array).length];
 
         mShowDialogButton.setOnClickListener(onClickListenerForShowDialog());
 
         // Default selection for Plan Status is One-Time therefore Plan Duration is set to disabled
-        mPremiumDurationInputLayout.setEnabled(false);
-        mPremiumDurationInputLayout.setAlpha(.5f);
+        if (mPaymentTypeSegmentedButton.getPosition() == 0) {
+            mPremiumDurationInputLayout.setEnabled(false);
+            mPremiumDurationInputLayout.setAlpha(.5f);
+        }
 
         mPaymentTypeSegmentedButton.setOnPositionChangedListener(
                 new SegmentedButtonGroup.OnPositionChangedListener() {
@@ -382,7 +430,7 @@ public class PlanActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ListView list = ((AlertDialog) dialog).getListView();
-                        // make selected item in the comma seprated string
+                        // make selected item in the comma separated string
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < list.getCount(); i++) {
                             boolean checked = list.isItemChecked(i);

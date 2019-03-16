@@ -17,8 +17,7 @@ public interface SQLConstants {
     String USER_TABLE_JOB_STATUS = "job_status";
     String USER_TABLE_CITIZENSHIP = "citizenship";
     String USER_TABLE_INCOME = "income";
-    String USER_TABLE_FIXED_EXPENSES = "fixed_expenses";
-    String USER_TABLE_VARIABLE_EXPENSES = "variable_expenses";
+    String USER_TABLE_EXPENSES = "expenses";
     String USER_TABLE_INITIAL_ASSETS = "initial_assets";
     String USER_TABLE_TOTAL_ASSETS = "total_assets";
     String USER_TABLE_ORDINARY_ACCOUNT = "ordinary_account";
@@ -38,6 +37,7 @@ public interface SQLConstants {
     String EVENT_TABLE_EVENT_STATUS = "event_status";
     String EVENT_TABLE_AMOUNT = "amount";
     String EVENT_TABLE_DURATION = "duration";
+    String EVENT_TABLE_NO_INCOME_STATUS = "no_income_status";
 
     String MILESTONE_TABLE_MILESTONE_NAME = "milestone_name";
     String MILESTONE_TABLE_MILESTONE_TYPE = "milestone_type";
@@ -69,8 +69,7 @@ public interface SQLConstants {
             + USER_TABLE_JOB_STATUS + " TEXT NOT NULL, "
             + USER_TABLE_CITIZENSHIP + " TEXT NOT NULL, "
             + USER_TABLE_INCOME + " FLOAT NOT NULL, "
-            + USER_TABLE_FIXED_EXPENSES + " FLOAT NOT NULL, "
-            + USER_TABLE_VARIABLE_EXPENSES + " FLOAT NOT NULL, "
+            + USER_TABLE_EXPENSES + " FLOAT NOT NULL, "
             + USER_TABLE_INITIAL_ASSETS + " FLOAT NOT NULL, "
             + USER_TABLE_INCREMENT + " INTEGER NOT NULL, "
             + USER_TABLE_INFLATION + " INTEGER NOT NULL, "
@@ -93,6 +92,7 @@ public interface SQLConstants {
             + EVENT_TABLE_EVENT_STATUS + " TEXT NOT NULL, "
             + EVENT_TABLE_AMOUNT + " FLOAT DEFAULT 0.0, "
             + EVENT_TABLE_DURATION + " INTEGER DEFAULT 1, "
+            + EVENT_TABLE_NO_INCOME_STATUS + " INTEGER DEFAULT 0, "
             + IS_SELECTED + " INTEGER DEFAULT 0);";
 
     String CREATE_MILESTONE_TABLE = "CREATE TABLE "
@@ -136,6 +136,8 @@ public interface SQLConstants {
     String SELECT_ALL_IS_SELECTED_FROM_EVENT_TABLE = "SELECT * FROM " + EVENT_TABLE + " WHERE " + IS_SELECTED + " = 1";
     String SELECT_ALL_IS_SELECTED_FROM_MILESTONE_TABLE = "SELECT * FROM " + MILESTONE_TABLE + " WHERE " + IS_SELECTED + " = 1";
     String SELECT_ALL_IS_SELECTED_FROM_PLAN_TABLE = "SELECT * FROM " + PLAN_TABLE + " WHERE " + IS_SELECTED + " = 1";
+    String SELECT_ALL_IS_SELECTED_AND_NO_INCOME_FROM_EVENT_TABLE = "SELECT * FROM " + EVENT_TABLE +
+            " WHERE " + IS_SELECTED + " = 1 AND " + EVENT_TABLE_NO_INCOME_STATUS + " = 1";
 
     String SELECT_ALL_EXISTING_FROM_PLAN_TABLE = "SELECT * FROM " + PLAN_TABLE +
             " WHERE " + PLAN_TABLE_PLAN_STATUS + " = '" + ScreenConstants.SEGMENTED_BUTTON_VALUE_EXISTING_PLAN +
