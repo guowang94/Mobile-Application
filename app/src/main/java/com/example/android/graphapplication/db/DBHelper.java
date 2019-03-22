@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
@@ -18,6 +19,7 @@ import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    private static final String TAG = "DBHelper";
     private static final int DATABASE_VERSION = 1;
 
     public DBHelper(Context context) {
@@ -142,6 +144,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+        Log.d(TAG, "getAllUser: " + userModelList.toString());
         return userModelList;
     }
 

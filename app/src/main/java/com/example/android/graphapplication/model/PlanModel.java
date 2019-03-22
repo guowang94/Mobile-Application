@@ -110,4 +110,22 @@ public class PlanModel {
     public void setIsSelected(int isSelected) {
         this.isSelected = isSelected;
     }
+
+    @Override
+    public String toString() {
+        return "PlanModel{" +
+                "id=" + id +
+                ", planName='" + planName + '\'' +
+                ", planType='" + planType + '\'' +
+                ", paymentType='" + paymentType + '\'' +
+                ", premiumStartAge=" + premiumStartAge +
+                ", paymentAmount=" + paymentAmount +
+                ", planDuration=" + planDuration +
+                ", payoutAge=" + payoutAge +
+                ", payoutAmount=" + payoutAmount +
+                ", payoutDuration=" + payoutDuration +
+                ", planStatus='" + planStatus + '\'' +
+                ", isSelected=" + isSelected +
+                '}';
+    }
 }
