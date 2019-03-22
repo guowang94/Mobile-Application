@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,6 +65,11 @@ import java.util.Set;
 public class GraphFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String TAG = "GraphFragment";
+    private static final String EXPENSES = "EXPENSES";
+    private static final String COVERED_EXPENSES = "COVERED_EXPENSES";
+    private static final String UNCOVERED_EXPENSES = "UNCOVERED_EXPENSES";
+    private static final String ASSETS = "ASSETS";
+
     private ConstraintLayout mLayout;
     private BarChart mChart;
     private Toolbar mToolbar;
@@ -72,6 +77,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private TextView mEmptyRecyclerTextView;
     private RecyclerView mRecyclerView;
     private Switch mToggleGraph;
+    private TextView mAgeTextView;
+    private TextView mExpensesTextView;
+    private TextView mUncoveredExpensesTextView;
+    private TextView mCoveredExpensesTextView;
+    private TextView mAssetsTextView;
 
     private boolean isViewShown;
     private boolean isViewLoaded;
@@ -82,6 +92,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     private List<CommonModel> milestonesList;
     private List<PlanModel> plansList;
     private List<CommonModel> noIncomeEventsList;
+
+    private SparseArray<HashMap<String, Float>> graphData;
 
     private DBHelper mydb;
 
@@ -108,6 +120,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyRecyclerTextView = view.findViewById(R.id.empty_recycler_text_view);
         mToggleGraph = view.findViewById(R.id.graph_switch);
+        mAgeTextView = view.findViewById(R.id.age_text_view);
+        mExpensesTextView = view.findViewById(R.id.expenses_text_view);
+        mUncoveredExpensesTextView = view.findViewById(R.id.uncovered_expenses_text_view);
+        mCoveredExpensesTextView = view.findViewById(R.id.covered_expenses_text_view);
+        mAssetsTextView = view.findViewById(R.id.assets_text_view);
 
         if (getActivity() != null) {
             mRecyclerView.addItemDecoration(new DividerItemDecoration(
@@ -193,85 +210,99 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
-        Log.d(TAG, "onValueSelected: entry, " + e);
-        Log.d(TAG, "onValueSelected: highlight, " + h);
-        if (h.getStackIndex() != -1) {
-            BarEntry entry = (BarEntry) e;
-            String type;
+        Log.d(TAG, "onValueSelected: entry/age, " + e);
+        Log.d(TAG, "onValueSelected: highlight/value, " + h);
 
-            if (entry.getYVals() != null) {
-                Log.i(TAG, "y values: " + entry.getY());
-                for (int i = 0; i < entry.getYVals().length; i++) {
-                    Log.i(TAG, "y values at " + i + " index: " + entry.getYVals()[i]);
-                }
-                Log.i(TAG, "Selected stack index: " + h.getStackIndex());
-                Log.i("VAL SELECTED", "Value: " + entry.getYVals()[h.getStackIndex()]);
+        HashMap<String, Float> currentData = graphData.get((int) e.getX());
 
-                switch (h.getStackIndex()) {
-                    //Green - expenses (baseline) yellow - addiitonal red - uncovered
-                    case 0:
-                        type = ", Expenses Value: ";
-                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
-                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                            .format(entry.getX()) + type +
-                                            DecimalFormat.getCurrencyInstance(Locale.US)
-                                                    .format(entry.getYVals()[h.getStackIndex()]),
-                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // Do nothing
-                                }
-                            }).show();
-                        }
-                        break;
+        mAgeTextView.setText(NumberFormat.getIntegerInstance().format(e.getX()));
+        mExpensesTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(EXPENSES)));
+        mCoveredExpensesTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(COVERED_EXPENSES)));
+        mUncoveredExpensesTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(UNCOVERED_EXPENSES)));
+        mAssetsTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(ASSETS)));
 
-                    case 1:
-                        type = ", Additional Value: ";
-                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
-                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                            .format(entry.getX()) + type +
-                                            DecimalFormat.getCurrencyInstance(Locale.US)
-                                                    .format(entry.getYVals()[h.getStackIndex()]),
-                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // Do nothing
-                                }
-                            }).show();
-                        }
-                        break;
-                    case 2:
-                        type = ", Uncovered: ";
-                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
-                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
-                                            .format(entry.getX()) + type +
-                                            DecimalFormat.getCurrencyInstance(Locale.US)
-                                                    .format(entry.getYVals()[h.getStackIndex()]),
-                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // Do nothing
-                                }
-                            }).show();
-                        }
-                        break;
-                    default:
-                        Log.d(TAG, "onValueSelected: None of the ids have matched. " +
-                                "Current Graph Index: " + h.getStackIndex());
-                }
-            } else {
-                Log.i("VAL SELECTED", "Value: " + entry.getY());
-            }
-        } else {
-            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(e.getX()) +
-                            ", Assets: " + DecimalFormat.getCurrencyInstance(Locale.US).format(e.getY()),
-                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Do nothing
-                }
-            }).show();
-        }
+//        if (h.getStackIndex() != -1) {
+//            BarEntry entry = (BarEntry) e;
+//            String type;
+//
+//            if (entry.getYVals() != null) {
+//                Log.i(TAG, "y values: " + entry.getY());
+//                for (int i = 0; i < entry.getYVals().length; i++) {
+//                    Log.i(TAG, "y values at " + i + " index: " + entry.getYVals()[i]);
+//                }
+//                Log.i(TAG, "Selected stack index: " + h.getStackIndex());
+//                Log.i("VAL SELECTED", "Value: " + entry.getYVals()[h.getStackIndex()]);
+//
+//
+//
+//                switch (h.getStackIndex()) {
+//                    //Green - expenses (baseline) yellow - addiitonal red - uncovered
+//                    case 0:
+//                        type = ", Expenses Value: ";
+//                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
+//                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+//                                            .format(entry.getX()) + type +
+//                                            DecimalFormat.getCurrencyInstance(Locale.US)
+//                                                    .format(entry.getYVals()[h.getStackIndex()]),
+//                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    // Do nothing
+//                                }
+//                            }).show();
+//                        }
+//                        break;
+//
+//                    case 1:
+//                        type = ", Additional Value: ";
+//                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
+//                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+//                                            .format(entry.getX()) + type +
+//                                            DecimalFormat.getCurrencyInstance(Locale.US)
+//                                                    .format(entry.getYVals()[h.getStackIndex()]),
+//                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    // Do nothing
+//                                }
+//                            }).show();
+//                        }
+//                        break;
+//                    case 2:
+//                        type = ", Uncovered: ";
+//                        if (entry.getYVals()[h.getStackIndex()] != 0f) {
+//                            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance()
+//                                            .format(entry.getX()) + type +
+//                                            DecimalFormat.getCurrencyInstance(Locale.US)
+//                                                    .format(entry.getYVals()[h.getStackIndex()]),
+//                                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    // Do nothing
+//                                }
+//                            }).show();
+//                        }
+//                        break;
+//                    default:
+//                        Log.d(TAG, "onValueSelected: None of the ids have matched. " +
+//                                "Current Graph Index: " + h.getStackIndex());
+//                }
+//            } else {
+//                Log.i("VAL SELECTED", "Value: " + entry.getY());
+//            }
+//        } else {
+//            mAgeTextView.setText(NumberFormat.getIntegerInstance().format(e.getX()));
+//            mAssetsTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(e.getY()));
+//
+//            Snackbar.make(mLayout, "Age: " + NumberFormat.getIntegerInstance().format(e.getX()) +
+//                            ", Assets: " + DecimalFormat.getCurrencyInstance(Locale.US).format(e.getY()),
+//                    Snackbar.LENGTH_INDEFINITE).setAction("CLOSE", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // Do nothing
+//                }
+//            }).show();
+//        }
     }
 
     @Override
@@ -302,6 +333,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
      */
     private void graphViewSetup() {
         Log.d(TAG, "graphViewSetup: in");
+
+        graphData = new SparseArray<>();
 
         UserModel userModel = mydb.getAllUser().get(0);
 
@@ -440,7 +473,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 //For graph value only
                 float totalExpenses = annualExpenses + Math.abs(editedValue);
                 float expensesValue = 0f;
-                float additionalValue = 0f;
+                float coveredValue = 0f;
                 float uncoveredValue = 0f;
 
                 if (totalExpenses < annualIncomeAfterDeductCPF) {
@@ -451,10 +484,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     float exceededExpensesAmount = totalExpenses - annualIncomeAfterDeductCPF;
 
                     if (exceededExpensesAmount < assets) {
-                        additionalValue = exceededExpensesAmount;
+                        coveredValue = exceededExpensesAmount;
                     } else if (exceededExpensesAmount > assets) {
                         if (assets > 0f) {
-                            additionalValue = assets;
+                            coveredValue = assets;
                             uncoveredValue = exceededExpensesAmount - assets;
                         } else {
                             uncoveredValue = exceededExpensesAmount;
@@ -464,7 +497,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 Log.d(TAG, "getGraphData: ============================");
                 Log.d(TAG, "getGraphData: Age: " + currentAge);
                 Log.d(TAG, "getGraphData: Expenses: " + expensesValue);
-                Log.d(TAG, "getGraphData: Additional: " + additionalValue);
+                Log.d(TAG, "getGraphData: Covered: " + coveredValue);
                 Log.d(TAG, "getGraphData: Uncovered: " + uncoveredValue);
                 Log.d(TAG, "getGraphData: ============================");
 
@@ -474,7 +507,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 if (mToggleGraph.isChecked()) {
                     barEntries.add(new BarEntry(currentAge, new float[]{assets}));
                 } else {
-                    barEntries.add(new BarEntry(currentAge, new float[]{expensesValue, additionalValue, uncoveredValue}));
+                    barEntries.add(new BarEntry(currentAge, new float[]{expensesValue, coveredValue, uncoveredValue}));
                 }
 
                 Log.d(TAG, "getGraphData: assets: " + assets + " at " + currentAge);
@@ -484,6 +517,23 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     balance = assets;
                 }
 
+                if (currentAge == age) {
+                    mAgeTextView.setText(String.valueOf(age));
+                    mExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(expensesValue));
+                    mCoveredExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(coveredValue));
+                    mUncoveredExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(uncoveredValue));
+                    mAssetsTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(assets));
+                }
+
+                //Store data so that it can display the data when the graph is tapped on
+                HashMap<String, Float> currentData = new HashMap<>();
+                currentData.put(EXPENSES, expensesValue);
+                currentData.put(COVERED_EXPENSES, coveredValue);
+                currentData.put(UNCOVERED_EXPENSES, uncoveredValue);
+                currentData.put(ASSETS, assets);
+
+                graphData.put(currentAge, currentData);
+
             } else {
                 annualExpenses = annualExpenses * (100 + inflation) / 100;
                 float editedValue = selectedScenarioValuesList.get(currentAge);
@@ -491,14 +541,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 //For graph value only
                 float totalExpenses = annualExpenses + Math.abs(editedValue);
                 float expensesValue = 0f;
-                float additionalValue = 0f;
+                float coveredValue = 0f;
                 float uncoveredValue = 0f;
 
                 if (totalExpenses < assets) {
-                    additionalValue = totalExpenses;
+                    coveredValue = totalExpenses;
                 } else if (totalExpenses > assets) {
                     if (assets > 0f) {
-                        additionalValue = assets;
+                        coveredValue = assets;
                         uncoveredValue = totalExpenses - assets;
                     } else {
                         uncoveredValue = totalExpenses;
@@ -507,7 +557,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 Log.d(TAG, "getGraphData: ============================");
                 Log.d(TAG, "getGraphData: Age: " + currentAge);
                 Log.d(TAG, "getGraphData: Expenses: " + expensesValue);
-                Log.d(TAG, "getGraphData: Additional: " + additionalValue);
+                Log.d(TAG, "getGraphData: Covered: " + coveredValue);
                 Log.d(TAG, "getGraphData: Uncovered: " + uncoveredValue);
                 Log.d(TAG, "getGraphData: ============================");
 
@@ -517,8 +567,17 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 if (mToggleGraph.isChecked()) {
                     barEntries.add(new BarEntry(currentAge, new float[]{assets}));
                 } else {
-                    barEntries.add(new BarEntry(currentAge, new float[]{expensesValue, additionalValue, uncoveredValue}));
+                    barEntries.add(new BarEntry(currentAge, new float[]{expensesValue, coveredValue, uncoveredValue}));
                 }
+
+                //Store data so that it can display the data when the graph is tapped on
+                HashMap<String, Float> currentData = new HashMap<>();
+                currentData.put(EXPENSES, expensesValue);
+                currentData.put(COVERED_EXPENSES, coveredValue);
+                currentData.put(UNCOVERED_EXPENSES, uncoveredValue);
+                currentData.put(ASSETS, assets);
+
+                graphData.put(currentAge, currentData);
 
                 Log.d(TAG, "getGraphData: assets: " + assets + " at " + currentAge);
             }
@@ -848,7 +907,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_RECURRING));
                 }
             }
-            Log.d(TAG, "getCombineSelectedList: total: " + totalValue + ", current age: " + currentAge);
+            if (totalValue != 0f) {
+                Log.d(TAG, "getCombineSelectedList: total: " + totalValue + ", current age: " + currentAge);
+            }
 
             combineSelectedList.add(totalValue);
         }
@@ -903,7 +964,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     uniqueNoIncomeAgeSet.add(currentAge);
                 }
             }
-            Log.d(TAG, "getCombineSelectedList: current age: " + currentAge);
+//            Log.d(TAG, "getCombineSelectedList: current age: " + currentAge);
 
         }
         noIncomeAgeList = new ArrayList<>(uniqueNoIncomeAgeSet);

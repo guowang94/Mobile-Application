@@ -92,4 +92,20 @@ public class CommonModel {
     public void setNoIncomeStatus(int noIncomeStatus) {
         this.noIncomeStatus = noIncomeStatus;
     }
+
+    @Override
+    public String toString() {
+        return "CommonModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", age=" + age +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", amount=" + amount +
+                ", duration=" + duration +
+                ", noIncomeStatus=" + noIncomeStatus +
+                ", isSelected=" + isSelected +
+                '}';
+    }
 }
