@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph_switch"
-        app:layout_constraintVertical_weight="7" />
+        app:layout_constraintVertical_weight="6" />
 
     <View
         android:id="@+id/divider3"
@@ -54,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stack_bar_graph"
-        app:layout_constraintVertical_weight="3" />
+        app:layout_constraintVertical_weight="4" />
 
     <TextView
         android:id="@+id/empty_recycler_text_view"

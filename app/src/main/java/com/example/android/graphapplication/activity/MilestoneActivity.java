@@ -29,6 +29,8 @@ import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
 
+import java.text.DecimalFormat;
+
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 public class MilestoneActivity extends AppCompatActivity implements
@@ -207,10 +209,13 @@ public class MilestoneActivity extends AppCompatActivity implements
         String ageOccurred = String.valueOf(milestoneModel.getAge());
         String description = milestoneModel.getDescription();
         String milestoneStatus = milestoneModel.getStatus();
-        String amount = String.valueOf(milestoneModel.getAmount());
         String duration = String.valueOf(milestoneModel.getDuration());
 
-        Log.d(TAG, "displayData: " + milestoneName);
+        Log.d(TAG, "displayData: Milestone Name: " + milestoneName);
+
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
+        String amount = df.format(milestoneModel.getAmount());
 
         if (mMilestoneNameInputLayout.getEditText() != null) {
             mMilestoneNameInputLayout.getEditText().setText(milestoneName);

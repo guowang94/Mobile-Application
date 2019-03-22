@@ -27,6 +27,8 @@ import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 
+import java.text.DecimalFormat;
+
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 public class PlanActivity extends AppCompatActivity {
@@ -219,14 +221,18 @@ public class PlanActivity extends AppCompatActivity {
         String planType = planModel.getPlanType();
         String paymentType = planModel.getPaymentType();
         String premiumStartAge = String.valueOf(planModel.getPremiumStartAge());
-        String paymentAmount = String.valueOf(planModel.getPaymentAmount());
         String planduration = String.valueOf(planModel.getPlanDuration());
         String payoutAge = String.valueOf(planModel.getPayoutAge());
-        String payoutAmount = String.valueOf(planModel.getPayoutAmount());
         String payoutDuration = String.valueOf(planModel.getPayoutDuration());
         String planStatus = planModel.getPlanStatus();
 
-        Log.d(TAG, "displayData: " + planName);
+        Log.d(TAG, "displayData: Plan name: " + planName);
+
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
+        String paymentAmount = df.format(planModel.getPaymentAmount());
+        String payoutAmount = df.format(planModel.getPayoutAmount());
+
 
         if (mPlanNameInputLayout.getEditText() != null)
             mPlanNameInputLayout.getEditText().setText(planName);

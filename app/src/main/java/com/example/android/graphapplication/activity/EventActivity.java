@@ -30,6 +30,8 @@ import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
 
+import java.text.DecimalFormat;
+
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 public class EventActivity extends AppCompatActivity implements
@@ -214,11 +216,13 @@ public class EventActivity extends AppCompatActivity implements
         String ageOccurred = String.valueOf(eventModel.getAge());
         String description = eventModel.getDescription();
         String eventStatus = eventModel.getStatus();
-        String amount = String.valueOf(eventModel.getAmount());
         String duration = String.valueOf(eventModel.getDuration());
         int noIncomeStatus = eventModel.getNoIncomeStatus();
+        Log.d(TAG, "displayData: Event Name: " + eventName);
 
-        Log.d(TAG, "displayData: " + eventName);
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
+        String amount = df.format(eventModel.getAmount());
 
         if (mEventNameInputLayout.getEditText() != null) {
             mEventNameInputLayout.getEditText().setText(eventName);
