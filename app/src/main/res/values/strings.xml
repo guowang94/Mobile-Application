@@ -23,8 +23,8 @@
     <string name="inflation_rate">Inflation Rate</string>
 
     <!--Graph Screen-->
-    <string name="expenses_graph">Expenses Graph</string>
-    <string name="assets_graph">Assets Graph</string>
+    <string name="expenses_graph">Expenses</string>
+    <string name="assets_graph">Assets</string>
 
     <!--Summary Screen-->
     <!--Section Header-->

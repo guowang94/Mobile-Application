@@ -326,10 +326,18 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisMinimum(userModel.getAge() - 1);
         xAxis.setAxisMaximum(userModel.getExpectancy() + 1);
+        xAxis.setLabelCount(8, false);
 
         YAxis yAxis = mChart.getAxisLeft();
         yAxis.setValueFormatter(new MyAxisValueFormatter());
         yAxis.setCenterAxisLabels(true);
+        yAxis.setLabelCount(7, true);
+        if (!mToggleGraph.isChecked()) {
+            Log.d(TAG, "graphViewSetup: Y Axis is set at 0.");
+            yAxis.setAxisMinimum(0f);
+        } else {
+            yAxis.resetAxisMinimum();
+        }
         mChart.getAxisRight().setEnabled(false);
 
         Legend legend = mChart.getLegend();
@@ -440,16 +448,16 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 } else if (totalExpenses > annualIncomeAfterDeductCPF) {
                     expensesValue = annualIncomeAfterDeductCPF;
 
-                    float exceededIncomeAmount = totalExpenses - annualIncomeAfterDeductCPF;
+                    float exceededExpensesAmount = totalExpenses - annualIncomeAfterDeductCPF;
 
-                    if (exceededIncomeAmount < assets) {
-                        additionalValue = exceededIncomeAmount;
-                    } else if (exceededIncomeAmount > assets) {
+                    if (exceededExpensesAmount < assets) {
+                        additionalValue = exceededExpensesAmount;
+                    } else if (exceededExpensesAmount > assets) {
                         if (assets > 0f) {
                             additionalValue = assets;
-                            uncoveredValue = exceededIncomeAmount - assets;
+                            uncoveredValue = exceededExpensesAmount - assets;
                         } else {
-                            uncoveredValue = exceededIncomeAmount - assets;
+                            uncoveredValue = exceededExpensesAmount;
                         }
                     }
                 }
@@ -493,7 +501,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         additionalValue = assets;
                         uncoveredValue = totalExpenses - assets;
                     } else {
-                        uncoveredValue = totalExpenses - assets;
+                        uncoveredValue = totalExpenses;
                     }
                 }
                 Log.d(TAG, "getGraphData: ============================");

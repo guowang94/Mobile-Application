@@ -796,8 +796,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
         //todo need to uncomment
-        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
-        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
-        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
+//        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+//        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+//        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
     }
 }
