@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -13,12 +14,14 @@
         android:id="@+id/graph_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:switchPadding="8dp"
         android:text="@string/expenses_graph"
+        app:layout_constraintBaseline_toBaselineOf="@+id/assets_text_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graph_toolbar" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/uncovered_expenses_text_view" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/stack_bar_graph"
@@ -30,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph_switch"
-        app:layout_constraintVertical_weight="7" />
+        app:layout_constraintVertical_weight="6" />
 
     <View
         android:id="@+id/divider3"
@@ -54,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stack_bar_graph"
-        app:layout_constraintVertical_weight="3" />
+        app:layout_constraintVertical_weight="4" />
 
     <TextView
         android:id="@+id/empty_recycler_text_view"
@@ -67,5 +70,120 @@
         app:layout_constraintStart_toStartOf="@id/recycler_view"
         app:layout_constraintTop_toTopOf="@id/recycler_view"
         app:layout_constraintVertical_bias="0.4" />
+
+    <ImageView
+        android:id="@+id/age_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/graph_age"
+        app:layout_constraintBottom_toTopOf="@+id/stack_bar_graph"
+        app:layout_constraintEnd_toStartOf="@+id/age_text_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/graph_toolbar"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/age_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/age_image_view"
+        app:layout_constraintEnd_toStartOf="@+id/expenses_image_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/age_image_view"
+        app:layout_constraintTop_toTopOf="@+id/age_image_view"
+        tools:text="@string/graph_age" />
+
+    <ImageView
+        android:id="@+id/expenses_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:contentDescription="@string/graph_expenses"
+        app:layout_constraintBottom_toBottomOf="@+id/age_image_view"
+        app:layout_constraintEnd_toStartOf="@+id/expenses_text_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/age_text_view"
+        app:layout_constraintTop_toTopOf="@+id/age_image_view"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/expenses_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/age_text_view"
+        app:layout_constraintEnd_toStartOf="@+id/covered_expenses_image_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/expenses_image_view"
+        tools:text="@string/graph_expenses" />
+
+    <ImageView
+        android:id="@+id/covered_expenses_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:contentDescription="@string/graph_uncovered_expenses"
+        app:layout_constraintBottom_toBottomOf="@+id/expenses_image_view"
+        app:layout_constraintEnd_toStartOf="@+id/covered_expenses_text_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/expenses_text_view"
+        app:layout_constraintTop_toTopOf="@+id/expenses_image_view"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/covered_expenses_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/expenses_text_view"
+        app:layout_constraintEnd_toStartOf="@+id/uncovered_image_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/covered_expenses_image_view"
+        tools:text="@string/graph_uncovered_expenses" />
+
+    <ImageView
+        android:id="@+id/uncovered_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:contentDescription="@string/graph_covered_expenses"
+        app:layout_constraintBottom_toBottomOf="@+id/covered_expenses_image_view"
+        app:layout_constraintEnd_toStartOf="@+id/uncovered_expenses_text_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/covered_expenses_text_view"
+        app:layout_constraintTop_toTopOf="@+id/covered_expenses_image_view"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/uncovered_expenses_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/covered_expenses_text_view"
+        app:layout_constraintEnd_toStartOf="@+id/assets_image_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/uncovered_image_view"
+        tools:text="@string/graph_covered_expenses" />
+
+    <ImageView
+        android:id="@+id/assets_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:contentDescription="@string/graph_assets"
+        app:layout_constraintBottom_toBottomOf="@+id/uncovered_image_view"
+        app:layout_constraintEnd_toStartOf="@+id/assets_text_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/uncovered_expenses_text_view"
+        app:layout_constraintTop_toTopOf="@+id/uncovered_image_view"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/assets_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/uncovered_expenses_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/graph_switch"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/assets_image_view"
+        tools:text="@string/graph_assets" />
 
 </android.support.constraint.ConstraintLayout>
