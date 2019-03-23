@@ -88,15 +88,15 @@ public class FormActivity extends AppCompatActivity {
         }
 
         //todo static text to be commented
-        mNameInput.getEditText().setText("wang");
-        mAgeInput.getEditText().setText("20");
-        mRetirementAgeInput.getEditText().setText("60");
-        mExpectancyInput.getEditText().setText("80");
-        mIncomeInput.getEditText().setText("1000");
-        mIncrementInput.getEditText().setText("5");
-        mExpensesInput.getEditText().setText("100");
-        mInflationInput.getEditText().setText("5");
-        mAssets.getEditText().setText("10000");
+//        mNameInput.getEditText().setText("wang");
+//        mAgeInput.getEditText().setText("20");
+//        mRetirementAgeInput.getEditText().setText("60");
+//        mExpectancyInput.getEditText().setText("80");
+//        mIncomeInput.getEditText().setText("1000");
+//        mIncrementInput.getEditText().setText("5");
+//        mExpensesInput.getEditText().setText("100");
+//        mInflationInput.getEditText().setText("5");
+//        mAssets.getEditText().setText("10000");
 
         initData();
         Log.d(TAG, "onCreate: out");

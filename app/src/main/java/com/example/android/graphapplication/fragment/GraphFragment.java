@@ -102,7 +102,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
         Log.d(TAG, "onCreate: out");
     }
 
@@ -136,6 +135,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mydb = new DBHelper(getActivity().getApplicationContext());
 
         if (isViewShown) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             initData();
             isDataLoaded = true;
         }
@@ -152,7 +152,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             isViewShown = true;
             if (isViewLoaded) {
                 if (!isDataLoaded) {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                     initData();
                     isDataLoaded = true;
                 }

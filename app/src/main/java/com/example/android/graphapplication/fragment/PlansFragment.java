@@ -57,7 +57,6 @@ public class PlansFragment extends Fragment {
         Log.d(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Log.d(TAG, "onCreate: out");
     }
 
@@ -83,6 +82,7 @@ public class PlansFragment extends Fragment {
         mydb = new DBHelper(getActivity().getApplicationContext());
 
         if (isViewShown) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             initData();
             isDataLoaded = true;
         }
