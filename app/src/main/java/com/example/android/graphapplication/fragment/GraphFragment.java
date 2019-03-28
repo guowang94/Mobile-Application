@@ -362,6 +362,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mChart.setDrawValueAboveBar(false);
         //This method need to set as false for the onValueSelected() to work
         mChart.setHighlightFullBarEnabled(false);
+        mChart.setVisibleXRangeMinimum(10);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
