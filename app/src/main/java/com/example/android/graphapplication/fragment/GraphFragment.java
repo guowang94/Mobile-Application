@@ -188,8 +188,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             public void onClick(View view) {
                 if (mToggleGraph.isChecked()) {
                     mToggleGraph.setText(getResources().getString(R.string.assets_graph));
+                    Log.d(TAG, "onClick: ============================");
+                    Log.d(TAG, "onClick: Assets Graph");
+                    Log.d(TAG, "onClick: ============================");
                 } else {
                     mToggleGraph.setText(getResources().getString(R.string.expenses_graph));
+                    Log.d(TAG, "onClick: ============================");
+                    Log.d(TAG, "onClick: Expenses Graph");
+                    Log.d(TAG, "onClick: ============================");
                 }
                 mChart.clear();
                 graphViewSetup();
@@ -219,7 +225,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mExpensesTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(EXPENSES)));
         mCoveredExpensesTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(COVERED_EXPENSES)));
         mUncoveredExpensesTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(UNCOVERED_EXPENSES)));
-        mAssetsTextView.setText(DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(ASSETS)));
+        String assets = currentData.get(ASSETS) < 0f ? DecimalFormat.getCurrencyInstance(Locale.US).format(0f) :
+                DecimalFormat.getCurrencyInstance(Locale.US).format(currentData.get(ASSETS));
+        mAssetsTextView.setText(assets);
 
 //        if (h.getStackIndex() != -1) {
 //            BarEntry entry = (BarEntry) e;
@@ -365,12 +373,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         yAxis.setValueFormatter(new MyAxisValueFormatter());
         yAxis.setCenterAxisLabels(true);
         yAxis.setLabelCount(7, true);
-        if (!mToggleGraph.isChecked()) {
-            Log.d(TAG, "graphViewSetup: Y Axis is set at 0.");
-            yAxis.setAxisMinimum(0f);
-        } else {
-            yAxis.resetAxisMinimum();
-        }
+        yAxis.setAxisMinimum(0f);
         mChart.getAxisRight().setEnabled(false);
 
         Legend legend = mChart.getLegend();
@@ -476,14 +479,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 float coveredValue = 0f;
                 float uncoveredValue = 0f;
 
-                if (totalExpenses < annualIncomeAfterDeductCPF) {
+                if (totalExpenses <= annualIncomeAfterDeductCPF) {
                     expensesValue = totalExpenses;
                 } else if (totalExpenses > annualIncomeAfterDeductCPF) {
                     expensesValue = annualIncomeAfterDeductCPF;
 
                     float exceededExpensesAmount = totalExpenses - annualIncomeAfterDeductCPF;
 
-                    if (exceededExpensesAmount < assets) {
+                    if (exceededExpensesAmount <= assets) {
                         coveredValue = exceededExpensesAmount;
                     } else if (exceededExpensesAmount > assets) {
                         if (assets > 0f) {
@@ -522,7 +525,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     mExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(expensesValue));
                     mCoveredExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(coveredValue));
                     mUncoveredExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(uncoveredValue));
-                    mAssetsTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(assets));
+                    String formattedAssets = assets < 0f ? NumberFormat.getCurrencyInstance(Locale.US).format(0f) :
+                            NumberFormat.getCurrencyInstance(Locale.US).format(assets);
+                    mAssetsTextView.setText(formattedAssets);
                 }
 
                 //Store data so that it can display the data when the graph is tapped on
@@ -544,7 +549,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 float coveredValue = 0f;
                 float uncoveredValue = 0f;
 
-                if (totalExpenses < assets) {
+                if (totalExpenses <= assets) {
                     coveredValue = totalExpenses;
                 } else if (totalExpenses > assets) {
                     if (assets > 0f) {

@@ -84,12 +84,14 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph_toolbar"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_graph_age" />
 
     <TextView
         android:id="@+id/age_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/age_image_view"
         app:layout_constraintEnd_toStartOf="@+id/expenses_image_view"
         app:layout_constraintHorizontal_bias="0.5"
@@ -107,12 +109,14 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/age_text_view"
         app:layout_constraintTop_toTopOf="@+id/age_image_view"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_graph_expenses" />
 
     <TextView
         android:id="@+id/expenses_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/age_text_view"
         app:layout_constraintEnd_toStartOf="@+id/covered_expenses_image_view"
         app:layout_constraintHorizontal_bias="0.5"
@@ -129,12 +133,14 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/expenses_text_view"
         app:layout_constraintTop_toTopOf="@+id/expenses_image_view"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_graph_covered_expenses" />
 
     <TextView
         android:id="@+id/covered_expenses_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/expenses_text_view"
         app:layout_constraintEnd_toStartOf="@+id/uncovered_image_view"
         app:layout_constraintHorizontal_bias="0.5"
@@ -151,12 +157,14 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/covered_expenses_text_view"
         app:layout_constraintTop_toTopOf="@+id/covered_expenses_image_view"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_graph_uncovered_expenses" />
 
     <TextView
         android:id="@+id/uncovered_expenses_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/covered_expenses_text_view"
         app:layout_constraintEnd_toStartOf="@+id/assets_image_view"
         app:layout_constraintHorizontal_bias="0.5"
@@ -173,12 +181,13 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/uncovered_expenses_text_view"
         app:layout_constraintTop_toTopOf="@+id/uncovered_image_view"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_graph_assets" />
 
     <TextView
         android:id="@+id/assets_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/uncovered_expenses_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/graph_switch"

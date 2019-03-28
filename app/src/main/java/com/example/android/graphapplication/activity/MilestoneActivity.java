@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -277,6 +278,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mAmountInputLayout.setId(R.id.amount_input_layout);
             mAmountInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             mAmountEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mAmountEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mAmountEditText.getParent() == null) {
                 mAmountInputLayout.addView(mAmountEditText);
             }
@@ -313,6 +315,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             mDurationEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mDurationEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mDurationEditText.getParent() == null) {
                 mDurationInputLayout.addView(mDurationEditText);
             }
@@ -322,6 +325,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mCostInputLayout.setId(R.id.cost_per_year_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mCostEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
             }

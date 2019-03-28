@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -130,7 +131,6 @@ public class EventActivity extends AppCompatActivity implements
         outState.putString(KEY_EVENT_NAME, mEventNameInputLayout.getEditText().getText().toString());
         outState.putInt(KEY_EVENT_TYPE, mEventTypeSpinner.getSpinner().getSelectedItemPosition());
         outState.putInt(KEY_EVENT_AGE, mAgeSpinner.getSpinner().getSelectedItemPosition());
-        ;
         outState.putString(KEY_EVENT_DESCRIPTION, mEventDescriptionInputLayout.getEditText().getText().toString());
 
         if (mEventStatusSegmentedButton.getPosition() == 0) {
@@ -290,6 +290,7 @@ public class EventActivity extends AppCompatActivity implements
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
             mAmountEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mAmountEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mAmountEditText.getParent() == null) {
                 mAmountInputLayout.addView(mAmountEditText);
             }
@@ -325,6 +326,7 @@ public class EventActivity extends AppCompatActivity implements
             mDurationInputLayout.setHint(getResources().getString(R.string.duration_in_year));
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mDurationEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mDurationEditText.getParent() == null) {
                 mDurationInputLayout.addView(mDurationEditText);
             }
@@ -333,6 +335,7 @@ public class EventActivity extends AppCompatActivity implements
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_per_year_input_layout);
             mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mCostEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
             }
