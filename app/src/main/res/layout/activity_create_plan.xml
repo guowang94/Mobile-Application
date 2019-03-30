@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/premium_amount"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="numberDecimal" />
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -211,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/payout_amount"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="numberDecimal" />
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

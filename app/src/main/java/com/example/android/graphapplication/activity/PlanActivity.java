@@ -2,10 +2,12 @@ package com.example.android.graphapplication.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -204,7 +206,10 @@ public class PlanActivity extends AppCompatActivity {
             mPayoutAgeInputLayout.getEditText().setOnFocusChangeListener(onFocusChangeListenerForAgeValidation());
 
         if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(planAction) && currentPlanID != -1) {
+            mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EDIT_PLAN);
             displayData();
+        } else {
+            mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_PLANS);
         }
         Log.d(TAG, "initData: out");
     }
@@ -341,8 +346,14 @@ public class PlanActivity extends AppCompatActivity {
                         mPremiumStartAgeInputLayout.isErrorEnabled() || mPremiumAmountInputLayout.isErrorEnabled() ||
                         mPremiumDurationInputLayout.isErrorEnabled() || mPayoutAgeInputLayout.isErrorEnabled() ||
                         mPayoutAmountInputLayout.isErrorEnabled() || mPayoutDurationInputLayout.isErrorEnabled()) {
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                 } else {
                     String planName = null;
                     String planType = null;
@@ -482,8 +493,14 @@ public class PlanActivity extends AppCompatActivity {
                     mPremiumStartAgeInputLayout.setErrorEnabled(false);
                 } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) > expectancy) {
                     mPremiumStartAgeInputLayout.getEditText().setText(String.valueOf(expectancy));
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                     mPayoutAgeInputLayout.setErrorEnabled(false);
                 } else if (Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString()) < 0) {
                     mPremiumStartAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_PREMIUM_AGE_CANNOT_BE_LESS_THAN_0);
@@ -504,8 +521,14 @@ public class PlanActivity extends AppCompatActivity {
                     mPayoutAgeInputLayout.setError(ErrorMsgConstants.ERR_MSG_PAYOUT_AGE_CANNOT_BE_LESS_THAN_1);
                 } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) > expectancy) {
                     mPayoutAgeInputLayout.getEditText().setText(String.valueOf(expectancy));
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_EXPECTANCY,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                     mPayoutAgeInputLayout.setErrorEnabled(false);
                 } else if (Integer.valueOf(mPayoutAgeInputLayout.getEditText().getText().toString()) <
                         Integer.valueOf(mPremiumStartAgeInputLayout.getEditText().getText().toString())) {
@@ -546,8 +569,14 @@ public class PlanActivity extends AppCompatActivity {
                 } else if (Integer.valueOf(mPremiumDurationInputLayout.getEditText().getText().toString()) < 1) {
                     mPremiumDurationInputLayout.setError(ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_BE_LESS_THAN_1);
                 } else if (premiumAge + Integer.valueOf(mPremiumDurationInputLayout.getEditText().getText().toString()) > expectancy) {
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_EXCEED_EXPECTANCY,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_EXCEED_EXPECTANCY,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                     int duration = expectancy - premiumAge;
                     duration = duration == 0 ? 1 : duration;
                     mPremiumDurationInputLayout.getEditText().setText(String.valueOf(duration));
@@ -568,8 +597,14 @@ public class PlanActivity extends AppCompatActivity {
                 } else if (Integer.valueOf(mPayoutDurationInputLayout.getEditText().getText().toString()) < 1) {
                     mPayoutDurationInputLayout.setError(ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_BE_LESS_THAN_1);
                 } else if (payoutAge + Integer.valueOf(mPayoutDurationInputLayout.getEditText().getText().toString()) > expectancy) {
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_EXCEED_EXPECTANCY,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_DURATION_CANNOT_EXCEED_EXPECTANCY,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                     int duration = expectancy - payoutAge;
                     duration = duration == 0 ? 1 : duration;
                     mPayoutDurationInputLayout.getEditText().setText(String.valueOf(duration));

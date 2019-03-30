@@ -407,10 +407,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         float assets = userModel.getInitialAssets();
         float firstYearIncome = userModel.getMonthlyIncome() * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
         float firstYearExpenses = userModel.getExpenses() * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
-        float subsequentAnnualIncome = userModel.getMonthlyIncome() * 12;
-        float subsequentAnnualExpenses = userModel.getExpenses() * 12;
-        float annualIncome = 0f;
-        float annualExpenses = 0f;
+        float annualIncome = userModel.getMonthlyIncome() * 12;
+        float annualExpenses = userModel.getExpenses() * 12;
         float annualIncomeAfterDeductCPF = 0f;
         float balance = 0f;
         float cpfOrdinaryAccount = 0f;
@@ -440,8 +438,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                     } else if (currentAge == age + 1) {
 //                    Log.i(TAG, "getGraphData: subsequent");
-                        annualIncome = subsequentAnnualIncome * (100 + increment) / 100;
-                        annualExpenses = subsequentAnnualExpenses * (100 + inflation) / 100;
+                        annualIncome = annualIncome * (100 + increment) / 100;
+                        annualExpenses = annualExpenses * (100 + inflation) / 100;
                         Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
                         Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                     } else {
@@ -574,6 +572,16 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     barEntries.add(new BarEntry(currentAge, new float[]{assets}));
                 } else {
                     barEntries.add(new BarEntry(currentAge, new float[]{expensesValue, coveredValue, uncoveredValue}));
+                }
+
+                if (age > retirementAge && currentAge == age) {
+                    mAgeTextView.setText(String.valueOf(age));
+                    mExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(expensesValue));
+                    mCoveredExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(coveredValue));
+                    mUncoveredExpensesTextView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(uncoveredValue));
+                    String formattedAssets = assets < 0f ? NumberFormat.getCurrencyInstance(Locale.US).format(0f) :
+                            NumberFormat.getCurrencyInstance(Locale.US).format(assets);
+                    mAssetsTextView.setText(formattedAssets);
                 }
 
                 //Store data so that it can display the data when the graph is tapped on

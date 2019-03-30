@@ -1,10 +1,12 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.adapter.ScenarioSectionAdapter;
+import com.example.android.graphapplication.constants.ErrorMsgConstants;
 import com.example.android.graphapplication.constants.KeyConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
 import com.example.android.graphapplication.db.DBHelper;
@@ -186,12 +189,21 @@ public class ScenarioActivity extends AppCompatActivity {
                             KeyConstants.INTENT_KEY_ACTION,
                             KeyConstants.INTENT_KEY_VALUE_APPLIED_SCENARIO));
                 } else {
-                    Snackbar.make(mLayout, "There is no scenario to be applied", Snackbar.LENGTH_LONG).setAction("CLOSE", new View.OnClickListener() {
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_NO_SCENARIO_TO_BE_APPLIED,
+                            Snackbar.LENGTH_LONG).setAction("CLOSE", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             // Do nothing
                         }
-                    }).show();
+                    });
+
+                    snackbar.setActionTextColor(Color.WHITE);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                     break;
                 }
                 break;

@@ -224,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/income"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="numberDecimal" />
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -260,7 +260,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/expenses"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="numberDecimal" />
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -296,7 +296,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/assets"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="numberDecimal" />
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
