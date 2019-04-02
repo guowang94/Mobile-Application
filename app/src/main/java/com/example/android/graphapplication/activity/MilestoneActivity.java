@@ -86,7 +86,7 @@ public class MilestoneActivity extends AppCompatActivity implements
         mMilestoneNameInputLayout = findViewById(R.id.milestone_name_input_layout);
         mMilestoneTypeSpinner = findViewById(R.id.milestone_type_spinner);
         mAgeSpinner = findViewById(R.id.age_spinner);
-        mMilestoneDescriptionInputLayout = findViewById(R.id.description_input_layout);
+        mMilestoneDescriptionInputLayout = findViewById(R.id.milestone_description_input_layout);
         mMilestoneStatusSegmentedButton = findViewById(R.id.milestone_status_segmented_button);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
@@ -191,6 +191,11 @@ public class MilestoneActivity extends AppCompatActivity implements
         if (mMilestoneNameInputLayout.getEditText() != null) {
             mMilestoneNameInputLayout.getEditText().setOnFocusChangeListener(
                     validation.onFocusChangeListenerForNameValidation(mMilestoneNameInputLayout));
+        }
+
+        if (mMilestoneDescriptionInputLayout.getEditText() != null) {
+            mMilestoneDescriptionInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForDescriptionValidation(mMilestoneDescriptionInputLayout));
         }
 
         if ("Edit".equalsIgnoreCase(milestoneAction) && currentMilestoneID != -1) {
@@ -453,6 +458,10 @@ public class MilestoneActivity extends AppCompatActivity implements
                 boolean isErrorEnabled = false;
 
                 if (mMilestoneNameInputLayout.isErrorEnabled()) {
+                    isErrorEnabled = true;
+                }
+
+                if (mMilestoneDescriptionInputLayout.isErrorEnabled()) {
                     isErrorEnabled = true;
                 }
 

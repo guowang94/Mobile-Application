@@ -88,7 +88,7 @@ public class EventActivity extends AppCompatActivity implements
         mEventNameInputLayout = findViewById(R.id.event_name_input_layout);
         mEventTypeSpinner = findViewById(R.id.event_type_spinner);
         mAgeSpinner = findViewById(R.id.age_spinner);
-        mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
+        mEventDescriptionInputLayout = findViewById(R.id.event_description_input_layout);
         mEventStatusSegmentedButton = findViewById(R.id.event_status_segmented_button);
         mNoIncomeSwitch = findViewById(R.id.no_income_switch);
         mToolbarTitle = findViewById(R.id.toolbar_title);
@@ -195,6 +195,11 @@ public class EventActivity extends AppCompatActivity implements
         if (mEventNameInputLayout.getEditText() != null) {
             mEventNameInputLayout.getEditText().setOnFocusChangeListener(
                     validation.onFocusChangeListenerForNameValidation(mEventNameInputLayout));
+        }
+
+        if (mEventDescriptionInputLayout.getEditText() != null) {
+            mEventDescriptionInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForDescriptionValidation(mEventDescriptionInputLayout));
         }
 
         if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction) && currentEventID != -1) {
@@ -462,6 +467,10 @@ public class EventActivity extends AppCompatActivity implements
                 boolean isErrorEnabled = false;
 
                 if (mEventNameInputLayout.isErrorEnabled()) {
+                    isErrorEnabled = true;
+                }
+
+                if (mEventDescriptionInputLayout.isErrorEnabled()) {
                     isErrorEnabled = true;
                 }
 

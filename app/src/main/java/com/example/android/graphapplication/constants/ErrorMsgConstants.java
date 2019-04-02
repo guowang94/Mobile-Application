@@ -3,6 +3,7 @@ package com.example.android.graphapplication.constants;
 public interface ErrorMsgConstants {
     //Form Validation Message
     String ERR_MSG_INVALID_NAME = "Please enter valid name";
+    String ERR_MSG_INVALID_DESCRIPTION = "No special character allowed";
     String ERR_MSG_INVALID_EXPECTANCY = "Expectancy cannot be less than current age or retirement age";
     String ERR_MSG_INVALID_PAYOUT_AGE = "Payout age cannot be less than premium age";
     String ERR_MSG_INVALID_ASSETS = "Assets cannot be less than $0";

@@ -13,8 +13,12 @@ public class Validation {
 
     private static final String TAG = "Validation";
 
-    private boolean matchCharOnly(String str) {
+    private boolean matchCharForName(String str) {
         return Pattern.matches("[A-Za-z ]{2,}", str);
+    }
+
+    private boolean matchCharOnly(String str) {
+        return Pattern.matches("[A-Za-z ]+", str);
     }
 
     /**
@@ -63,6 +67,17 @@ public class Validation {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     nameValidation(textInputLayout);
+                }
+            }
+        };
+    }
+
+    public View.OnFocusChangeListener onFocusChangeListenerForDescriptionValidation(final TextInputLayout textInputLayout) {
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    descriptionValidation(textInputLayout);
                 }
             }
         };
@@ -284,13 +299,15 @@ public class Validation {
 
     /**
      * This method will validate the name input
+     *
+     * @param textInputLayout
      */
     public void nameValidation(TextInputLayout textInputLayout) {
         try {
             switch (textInputLayout.getId()) {
                 case R.id.user_name_input_layout:
                     if (textInputLayout.getEditText() != null) {
-                        if ((!matchCharOnly(textInputLayout.getEditText().getText().toString())) &&
+                        if ((!matchCharForName(textInputLayout.getEditText().getText().toString())) &&
                                 textInputLayout.getEditText().getText().length() > 0) {
                             textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_NAME);
                         } else {
@@ -305,7 +322,35 @@ public class Validation {
                     textInputLayout.setErrorEnabled(false);
                     break;
                 default:
-                    Log.d(TAG, "negativeValueValidation: None of the TextInputLayout id has been matched." +
+                    Log.d(TAG, "nameValidation: None of the TextInputLayout id has been matched." +
+                            "TextInputLayout id: " + textInputLayout.getId());
+            }
+        } catch (Exception e) {
+            //Do nothing
+        }
+    }
+
+    /**
+     * This method will validate the name input
+     *
+     * @param textInputLayout
+     */
+    public void descriptionValidation(TextInputLayout textInputLayout) {
+        try {
+            switch (textInputLayout.getId()) {
+                case R.id.event_description_input_layout:
+                case R.id.milestone_description_input_layout:
+                    if (textInputLayout.getEditText() != null) {
+                        if ((!matchCharOnly(textInputLayout.getEditText().getText().toString())) &&
+                                textInputLayout.getEditText().getText().length() > 0) {
+                            textInputLayout.setError(ErrorMsgConstants.ERR_MSG_INVALID_DESCRIPTION);
+                        } else {
+                            textInputLayout.setErrorEnabled(false);
+                        }
+                    }
+                    break;
+                default:
+                    Log.d(TAG, "descriptionValidation: None of the TextInputLayout id has been matched." +
                             "TextInputLayout id: " + textInputLayout.getId());
             }
         } catch (Exception e) {
