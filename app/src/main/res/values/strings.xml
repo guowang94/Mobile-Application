@@ -105,4 +105,11 @@
     <string name="graph_uncovered_expenses">uncovered expenses</string>
     <string name="graph_assets">assets</string>
 
+    <!--OTP Verification-->
+    <string name="enter_otp">OTP</string>
+    <string name="verify">Verify</string>
+    <string name="sms_otp">SMS OTP</string>
+    <string name="sms_otp_description">Enter the 6-digit One-Time-Password (OTP)</string>
+    <string name="sign_out">Sign Out</string>
+
 </resources>

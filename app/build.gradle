@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -34,5 +35,6 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3' //graph view, stack bar graph
     implementation 'com.satsuware.lib:usefulviews:2.3.6' //labelled spinner
     implementation 'com.github.ceryle:SegmentedButton:v2.0.2' //segmented control
+    implementation 'com.google.firebase:firebase-auth:16.2.1'
 
 }

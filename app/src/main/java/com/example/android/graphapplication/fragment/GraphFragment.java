@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.example.android.graphapplication.R;
 import com.example.android.graphapplication.activity.ExportActivity;
+import com.example.android.graphapplication.activity.OTPVerificationActivity;
 import com.example.android.graphapplication.activity.ScenarioActivity;
 import com.example.android.graphapplication.adapter.SelectedScenarioAdapter;
 import com.example.android.graphapplication.constants.KeyConstants;
@@ -50,6 +51,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -771,7 +773,9 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu: in");
-        inflater.inflate(R.menu.graph_fragment_menu, menu);
+        //TODO need to uncomment graph_fragment_menu code and comment graph_fragment_menu_test code
+//        inflater.inflate(R.menu.graph_fragment_menu, menu);
+        inflater.inflate(R.menu.graph_fragment_menu_test, menu);
         super.onCreateOptionsMenu(menu, inflater);
         Log.d(TAG, "onCreateOptionsMenu: out");
     }
@@ -791,7 +795,13 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             case R.id.action_export:
                 startActivity(new Intent(getContext(), ExportActivity.class));
                 break;
+            case R.id.sign_out_export:
+                FirebaseAuth.getInstance().signOut();
 
+                Intent intent = new Intent(getContext(), OTPVerificationActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
             default:
                 Log.i(TAG, "onOptionsItemSelected: In default");
         }
