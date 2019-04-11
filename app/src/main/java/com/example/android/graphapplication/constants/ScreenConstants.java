@@ -27,12 +27,10 @@ public interface ScreenConstants {
     String TOOLBAR_TITLE_ENTER_USER_DETAILS = "Enter User Details";
     String TOOLBAR_TITLE_SCENARIO = "Add Scenarios";
     String TOOLBAR_TITLE_ADD_EVENT = "Add Event";
+    String TOOLBAR_TITLE_EDIT_EVENT = "Edit Event";
     String TOOLBAR_TITLE_ADD_MILESTONE = "Add Milestone";
+    String TOOLBAR_TITLE_EDIT_MILESTONE = "Edit Milestone";
     String TOOLBAR_TITLE_ADD_PLAN = "Add Plan";
+    String TOOLBAR_TITLE_EDIT_PLAN = "Edit Plan";
     String TOOLBAR_TITLE_EXPORT_PREVIEW = "Export Preview";
-
-    //Graph Legend
-    String GRAPH_LEGEND_ASSETS = "Total Assets";
-    String GRAPH_LEGEND_INCOME = "Total Income";
-    String GRAPH_LEGEND_EXPENSES = "Total Expenses";
 }

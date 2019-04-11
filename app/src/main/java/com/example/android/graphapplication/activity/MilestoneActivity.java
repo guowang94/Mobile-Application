@@ -1,11 +1,13 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,6 +31,8 @@ import com.example.android.graphapplication.model.CommonModel;
 import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
+
+import java.text.DecimalFormat;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
@@ -81,7 +86,7 @@ public class MilestoneActivity extends AppCompatActivity implements
         mMilestoneNameInputLayout = findViewById(R.id.milestone_name_input_layout);
         mMilestoneTypeSpinner = findViewById(R.id.milestone_type_spinner);
         mAgeSpinner = findViewById(R.id.age_spinner);
-        mMilestoneDescriptionInputLayout = findViewById(R.id.description_input_layout);
+        mMilestoneDescriptionInputLayout = findViewById(R.id.milestone_description_input_layout);
         mMilestoneStatusSegmentedButton = findViewById(R.id.milestone_status_segmented_button);
         mToolbarTitle = findViewById(R.id.toolbar_title);
         mLayout = findViewById(R.id.layout);
@@ -188,8 +193,16 @@ public class MilestoneActivity extends AppCompatActivity implements
                     validation.onFocusChangeListenerForNameValidation(mMilestoneNameInputLayout));
         }
 
+        if (mMilestoneDescriptionInputLayout.getEditText() != null) {
+            mMilestoneDescriptionInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForDescriptionValidation(mMilestoneDescriptionInputLayout));
+        }
+
         if ("Edit".equalsIgnoreCase(milestoneAction) && currentMilestoneID != -1) {
+            mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EDIT_MILESTONE);
             displayData();
+        } else {
+            mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ADD_MILESTONE);
         }
         Log.d(TAG, "initData: out");
     }
@@ -207,10 +220,13 @@ public class MilestoneActivity extends AppCompatActivity implements
         String ageOccurred = String.valueOf(milestoneModel.getAge());
         String description = milestoneModel.getDescription();
         String milestoneStatus = milestoneModel.getStatus();
-        String amount = String.valueOf(milestoneModel.getAmount());
         String duration = String.valueOf(milestoneModel.getDuration());
 
-        Log.d(TAG, "displayData: " + milestoneName);
+        Log.d(TAG, "displayData: Milestone Name: " + milestoneName);
+
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
+        String amount = df.format(milestoneModel.getAmount());
 
         if (mMilestoneNameInputLayout.getEditText() != null) {
             mMilestoneNameInputLayout.getEditText().setText(milestoneName);
@@ -271,7 +287,8 @@ public class MilestoneActivity extends AppCompatActivity implements
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
             mAmountInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            mAmountEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mAmountEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mAmountEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mAmountEditText.getParent() == null) {
                 mAmountInputLayout.addView(mAmountEditText);
             }
@@ -308,6 +325,7 @@ public class MilestoneActivity extends AppCompatActivity implements
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
             mDurationEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mDurationEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mDurationEditText.getParent() == null) {
                 mDurationInputLayout.addView(mDurationEditText);
             }
@@ -316,7 +334,8 @@ public class MilestoneActivity extends AppCompatActivity implements
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_per_year_input_layout);
             mCostInputLayout.setHintTextAppearance(R.style.input_layout_hint_color);
-            mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mCostEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
             }
@@ -440,23 +459,27 @@ public class MilestoneActivity extends AppCompatActivity implements
 
                 if (mMilestoneNameInputLayout.isErrorEnabled()) {
                     isErrorEnabled = true;
+                }
 
-                    if (mAmountInputLayout.isAttachedToWindow()) {
-                        if (mAmountInputLayout.isErrorEnabled()) {
-                            isErrorEnabled = true;
-                        }
+                if (mMilestoneDescriptionInputLayout.isErrorEnabled()) {
+                    isErrorEnabled = true;
+                }
+
+                if (mAmountInputLayout.isAttachedToWindow()) {
+                    if (mAmountInputLayout.isErrorEnabled()) {
+                        isErrorEnabled = true;
                     }
+                }
 
-                    if (mDurationInputLayout.isAttachedToWindow()) {
-                        if (mDurationInputLayout.isErrorEnabled()) {
-                            isErrorEnabled = true;
-                        }
+                if (mDurationInputLayout.isAttachedToWindow()) {
+                    if (mDurationInputLayout.isErrorEnabled()) {
+                        isErrorEnabled = true;
                     }
+                }
 
-                    if (mCostInputLayout.isAttachedToWindow()) {
-                        if (mCostInputLayout.isErrorEnabled()) {
-                            isErrorEnabled = true;
-                        }
+                if (mCostInputLayout.isAttachedToWindow()) {
+                    if (mCostInputLayout.isErrorEnabled()) {
+                        isErrorEnabled = true;
                     }
                 }
 
@@ -504,8 +527,14 @@ public class MilestoneActivity extends AppCompatActivity implements
                     startActivity(new Intent(this, MainActivity.class).putExtra(
                             KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 2));
                 } else {
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                 }
                 break;
             case android.R.id.home:

@@ -1,10 +1,12 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -88,15 +90,15 @@ public class FormActivity extends AppCompatActivity {
         }
 
         //todo static text to be commented
-        mNameInput.getEditText().setText("wang");
-        mAgeInput.getEditText().setText("20");
-        mRetirementAgeInput.getEditText().setText("60");
-        mExpectancyInput.getEditText().setText("80");
-        mIncomeInput.getEditText().setText("1000");
-        mIncrementInput.getEditText().setText("5");
-        mExpensesInput.getEditText().setText("100");
-        mInflationInput.getEditText().setText("5");
-        mAssets.getEditText().setText("10000");
+//        mNameInput.getEditText().setText("wang");
+//        mAgeInput.getEditText().setText("40");
+//        mRetirementAgeInput.getEditText().setText("30");
+//        mExpectancyInput.getEditText().setText("80");
+//        mIncomeInput.getEditText().setText("1000");
+//        mIncrementInput.getEditText().setText("10");
+//        mExpensesInput.getEditText().setText("1230");
+//        mInflationInput.getEditText().setText("2");
+//        mAssets.getEditText().setText("12345");
 
         initData();
         Log.d(TAG, "onCreate: out");
@@ -155,6 +157,11 @@ public class FormActivity extends AppCompatActivity {
                     validation.nameValidation(mNameInput);
                 }
 
+                if (!validation.blankFieldValidation(mAgeInput)) {
+                    //Double check Age Input
+                    ageValidation();
+                }
+
                 if (!validation.blankFieldValidation(mRetirementAgeInput)) {
                     //Double check Retirement Age Input
                     ageValidation();
@@ -162,11 +169,6 @@ public class FormActivity extends AppCompatActivity {
 
                 if (!validation.blankFieldValidation(mExpectancyInput)) {
                     //Double check Expectancy Input
-                    ageValidation();
-                }
-
-                if (!validation.blankFieldValidation(mAgeInput)) {
-                    //Double check Age Input
                     ageValidation();
                 }
 
@@ -201,8 +203,15 @@ public class FormActivity extends AppCompatActivity {
                         mAssets.isErrorEnabled() || mExpensesInput.isErrorEnabled() ||
                         mRetirementAgeInput.isErrorEnabled() || mIncrementInput.isErrorEnabled() ||
                         mInflationInput.isErrorEnabled()) {
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
-                            Snackbar.LENGTH_LONG).show();
+
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                 } else {
                     String employmentStatus = mEmploymentStatusSegmentedButton.getPosition() == 0
                             ? ScreenConstants.SEGMENTED_BUTTON_VALUE_EMPLOYED
@@ -245,8 +254,8 @@ public class FormActivity extends AppCompatActivity {
                     mAgeInput.setErrorEnabled(false);
                 } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) > 999) {
                     mAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
-                } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) < 18) {
-                    mAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
+                } else if (Integer.valueOf(mAgeInput.getEditText().getText().toString()) < 1) {
+                    mAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_1);
                 } else {
                     mAgeInput.setErrorEnabled(false);
                 }
@@ -262,13 +271,10 @@ public class FormActivity extends AppCompatActivity {
                     mRetirementAgeInput.setErrorEnabled(false);
                 } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 999) {
                     mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
-                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 18) {
-                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
-                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) <
-                        Integer.valueOf(mAgeInput.getEditText().getText().toString())) {
-                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_RETIREMENT_AGE);
+                } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 1) {
+                    mRetirementAgeInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_1);
                 } else if (Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) < 999 &&
-                        Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 18) {
+                        Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()) > 1) {
                     mRetirementAgeInput.setErrorEnabled(false);
                 } else {
                     mRetirementAgeInput.setErrorEnabled(false);
@@ -285,8 +291,8 @@ public class FormActivity extends AppCompatActivity {
                     mExpectancyInput.setErrorEnabled(false);
                 } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 999) {
                     mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_MORE_THAN_999);
-                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 18) {
-                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_18);
+                } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 1) {
+                    mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_AGE_CANNOT_BE_LESS_THAN_1);
                 } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) <
                         Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
                     mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
@@ -296,7 +302,7 @@ public class FormActivity extends AppCompatActivity {
                                 Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString())) {
                     mExpectancyInput.setError(ErrorMsgConstants.ERR_MSG_INVALID_EXPECTANCY);
                 } else if (Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) < 999 &&
-                        Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 18) {
+                        Integer.valueOf(mExpectancyInput.getEditText().getText().toString()) > 1) {
                     mExpectancyInput.setErrorEnabled(false);
                 } else {
                     mExpectancyInput.setErrorEnabled(false);

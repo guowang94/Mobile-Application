@@ -182,4 +182,30 @@ public class UserModel {
     public void setExpensesExceededIncomeAge(int expensesExceededIncomeAge) {
         this.expensesExceededIncomeAge = expensesExceededIncomeAge;
     }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", expectedRetirementAge=" + expectedRetirementAge +
+                ", expectancy=" + expectancy +
+                ", jobStatus='" + jobStatus + '\'' +
+                ", citizenship='" + citizenship + '\'' +
+                ", monthlyIncome=" + monthlyIncome +
+                ", expenses=" + expenses +
+                ", initialAssets=" + initialAssets +
+                ", totalAssets=" + totalAssets +
+                ", ordinaryAccount=" + ordinaryAccount +
+                ", specialAccount=" + specialAccount +
+                ", medisaveAccount=" + medisaveAccount +
+                ", shortfallAge=" + shortfallAge +
+                ", shortfall=" + shortfall +
+                ", balance=" + balance +
+                ", increment=" + increment +
+                ", inflation=" + inflation +
+                ", expensesExceededIncomeAge=" + expensesExceededIncomeAge +
+                '}';
+    }
 }

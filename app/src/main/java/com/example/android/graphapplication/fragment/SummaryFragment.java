@@ -48,7 +48,6 @@ public class SummaryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreate: in");
         super.onCreate(savedInstanceState);
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Log.i(TAG, "onCreate: out");
     }
 
@@ -75,6 +74,7 @@ public class SummaryFragment extends Fragment {
         mydb = new DBHelper(getActivity().getApplicationContext());
 
         if (isViewShown) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             initData();
             isDataLoaded = true;
         }

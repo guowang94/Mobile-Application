@@ -36,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/plan_name"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
 
@@ -55,6 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/plan_type"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="textMultiLine"
                 android:maxLines="10"
                 android:textIsSelectable="true" />
@@ -128,6 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/premium_start_age"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -147,7 +150,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/premium_amount"
-                android:inputType="numberDecimal" />
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -166,6 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/premium_duration"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -185,6 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/payout_age"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -204,7 +210,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/payout_amount"
-                android:inputType="numberDecimal" />
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -223,6 +230,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/payout_duration"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 

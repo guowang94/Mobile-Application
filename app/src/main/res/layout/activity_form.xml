@@ -45,9 +45,9 @@
             android:id="@+id/user_name_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:textColorHint="@color/formColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -58,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="textPersonName" />
         </android.support.design.widget.TextInputLayout>
 
@@ -75,6 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/age"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -93,6 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/retirement_age"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -110,6 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/expectancy"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -134,8 +138,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="4dp"
                 android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/singaporean"
                 app:sb_textColor="@color/formColor"
@@ -145,8 +149,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="4dp"
                 android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/foreigner_or_pr"
                 app:sb_textColor="@color/formColor"
@@ -175,8 +179,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="4dp"
                 android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/employed"
                 app:sb_textColor="@color/formColor"
@@ -186,8 +190,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="4dp"
                 android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 app:sb_rippleColor="@color/colorPrimary"
                 app:sb_text="@string/self_employed"
                 app:sb_textColor="@color/formColor"
@@ -219,7 +223,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/income"
-                android:inputType="numberDecimal" />
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -236,6 +241,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/increment"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -253,7 +259,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/expenses"
-                android:inputType="numberDecimal" />
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -270,6 +277,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/inflation_rate"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -287,7 +295,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/assets"
-                android:inputType="numberDecimal" />
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -295,10 +304,10 @@
             style="@style/form_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
             android:background="@drawable/compute_button"
             android:text="@string/forecast"
             android:visibility="visible"

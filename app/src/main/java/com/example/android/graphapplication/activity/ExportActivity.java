@@ -338,8 +338,9 @@ public class ExportActivity extends AppCompatActivity {
         List<PlanModel> nonExistingPlanList = mydb.getAllNonExistingPlan();
         mydb.close();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         String currentDate = simpleDateFormat.format(new Date());
+        String reportTitle = getResources().getString(R.string.export_report_title).concat(" for ") + userModel.getName();
         Float totalMilestoneCost = 0f;
         Float totalExistingCoverage = 0f;
         Float totalNonExistingCoverage = 0f;
@@ -363,14 +364,12 @@ public class ExportActivity extends AppCompatActivity {
 
 
         //Setting data for Recycler View
-        mExportViewHolderList.add(new ExportViewHolder(currentDate, ExportViewHolder.REPORT_TITLE));
+        mExportViewHolderList.add(new ExportViewHolder(reportTitle, currentDate, ExportViewHolder.REPORT_TITLE));
 
         //Client Details
         mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CLIENT_DETAILS, ExportViewHolder.REPORT_HEADER));
-        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.TOTAL_SHORTFALL,
+        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.TOTAL_BALANCE,
                 String.valueOf(userModel.getTotalAssets()), ExportViewHolder.REPORT_TOTAL_SECTION_WITH_COLOR));
-        mExportViewHolderList.add(new ExportViewHolder(ExportConstant.CLIENT_NAME,
-                userModel.getName(), ExportViewHolder.CLIENT_DETAIL));
         mExportViewHolderList.add(new ExportViewHolder(ExportConstant.GROSS_MONTHLY_INCOME,
                 String.valueOf(NumberFormat.getCurrencyInstance(Locale.US)
                         .format(userModel.getMonthlyIncome())), ExportViewHolder.CLIENT_DETAIL));

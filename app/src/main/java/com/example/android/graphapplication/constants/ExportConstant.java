@@ -8,7 +8,7 @@ public interface ExportConstant {
     String PLANS_NON_EXISTING = "Plans - Non-Existing ($1)";
     String TOTAL_MILESTONE_COST = "Total Milestone Cost";
     String TOTAL_COVERAGE = "Total Coverage";
-    String TOTAL_SHORTFALL = "Total Shortfall";
+    String TOTAL_BALANCE = "Total Balance";
 
     String CLIENT_NAME = "Client Name";
     String GROSS_MONTHLY_INCOME = "Gross Monthly Income";

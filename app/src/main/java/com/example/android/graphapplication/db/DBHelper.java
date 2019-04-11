@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.android.graphapplication.constants.SQLConstants;
 import com.example.android.graphapplication.constants.ScreenConstants;
@@ -14,11 +15,13 @@ import com.example.android.graphapplication.model.PlanModel;
 import com.example.android.graphapplication.model.UserModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final String TAG = "DBHelper";
+    private static final int DATABASE_VERSION = 2;
 
     public DBHelper(Context context) {
         super(context, SQLConstants.DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,7 +39,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
-                //do nothing
+                db.execSQL(SQLConstants.DROP_USER_TABLE);
+                db.execSQL(SQLConstants.DROP_EVENT_TABLE);
+                db.execSQL(SQLConstants.CREATE_USER_TABLE);
+                db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
+                break;
+            default:
+                Log.d(TAG, "onUpgrade: Unknown database version: " + DATABASE_VERSION);
         }
     }
 
@@ -117,6 +126,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_USER_TABLE, null);
         res.moveToFirst();
+        String[] columnNames = res.getColumnNames();
+        Log.d(TAG, "getAllUser: " + Arrays.toString(columnNames));
 
         while (!res.isAfterLast()) {
             UserModel userModel = new UserModel();
@@ -142,6 +153,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+        Log.d(TAG, "getAllUser: " + userModelList.toString());
         return userModelList;
     }
 
@@ -155,7 +167,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param eventStatus      One time payment/recurring
      * @param amount           Amount of money to pay
      * @param duration         Duration of the event
-     * @param noIncomeStatus No income status
+     * @param noIncomeStatus   No income status
      */
     public void insertEvent(String eventName, String eventType, int eventAge, String eventDescription,
                             String eventStatus, float amount, int duration, int noIncomeStatus) {
@@ -176,7 +188,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /**
      * This method will update Event details
-     *  @param eventID          ID of the edited event
+     *
+     * @param eventID          ID of the edited event
      * @param eventName        Edited event name
      * @param eventType        Edited event type
      * @param eventAge         Edited age when event occurred
@@ -184,7 +197,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param eventStatus      One time payment/recurring
      * @param amount           Edited amount to pay
      * @param duration         Edited duration of event
-     * @param noIncomeStatus Edited no income status
+     * @param noIncomeStatus   Edited no income status
      */
     public void updateEvent(int eventID, String eventName, String eventType, int eventAge,
                             String eventDescription, String eventStatus, float amount,
@@ -796,8 +809,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(SQLConstants.DELETE_USER_TABLE);
         //todo need to uncomment
-//        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
-//        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
-//        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
+        db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
+        db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
+        db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
     }
 }

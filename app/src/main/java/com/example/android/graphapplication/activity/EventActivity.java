@@ -1,11 +1,13 @@
 package com.example.android.graphapplication.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -29,6 +32,8 @@ import com.example.android.graphapplication.model.CommonModel;
 import com.example.android.graphapplication.model.UserModel;
 import com.example.android.graphapplication.validations.Validation;
 import com.satsuware.usefulviews.LabelledSpinner;
+
+import java.text.DecimalFormat;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
@@ -83,7 +88,7 @@ public class EventActivity extends AppCompatActivity implements
         mEventNameInputLayout = findViewById(R.id.event_name_input_layout);
         mEventTypeSpinner = findViewById(R.id.event_type_spinner);
         mAgeSpinner = findViewById(R.id.age_spinner);
-        mEventDescriptionInputLayout = findViewById(R.id.description_input_layout);
+        mEventDescriptionInputLayout = findViewById(R.id.event_description_input_layout);
         mEventStatusSegmentedButton = findViewById(R.id.event_status_segmented_button);
         mNoIncomeSwitch = findViewById(R.id.no_income_switch);
         mToolbarTitle = findViewById(R.id.toolbar_title);
@@ -128,7 +133,6 @@ public class EventActivity extends AppCompatActivity implements
         outState.putString(KEY_EVENT_NAME, mEventNameInputLayout.getEditText().getText().toString());
         outState.putInt(KEY_EVENT_TYPE, mEventTypeSpinner.getSpinner().getSelectedItemPosition());
         outState.putInt(KEY_EVENT_AGE, mAgeSpinner.getSpinner().getSelectedItemPosition());
-        ;
         outState.putString(KEY_EVENT_DESCRIPTION, mEventDescriptionInputLayout.getEditText().getText().toString());
 
         if (mEventStatusSegmentedButton.getPosition() == 0) {
@@ -152,7 +156,6 @@ public class EventActivity extends AppCompatActivity implements
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this mToolbar
         ActionBar actionBar = getSupportActionBar();
-        mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ADD_EVENT);
 
         // Enable the top left button
         if (actionBar != null) {
@@ -194,8 +197,16 @@ public class EventActivity extends AppCompatActivity implements
                     validation.onFocusChangeListenerForNameValidation(mEventNameInputLayout));
         }
 
+        if (mEventDescriptionInputLayout.getEditText() != null) {
+            mEventDescriptionInputLayout.getEditText().setOnFocusChangeListener(
+                    validation.onFocusChangeListenerForDescriptionValidation(mEventDescriptionInputLayout));
+        }
+
         if (KeyConstants.INTENT_KEY_VALUE_EDIT.equalsIgnoreCase(eventAction) && currentEventID != -1) {
+            mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EDIT_EVENT);
             displayData();
+        } else {
+            mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_ADD_EVENT);
         }
 
         Log.d(TAG, "initData: out");
@@ -214,11 +225,13 @@ public class EventActivity extends AppCompatActivity implements
         String ageOccurred = String.valueOf(eventModel.getAge());
         String description = eventModel.getDescription();
         String eventStatus = eventModel.getStatus();
-        String amount = String.valueOf(eventModel.getAmount());
         String duration = String.valueOf(eventModel.getDuration());
         int noIncomeStatus = eventModel.getNoIncomeStatus();
+        Log.d(TAG, "displayData: Event Name: " + eventName);
 
-        Log.d(TAG, "displayData: " + eventName);
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
+        String amount = df.format(eventModel.getAmount());
 
         if (mEventNameInputLayout.getEditText() != null) {
             mEventNameInputLayout.getEditText().setText(eventName);
@@ -285,7 +298,8 @@ public class EventActivity extends AppCompatActivity implements
 
             mAmountInputLayout.setHint(getResources().getString(R.string.amount));
             mAmountInputLayout.setId(R.id.amount_input_layout);
-            mAmountEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mAmountEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mAmountEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mAmountEditText.getParent() == null) {
                 mAmountInputLayout.addView(mAmountEditText);
             }
@@ -321,6 +335,7 @@ public class EventActivity extends AppCompatActivity implements
             mDurationInputLayout.setHint(getResources().getString(R.string.duration_in_year));
             mDurationInputLayout.setId(R.id.duration_input_layout);
             mDurationEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mDurationEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mDurationEditText.getParent() == null) {
                 mDurationInputLayout.addView(mDurationEditText);
             }
@@ -328,7 +343,8 @@ public class EventActivity extends AppCompatActivity implements
 
             mCostInputLayout.setHint(getResources().getString(R.string.cost_per_year));
             mCostInputLayout.setId(R.id.cost_per_year_input_layout);
-            mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            mCostEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mCostEditText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             if (mCostEditText.getParent() == null) {
                 mCostInputLayout.addView(mCostEditText);
             }
@@ -454,6 +470,10 @@ public class EventActivity extends AppCompatActivity implements
                     isErrorEnabled = true;
                 }
 
+                if (mEventDescriptionInputLayout.isErrorEnabled()) {
+                    isErrorEnabled = true;
+                }
+
                 if (mAmountInputLayout.isAttachedToWindow()) {
                     if (mAmountInputLayout.isErrorEnabled()) {
                         isErrorEnabled = true;
@@ -519,8 +539,14 @@ public class EventActivity extends AppCompatActivity implements
                     startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(
                             KeyConstants.INTENT_KEY_FRAGMENT_POSITION, 1));
                 } else {
-                    Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(mLayout, ErrorMsgConstants.ERR_MSG_ENTER_VALID_INPUT,
+                            Snackbar.LENGTH_LONG);
+
+                    TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    snackbar.show();
                 }
                 break;
             case android.R.id.home:
