@@ -29,6 +29,8 @@ public class OTPVerificationActivity extends AppCompatActivity {
     private String verificationId;
     private FirebaseAuth mAuth;
     private TextInputLayout mOTPInputLayout;
+    public static final String KEY_OTP = "KEY_OTP";
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
@@ -77,6 +79,10 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 verifyCode(code);
             }
         });
+
+        if (savedInstanceState != null) {
+            mOTPInputLayout.getEditText().setText(savedInstanceState.getString(KEY_OTP));
+        }
     }
 
     @Override
@@ -91,6 +97,12 @@ public class OTPVerificationActivity extends AppCompatActivity {
         } else {
             sendVerificationCode(phoneNumber);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_OTP, mOTPInputLayout.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     /**

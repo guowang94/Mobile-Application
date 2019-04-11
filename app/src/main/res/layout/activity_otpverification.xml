@@ -23,6 +23,8 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="number"
             android:hint="@string/enter_otp" />
     </android.support.design.widget.TextInputLayout>
 
