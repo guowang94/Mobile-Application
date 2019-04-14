@@ -25,6 +25,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
     private final String phoneNumber = "+6596929180"; //danny
 //    private final String phoneNumber = "+6596879596"; //eric (danny's bro)
 //    private final String phoneNumber = "+6596812904";
+//    private final String phoneNumber = "+6596812903"; //for emulator
 
     private String verificationId;
     private FirebaseAuth mAuth;
