@@ -14,6 +14,7 @@
     <color name="lightGray">#e7e7e7</color>
     <color name="lineGraph">#E5174d72</color>
     <color name="segmentedButton">#193628</color>
+    <color name="gray">#20161616</color>
 
     <color name="graphGreen">#B3DE68</color>
     <color name="graphYellow">#FFBB49</color>

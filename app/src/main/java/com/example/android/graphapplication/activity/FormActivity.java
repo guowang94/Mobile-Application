@@ -94,7 +94,7 @@ public class FormActivity extends AppCompatActivity {
 //        mAgeInput.getEditText().setText("40");
 //        mRetirementAgeInput.getEditText().setText("60");
 //        mExpectancyInput.getEditText().setText("80");
-//        mIncomeInput.getEditText().setText("1000");
+//        mIncomeInput.getEditText().setText("2000");
 //        mIncrementInput.getEditText().setText("10");
 //        mExpensesInput.getEditText().setText("1230");
 //        mInflationInput.getEditText().setText("2");
