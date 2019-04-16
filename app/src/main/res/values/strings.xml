@@ -56,9 +56,9 @@
     <string name="amount">Amount</string>
     <string name="duration_in_year">Duration (in Year)</string>
     <string name="cost_per_year">Cost Per Year</string>
-    <string name="event_empty_recycler">Tap on \'+\' to add new Event</string>
-    <string name="milestone_empty_recycler">Tap on \'+\' to add new Milestone</string>
-    <string name="plan_empty_recycler">Tap on \'+\' to add new Plan</string>
+    <string name="event_empty_recycler">Tap on \'+\' to add Event</string>
+    <string name="milestone_empty_recycler">Tap on \'+\' to add Milestone</string>
+    <string name="plan_empty_recycler">Tap on \'+\' to add Plan</string>
     <string name="graph_empty_recycler">Apply Scenario for data to be shown</string>
     <string name="no_income_event">No Income during this period</string>
 

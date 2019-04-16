@@ -20,7 +20,7 @@
 
         <include
             android:id="@+id/create_event_toolbar"
-            layout="@layout/toolbar_layout_blue" />
+            layout="@layout/toolbar_layout" />
 
         <View
             android:id="@+id/divider4"
@@ -129,10 +129,10 @@
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/formColor"
+            app:sbg_borderColor="@color/segmentedButton"
             app:sbg_borderSize="1dp"
             app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/formColor">
+            app:sbg_selectorColor="@color/segmentedButton">
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
@@ -140,9 +140,9 @@
                 android:layout_weight="1"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                app:sb_rippleColor="@color/colorPrimary"
+                app:sb_rippleColor="@color/segmentedButton"
                 app:sb_text="@string/singaporean"
-                app:sb_textColor="@color/formColor"
+                app:sb_textColor="@color/segmentedButton"
                 app:sb_textColor_onSelection="@color/white" />
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -151,9 +151,9 @@
                 android:layout_weight="1"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                app:sb_rippleColor="@color/colorPrimary"
+                app:sb_rippleColor="@color/segmentedButton"
                 app:sb_text="@string/foreigner_or_pr"
-                app:sb_textColor="@color/formColor"
+                app:sb_textColor="@color/segmentedButton"
                 app:sb_textColor_onSelection="@color/white" />
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
@@ -170,10 +170,10 @@
             app:sbg_animateSelector="linearOutSlowIn"
             app:sbg_animateSelectorDuration="1000"
             app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/formColor"
+            app:sbg_borderColor="@color/segmentedButton"
             app:sbg_borderSize="1dp"
             app:sbg_radius="2dp"
-            app:sbg_selectorColor="@color/formColor">
+            app:sbg_selectorColor="@color/segmentedButton">
 
             <co.ceryle.segmentedbutton.SegmentedButton
                 android:layout_width="0dp"
@@ -181,9 +181,9 @@
                 android:layout_weight="1"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                app:sb_rippleColor="@color/colorPrimary"
+                app:sb_rippleColor="@color/segmentedButton"
                 app:sb_text="@string/employed"
-                app:sb_textColor="@color/formColor"
+                app:sb_textColor="@color/segmentedButton"
                 app:sb_textColor_onSelection="@color/white" />
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -192,9 +192,9 @@
                 android:layout_weight="1"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                app:sb_rippleColor="@color/colorPrimary"
+                app:sb_rippleColor="@color/segmentedButton"
                 app:sb_text="@string/self_employed"
-                app:sb_textColor="@color/formColor"
+                app:sb_textColor="@color/segmentedButton"
                 app:sb_textColor_onSelection="@color/white" />
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>

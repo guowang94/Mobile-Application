@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">#2196F3</item>
+        <item name="colorControlNormal">@color/formColor</item>
         <item name="android:navigationBarColor">@color/colorAccent</item>
     </style>
 
@@ -62,7 +62,7 @@
     <style name="summary_screen_white_text">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="summary_screen_horizontal_divider">

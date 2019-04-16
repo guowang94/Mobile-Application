@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#049EE9</color>
-    <color name="colorPrimaryDark">#0060ac</color>
-    <color name="colorAccent">#137ece</color>
+    <color name="colorPrimary">#7BE4A6</color>
+    <color name="colorPrimaryDark">#193628</color>
+    <color name="colorAccent">#33D87A</color>
     <color name="incomeGraph">#55A8FE</color>
     <color name="expensesGraph">#7F55A8FE</color>
-    <color name="actionBar">#2093ef</color>
+    <color name="actionBar">#7BE4A6</color>
     <color name="summary_action_bar">#00FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="formColor">#049EE9</color>
+    <color name="formColor">#193628</color>
     <color name="navTextColor">#A6A6A6</color>
     <color name="lightGray">#e7e7e7</color>
     <color name="lineGraph">#E5174d72</color>
+    <color name="segmentedButton">#193628</color>
+
+    <color name="graphGreen">#B3DE68</color>
+    <color name="graphYellow">#FFBB49</color>
+    <color name="graphRed">#FB8072</color>
+    <color name="graphBlue">#81B1D3</color>
 
     <color name="listRowBlack">#6D6D72</color>
     <color name="listRowValue">#4A90E2</color>

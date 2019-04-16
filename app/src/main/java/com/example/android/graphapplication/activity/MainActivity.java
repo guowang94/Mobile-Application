@@ -46,6 +46,31 @@ public class MainActivity extends AppCompatActivity {
 
         mTabLayout = findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
+//        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+//                if (tab.getIcon() != null) {
+//                    tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.MULTIPLY);
+//                }
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//                int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
+//                if (tab.getIcon() != null) {
+//                    tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+//                }
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//                int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+//                if (tab.getIcon() != null) {
+//                    tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.MULTIPLY);
+//                }
+//            }
+//        });
         setupTabIcons();
 
         Log.d(TAG, "onCreate: out");

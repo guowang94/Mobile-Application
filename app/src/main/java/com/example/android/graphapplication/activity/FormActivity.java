@@ -92,7 +92,7 @@ public class FormActivity extends AppCompatActivity {
         //todo static text to be commented
 //        mNameInput.getEditText().setText("wang");
 //        mAgeInput.getEditText().setText("40");
-//        mRetirementAgeInput.getEditText().setText("30");
+//        mRetirementAgeInput.getEditText().setText("60");
 //        mExpectancyInput.getEditText().setText("80");
 //        mIncomeInput.getEditText().setText("1000");
 //        mIncrementInput.getEditText().setText("10");
