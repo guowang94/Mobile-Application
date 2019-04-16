@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/summary_toolbar"
-        layout="@layout/toolbar_layout_blue" />
+        layout="@layout/toolbar_layout" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycerView"

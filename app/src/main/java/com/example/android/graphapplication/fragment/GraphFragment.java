@@ -623,9 +623,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         //----------- Bar Graph ------------
         BarDataSet barDataSet = new BarDataSet(barEntries, null);
         if (mToggleGraph.isChecked()) {
-            barDataSet.setColors(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.expensesGraph));
+            barDataSet.setColors(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.graphBlue));
         } else {
-            barDataSet.setColors(Color.GREEN, Color.YELLOW, Color.RED);
+            barDataSet.setColors(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.graphGreen),
+                    ContextCompat.getColor(getActivity().getApplicationContext(), R.color.graphYellow),
+                    ContextCompat.getColor(getActivity().getApplicationContext(), R.color.graphRed));
         }
 //        barDataSet.setStackLabels(new String[]{"Negative Value", ScreenConstants.GRAPH_LEGEND_EXPENSES,
 //                ScreenConstants.GRAPH_LEGEND_INCOME, "Positive Value"});
