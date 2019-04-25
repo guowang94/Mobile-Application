@@ -16,7 +16,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:textAllCaps="true"
         tools:text="@string/template_text" />
 
 </android.support.v7.widget.Toolbar>
