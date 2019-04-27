@@ -121,6 +121,7 @@ public class EventsFragment extends Fragment {
         if (getActivity() != null)
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_EVENTS);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final Context context = getActivity().getApplicationContext();
 

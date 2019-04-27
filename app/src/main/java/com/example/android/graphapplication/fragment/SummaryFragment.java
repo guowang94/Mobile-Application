@@ -111,6 +111,7 @@ public class SummaryFragment extends Fragment {
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         }
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_SUMMARY);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Context context = getActivity().getApplicationContext();
 

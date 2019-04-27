@@ -182,6 +182,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         }
         // Get a support ActionBar corresponding to this mToolbar
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_GRAPH);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mChart.setOnChartValueSelectedListener(this);
 
@@ -776,8 +777,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu: in");
         //TODO need to uncomment graph_fragment_menu code and comment graph_fragment_menu_test code
-//        inflater.inflate(R.menu.graph_fragment_menu, menu);
-        inflater.inflate(R.menu.graph_fragment_menu_test, menu);
+        inflater.inflate(R.menu.graph_fragment_menu, menu);
+//        inflater.inflate(R.menu.graph_fragment_menu_test, menu);
         super.onCreateOptionsMenu(menu, inflater);
         Log.d(TAG, "onCreateOptionsMenu: out");
     }
