@@ -1,5 +1,6 @@
 package com.example.android.graphapplication.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -222,22 +224,43 @@ public class FormActivity extends AppCompatActivity {
 
                     DBHelper mydb = new DBHelper(getApplicationContext());
 
-                    mydb.deleteAllRecords();
-                    mydb.insertUser(mNameInput.getEditText().getText().toString(),
-                            Integer.valueOf(mAgeInput.getEditText().getText().toString()),
-                            Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()),
-                            Integer.valueOf(mExpectancyInput.getEditText().getText().toString()),
-                            employmentStatus, citizenship,
-                            Float.valueOf(mIncomeInput.getEditText().getText().toString()),
-                            Float.valueOf(mExpensesInput.getEditText().getText().toString()),
-                            Float.valueOf(mAssets.getEditText().getText().toString()),
-                            Integer.valueOf(mIncrementInput.getEditText().getText().toString()),
-                            Integer.valueOf(mInflationInput.getEditText().getText().toString()));
+                    try {
+                        mydb.deleteAllRecords();
+                        mydb.insertUser(mNameInput.getEditText().getText().toString(),
+                                Integer.valueOf(mAgeInput.getEditText().getText().toString()),
+                                Integer.valueOf(mRetirementAgeInput.getEditText().getText().toString()),
+                                Integer.valueOf(mExpectancyInput.getEditText().getText().toString()),
+                                employmentStatus, citizenship,
+                                Float.valueOf(mIncomeInput.getEditText().getText().toString()),
+                                Float.valueOf(mExpensesInput.getEditText().getText().toString()),
+                                Float.valueOf(mAssets.getEditText().getText().toString()),
+                                Integer.valueOf(mIncrementInput.getEditText().getText().toString()),
+                                Integer.valueOf(mInflationInput.getEditText().getText().toString()));
 
-                    Log.d(TAG, "onClick: " + mydb.numberOfRows(SQLConstants.USER_TABLE));
-                    mydb.close();
+                        Log.d(TAG, "onClick: " + mydb.numberOfRows(SQLConstants.USER_TABLE));
+                        mydb.close();
 
-                    startActivity(new Intent(FormActivity.this, MainActivity.class));
+                        startActivity(new Intent(FormActivity.this, MainActivity.class));
+                    } catch (Exception e) {
+                        //show a dialog explaining permission and then request permission
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(FormActivity.this);
+
+                        // Setting Dialog Title
+                        alertDialog.setTitle("Error");
+
+                        // Setting Dialog Message
+                        alertDialog.setMessage(e.getMessage());
+
+                        // Setting Positive "Yes" Button
+                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Do nothing
+                            }
+                        });
+
+                        // Showing Alert Message
+                        alertDialog.show();
+                    }
                 }
             }
         });
