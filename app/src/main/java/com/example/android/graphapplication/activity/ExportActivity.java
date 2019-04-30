@@ -336,7 +336,7 @@ public class ExportActivity extends AppCompatActivity {
         List<CommonModel> milestoneList = mydb.getAllSelectedMilestone();
         List<PlanModel> existingPlanList = mydb.getAllExistingPlan();
         List<PlanModel> nonExistingPlanList = mydb.getAllNonExistingPlan();
-        mydb.close();
+//        mydb.close();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         String currentDate = "Generated on\n" + simpleDateFormat.format(new Date());

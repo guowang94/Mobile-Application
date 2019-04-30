@@ -238,7 +238,7 @@ public class FormActivity extends AppCompatActivity {
                                 Integer.valueOf(mInflationInput.getEditText().getText().toString()));
 
                         Log.d(TAG, "onClick: " + mydb.numberOfRows(SQLConstants.USER_TABLE));
-                        mydb.close();
+//                        mydb.close();
 
                         startActivity(new Intent(FormActivity.this, MainActivity.class));
                     } catch (Exception e) {
