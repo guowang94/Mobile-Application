@@ -33,7 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
         db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
         db.execSQL(SQLConstants.CREATE_PLAN_TABLE);
-        db.close();
+//        db.close();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL(SQLConstants.DROP_EVENT_TABLE);
                 db.execSQL(SQLConstants.CREATE_USER_TABLE);
                 db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
-                db.close();
+//                db.close();
                 break;
             default:
                 Log.d(TAG, "onUpgrade: Unknown database version: " + DATABASE_VERSION);
@@ -85,7 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(SQLConstants.USER_TABLE_INCREMENT, increment);
         contentValues.put(SQLConstants.USER_TABLE_INFLATION, inflation);
         db.insert(SQLConstants.USER_TABLE, null, contentValues);
-        db.close();
+//        db.close();
     }
 
     /**
@@ -116,7 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.update(SQLConstants.USER_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ", new String[]{"1"});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -157,7 +157,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         Log.d(TAG, "getAllUser: " + userModelList.toString());
         return userModelList;
     }
@@ -189,7 +189,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         contentValues.put(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS, noIncomeStatus);
         db.insert(SQLConstants.EVENT_TABLE, null, contentValues);
-        db.close();
+//        db.close();
     }
 
     /**
@@ -223,7 +223,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.EVENT_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(eventID)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -239,7 +239,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.EVENT_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(eventID)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -250,7 +250,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteEvent(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SQLConstants.EVENT_TABLE, "id = ? ", new String[]{String.valueOf(id)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -280,7 +280,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return eventsList;
     }
 
@@ -309,7 +309,7 @@ public class DBHelper extends SQLiteOpenHelper {
         eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
 
         res.close();
-        db.close();
+//        db.close();
         return eventModel;
     }
 
@@ -340,7 +340,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return eventModelsList;
     }
 
@@ -371,7 +371,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return eventModelsList;
     }
 
@@ -400,7 +400,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put(SQLConstants.MILESTONE_TABLE_DURATION, duration);
         }
         db.insert(SQLConstants.MILESTONE_TABLE, null, contentValues);
-        db.close();
+//        db.close();
     }
 
     /**
@@ -432,7 +432,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.MILESTONE_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(milestoneID)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -448,7 +448,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.MILESTONE_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(milestoneID)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -459,7 +459,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteMilestone(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SQLConstants.MILESTONE_TABLE, "id = ? ", new String[]{String.valueOf(id)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -488,7 +488,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return milestoneModelsList;
     }
 
@@ -516,7 +516,7 @@ public class DBHelper extends SQLiteOpenHelper {
         milestoneModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
 
         res.close();
-        db.close();
+//        db.close();
         return milestoneModel;
     }
 
@@ -547,7 +547,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return milestoneModelsList;
     }
 
@@ -584,7 +584,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put(SQLConstants.PLAN_TABLE_PLAN_DURATION, planDuration);
         }
         db.insert(SQLConstants.PLAN_TABLE, null, contentValues);
-        db.close();
+//        db.close();
     }
 
     /**
@@ -623,7 +623,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.PLAN_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(planID)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -639,7 +639,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.PLAN_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(planID)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -650,7 +650,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deletePlan(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SQLConstants.PLAN_TABLE, "id = ? ", new String[]{String.valueOf(id)});
-        db.close();
+//        db.close();
     }
 
     /**
@@ -684,7 +684,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return planModelsList;
     }
 
@@ -718,7 +718,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return planModelsList;
     }
 
@@ -752,7 +752,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return planModelsList;
     }
 
@@ -786,7 +786,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
-        db.close();
+//        db.close();
         return planModelsList;
     }
 
@@ -817,7 +817,7 @@ public class DBHelper extends SQLiteOpenHelper {
         planModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
 
         res.close();
-        db.close();
+//        db.close();
         return planModel;
     }
 
@@ -829,7 +829,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int numberOfRows(String tableName) {
         SQLiteDatabase db = this.getReadableDatabase();
         int numberOfRows = (int) DatabaseUtils.queryNumEntries(db, tableName);
-        db.close();
+//        db.close();
         return numberOfRows;
     }
 
@@ -843,6 +843,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQLConstants.DELETE_EVENT_TABLE);
         db.execSQL(SQLConstants.DELETE_MILESTONE_TABLE);
         db.execSQL(SQLConstants.DELETE_PLAN_TABLE);
-        db.close();
+//        db.close();
     }
 }
