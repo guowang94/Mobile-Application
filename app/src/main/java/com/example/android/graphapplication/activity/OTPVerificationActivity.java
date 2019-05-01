@@ -69,7 +69,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String code = mOTPInputLayout.getEditText().getText().toString();
 
-                if (code.isEmpty() || code.length() < 6) {
+                if (code.equals("") || code.length() < 6) {
                     mOTPInputLayout.setError("Enter OTP code!");
                     mOTPInputLayout.requestFocus();
                     return;
@@ -78,6 +78,13 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 }
 
                 verifyCode(code);
+            }
+        });
+
+        findViewById(R.id.resend_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendVerificationCode(phoneNumber);
             }
         });
 
