@@ -86,6 +86,7 @@ public class FormActivity extends AppCompatActivity {
             mExpectancyInput.getEditText().setText(savedInstanceState.getString(KEY_EXPECTANCY));
             mIncomeInput.getEditText().setText(savedInstanceState.getString(KEY_INCOME));
             mIncrementInput.getEditText().setText(savedInstanceState.getString(KEY_INCREMENT));
+            mIncrementInput.getEditText().setText(savedInstanceState.getString(KEY_INCREMENT));
             mExpensesInput.getEditText().setText(savedInstanceState.getString(KEY_EXPENSES));
             mInflationInput.getEditText().setText(savedInstanceState.getString(KEY_INFLATION));
             mAssets.getEditText().setText(savedInstanceState.getString(KEY_ASSETS));
@@ -238,7 +239,6 @@ public class FormActivity extends AppCompatActivity {
                                 Integer.valueOf(mInflationInput.getEditText().getText().toString()));
 
                         Log.d(TAG, "onClick: " + mydb.numberOfRows(SQLConstants.USER_TABLE));
-//                        mydb.close();
 
                         startActivity(new Intent(FormActivity.this, MainActivity.class));
                     } catch (Exception e) {

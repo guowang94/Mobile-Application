@@ -27,4 +27,5 @@ public interface ErrorMsgConstants {
     String ERR_MSG_DURATION_CANNOT_BE_LESS_THAN_1 = "Duration cannot be less than 1";
     String ERR_MSG_PASSWORD_CANNOT_BE_BLANK = "Password cannot be blank";
     String ERR_MSG_NO_SCENARIO_TO_BE_APPLIED = "There is no scenario to be applied";
+    String ERR_MSG_WRONG_PASSWORD = "Wrong Password, Please try again.";
 }

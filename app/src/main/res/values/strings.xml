@@ -113,4 +113,9 @@
     <string name="sign_out">Sign Out</string>
     <string name="resend_otp">Resend OTP</string>
 
+    <!--Login Activity-->
+    <string name="welcome">Welcome to Smart Advisor. Please enter Password</string>
+    <string name="login">Login</string>
+    <string name="enter_password">Enter Password</string>
+
 </resources>

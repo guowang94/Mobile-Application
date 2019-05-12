@@ -25,7 +25,10 @@
 
         <activity
             android:name=".activity.OTPVerificationActivity"
-            android:theme="@style/AppTheme.Launcher">
+            android:theme="@style/AppTheme.Launcher" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -35,46 +38,31 @@
         </activity>
         <activity
             android:name=".activity.FormActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.MainActivity"
             android:parentActivityName=".activity.FormActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.EventActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.MilestoneActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.PlanActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.ScenarioActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme">
-
-            <!-- <intent-filter> -->
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.ExportActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

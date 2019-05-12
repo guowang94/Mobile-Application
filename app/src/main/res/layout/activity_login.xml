@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.LoginActivity">
+
+    <include
+        android:id="@+id/login_toolbar"
+        layout="@layout/toolbar_layout" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_text_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:textColorHint="@color/formColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_toolbar"
+        app:layout_constraintVertical_bias="0.55">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_password"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/welcome"
+        app:layout_constraintBottom_toTopOf="@+id/login_text_input_layout"
+        app:layout_constraintEnd_toEndOf="@+id/login_text_input_layout"
+        app:layout_constraintStart_toStartOf="@+id/login_text_input_layout" />
+
+    <Button
+        android:id="@+id/login_button"
+        style="@style/form_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/compute_button"
+        android:text="@string/login"
+        app:layout_constraintEnd_toEndOf="@+id/login_text_input_layout"
+        app:layout_constraintStart_toStartOf="@+id/login_text_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/login_text_input_layout" />
+
+</android.support.constraint.ConstraintLayout>
