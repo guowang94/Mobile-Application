@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +16,8 @@ import com.example.android.graphapplication.db.DBHelper;
 import com.example.android.graphapplication.validations.Validation;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";
 
     public static final String applicationPassword = "20Sm@rtAdvisor19";
     public static final String KEY_PASSWORD = "password";
@@ -39,6 +42,9 @@ public class LoginActivity extends AppCompatActivity {
 
         initData();
 
+        //todo static value to be commented
+//        mLoginTextInputLayout.getEditText().setText(applicationPassword);
+
     }
 
     @Override
@@ -48,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        Log.d(TAG, "initData: in");
         setSupportActionBar(mToolbar);
         // Get a support ActionBar corresponding to this toolbar
         mToolbarTitle.setText(getResources().getString(R.string.app_name));
@@ -82,5 +89,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        Log.d(TAG, "initData: out");
     }
 }

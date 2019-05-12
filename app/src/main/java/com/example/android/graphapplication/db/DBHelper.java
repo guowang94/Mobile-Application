@@ -21,7 +21,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DBHelper";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public DBHelper(Context context) {
         super(context, SQLConstants.DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,15 +29,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d(TAG, "onCreate: in");
         db.execSQL(SQLConstants.CREATE_USER_TABLE);
         db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
         db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
         db.execSQL(SQLConstants.CREATE_PLAN_TABLE);
-
+        db.execSQL(SQLConstants.CREATE_OTL_TABLE);
+        Log.d(TAG, "onCreate: out");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(TAG, "onUpgrade: in. Current Version: " + newVersion + ", Old Version: " + oldVersion);
         switch (oldVersion) {
             case 1:
                 db.execSQL(SQLConstants.DROP_USER_TABLE);
@@ -46,11 +49,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
                 break;
             case 2:
+            case 3:
                 db.execSQL(SQLConstants.CREATE_OTL_TABLE);
                 break;
             default:
                 Log.d(TAG, "onUpgrade: Unknown database version: " + DATABASE_VERSION);
         }
+        Log.d(TAG, "onUpgrade: out");
     }
 
     /**

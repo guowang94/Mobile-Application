@@ -92,7 +92,7 @@ public class FormActivity extends AppCompatActivity {
             mAssets.getEditText().setText(savedInstanceState.getString(KEY_ASSETS));
         }
 
-        //todo static text to be commented
+        //todo static value to be commented
 //        mNameInput.getEditText().setText("wang");
 //        mAgeInput.getEditText().setText("40");
 //        mRetirementAgeInput.getEditText().setText("60");
