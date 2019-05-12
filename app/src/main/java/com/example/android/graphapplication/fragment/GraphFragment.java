@@ -182,6 +182,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         }
         // Get a support ActionBar corresponding to this mToolbar
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_GRAPH);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mChart.setOnChartValueSelectedListener(this);
 
@@ -424,6 +425,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         int increment = userModel.getIncrement();
         int inflation = userModel.getInflation();
         List<Float> selectedScenarioValuesList = getCombineSelectedList(expectancy);
+        List<Float> selectedPayoutValueList = getPayoutSelectedList(expectancy);
         List<Integer> noIncomeAgeList = getNoIncomeEventSelectedList(expectancy);
 
         for (int currentAge = age; currentAge <= expectancy; currentAge++) {
@@ -473,12 +475,17 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 //Green - expenses (baseline) yellow - addiitonal red - uncovered
 
                 float editedValue = selectedScenarioValuesList.get(currentAge);
+                float payoutValue = selectedPayoutValueList.get(currentAge);
 
                 //For graph value only
                 float totalExpenses = annualExpenses + Math.abs(editedValue);
                 float expensesValue = 0f;
                 float coveredValue = 0f;
                 float uncoveredValue = 0f;
+
+                // Adding payout to assets first because the payout is given to the client so it
+                // is not calculated as part of the income
+                assets += payoutValue;
 
                 if (totalExpenses <= annualIncomeAfterDeductCPF) {
                     expensesValue = totalExpenses;
@@ -505,6 +512,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 Log.d(TAG, "getGraphData: Uncovered: " + uncoveredValue);
                 Log.d(TAG, "getGraphData: ============================");
 
+                // Adding these value after getting various expenses value because expenses need to
+                // minus from income
                 assets += annualIncomeAfterDeductCPF - annualExpenses;
                 assets += editedValue;
 
@@ -543,12 +552,15 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             } else {
                 annualExpenses = annualExpenses * (100 + inflation) / 100;
                 float editedValue = selectedScenarioValuesList.get(currentAge);
+                float payoutValue = selectedPayoutValueList.get(currentAge);
 
                 //For graph value only
                 float totalExpenses = annualExpenses + Math.abs(editedValue);
                 float expensesValue = 0f;
                 float coveredValue = 0f;
                 float uncoveredValue = 0f;
+
+                assets += payoutValue;
 
                 if (totalExpenses <= assets) {
                     coveredValue = totalExpenses;
@@ -776,8 +788,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu: in");
         //TODO need to uncomment graph_fragment_menu code and comment graph_fragment_menu_test code
-//        inflater.inflate(R.menu.graph_fragment_menu, menu);
-        inflater.inflate(R.menu.graph_fragment_menu_test, menu);
+        inflater.inflate(R.menu.graph_fragment_menu, menu);
+//        inflater.inflate(R.menu.graph_fragment_menu_test, menu);
         super.onCreateOptionsMenu(menu, inflater);
         Log.d(TAG, "onCreateOptionsMenu: out");
     }
@@ -886,15 +898,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             planHashmap.put(KeyConstants.KEY_PLAN_RECURRING,
                     String.valueOf(0 - plansList.get(i).getPaymentAmount()));
 
-            planHashmap.put(KeyConstants.KEY_PAYOUT_START_AGE,
-                    String.valueOf(plansList.get(i).getPayoutAge()));
-
-            planHashmap.put(KeyConstants.KEY_PAYOUT_TILL_AGE, String.valueOf(
-                    plansList.get(i).getPayoutAge() + plansList.get(i).getPayoutDuration() - 1));
-
-            planHashmap.put(KeyConstants.KEY_PAYOUT_RECURRING, String.valueOf(
-                    plansList.get(i).getPayoutAmount() / plansList.get(i).getPayoutDuration()));
-
             hashMapList.add(planHashmap);
         }
 
@@ -925,13 +928,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                         currentAge <= Integer.valueOf(hashMap.get(KeyConstants.KEY_PLAN_TILL_AGE))) {
                     totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_PLAN_RECURRING));
                 }
-
-                if (hashMap.get(KeyConstants.KEY_PAYOUT_TILL_AGE) != null &&
-                        hashMap.get(KeyConstants.KEY_PAYOUT_START_AGE) != null &&
-                        currentAge >= Integer.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_START_AGE)) &&
-                        currentAge <= Integer.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_TILL_AGE))) {
-                    totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_RECURRING));
-                }
             }
             if (totalValue != 0f) {
                 Log.d(TAG, "getCombineSelectedList: total: " + totalValue + ", current age: " + currentAge);
@@ -941,6 +937,56 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         }
 
         return combineSelectedList;
+    }
+
+    /**
+     * This method to get the combined data of Plan's Payout selected scenario
+     *
+     * @param expectancy Expected to live age
+     * @return list of selected payout
+     */
+    public List<Float> getPayoutSelectedList(int expectancy) {
+        List<Float> payoutSelectedList = new ArrayList<>();
+        List<HashMap<String, String>> hashMapList = new ArrayList<>();
+
+        //add event till age value and recurring/amount value in hash map
+        for (int i = 0; i < plansList.size(); i++) {
+            HashMap<String, String> planHashmap = new HashMap<>();
+
+            planHashmap.put(KeyConstants.KEY_PAYOUT_START_AGE,
+                    String.valueOf(plansList.get(i).getPayoutAge()));
+
+            planHashmap.put(KeyConstants.KEY_PAYOUT_TILL_AGE, String.valueOf(
+                    plansList.get(i).getPayoutAge() + plansList.get(i).getPayoutDuration() - 1));
+
+            planHashmap.put(KeyConstants.KEY_PAYOUT_RECURRING, String.valueOf(
+                    plansList.get(i).getPayoutAmount() / plansList.get(i).getPayoutDuration()));
+
+            hashMapList.add(planHashmap);
+        }
+
+        Log.d(TAG, "getPayoutSelectedList: hashmap list: " + hashMapList.size());
+
+        //when add value to total when till age is more then or equal to current age
+        for (int currentAge = 0; currentAge <= expectancy; currentAge++) {
+            float totalValue = 0f;
+
+            for (HashMap<String, String> hashMap : hashMapList) {
+                if (hashMap.get(KeyConstants.KEY_PAYOUT_TILL_AGE) != null &&
+                        hashMap.get(KeyConstants.KEY_PAYOUT_START_AGE) != null &&
+                        currentAge >= Integer.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_START_AGE)) &&
+                        currentAge <= Integer.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_TILL_AGE))) {
+                    totalValue += Float.valueOf(hashMap.get(KeyConstants.KEY_PAYOUT_RECURRING));
+                }
+            }
+            if (totalValue != 0f) {
+                Log.d(TAG, "getPayoutSelectedList: total: " + totalValue + ", current age: " + currentAge);
+            }
+
+            payoutSelectedList.add(totalValue);
+        }
+
+        return payoutSelectedList;
     }
 
     /**
@@ -978,7 +1024,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             hashMapList.add(eventHashmap);
         }
 
-        Log.d(TAG, "getCombineSelectedList: hashmap list: " + hashMapList.size());
+        Log.d(TAG, "getNoIncomeEventSelectedList: hashmap list: " + hashMapList.size());
 
         //when add value to total when till age is more then or equal to current age
         for (int currentAge = 0; currentAge <= expectancy; currentAge++) {
@@ -990,7 +1036,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                     uniqueNoIncomeAgeSet.add(currentAge);
                 }
             }
-//            Log.d(TAG, "getCombineSelectedList: current age: " + currentAge);
 
         }
         noIncomeAgeList = new ArrayList<>(uniqueNoIncomeAgeSet);

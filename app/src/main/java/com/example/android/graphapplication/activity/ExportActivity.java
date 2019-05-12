@@ -336,10 +336,10 @@ public class ExportActivity extends AppCompatActivity {
         List<CommonModel> milestoneList = mydb.getAllSelectedMilestone();
         List<PlanModel> existingPlanList = mydb.getAllExistingPlan();
         List<PlanModel> nonExistingPlanList = mydb.getAllNonExistingPlan();
-        mydb.close();
+//        mydb.close();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        String currentDate = simpleDateFormat.format(new Date());
+        String currentDate = "Generated on\n" + simpleDateFormat.format(new Date());
         String reportTitle = getResources().getString(R.string.export_report_title).concat(" for ") + userModel.getName();
         Float totalMilestoneCost = 0f;
         Float totalExistingCoverage = 0f;

@@ -21,7 +21,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DBHelper";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     public DBHelper(Context context) {
         super(context, SQLConstants.DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,14 +29,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d(TAG, "onCreate: in");
         db.execSQL(SQLConstants.CREATE_USER_TABLE);
         db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
         db.execSQL(SQLConstants.CREATE_MILESTONE_TABLE);
         db.execSQL(SQLConstants.CREATE_PLAN_TABLE);
+        db.execSQL(SQLConstants.CREATE_OTL_TABLE);
+        Log.d(TAG, "onCreate: out");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(TAG, "onUpgrade: in. Current Version: " + newVersion + ", Old Version: " + oldVersion);
         switch (oldVersion) {
             case 1:
                 db.execSQL(SQLConstants.DROP_USER_TABLE);
@@ -44,9 +48,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL(SQLConstants.CREATE_USER_TABLE);
                 db.execSQL(SQLConstants.CREATE_EVENT_TABLE);
                 break;
+            case 2:
+            case 3:
+                db.execSQL(SQLConstants.CREATE_OTL_TABLE);
+                break;
             default:
                 Log.d(TAG, "onUpgrade: Unknown database version: " + DATABASE_VERSION);
         }
+        Log.d(TAG, "onUpgrade: out");
     }
 
     /**
@@ -83,6 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(SQLConstants.USER_TABLE_INCREMENT, increment);
         contentValues.put(SQLConstants.USER_TABLE_INFLATION, inflation);
         db.insert(SQLConstants.USER_TABLE, null, contentValues);
+
     }
 
     /**
@@ -113,6 +123,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.update(SQLConstants.USER_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ", new String[]{"1"});
+
     }
 
     /**
@@ -153,6 +164,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         Log.d(TAG, "getAllUser: " + userModelList.toString());
         return userModelList;
     }
@@ -184,6 +196,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         contentValues.put(SQLConstants.EVENT_TABLE_NO_INCOME_STATUS, noIncomeStatus);
         db.insert(SQLConstants.EVENT_TABLE, null, contentValues);
+
     }
 
     /**
@@ -217,6 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.EVENT_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(eventID)});
+
     }
 
     /**
@@ -232,6 +246,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.EVENT_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(eventID)});
+
     }
 
     /**
@@ -242,6 +257,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteEvent(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SQLConstants.EVENT_TABLE, "id = ? ", new String[]{String.valueOf(id)});
+
     }
 
     /**
@@ -271,6 +287,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return eventsList;
     }
 
@@ -299,6 +316,7 @@ public class DBHelper extends SQLiteOpenHelper {
         eventModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
 
         res.close();
+
         return eventModel;
     }
 
@@ -329,6 +347,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return eventModelsList;
     }
 
@@ -359,6 +378,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return eventModelsList;
     }
 
@@ -387,6 +407,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put(SQLConstants.MILESTONE_TABLE_DURATION, duration);
         }
         db.insert(SQLConstants.MILESTONE_TABLE, null, contentValues);
+
     }
 
     /**
@@ -418,6 +439,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.MILESTONE_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(milestoneID)});
+
     }
 
     /**
@@ -433,6 +455,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.MILESTONE_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(milestoneID)});
+
     }
 
     /**
@@ -443,6 +466,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteMilestone(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SQLConstants.MILESTONE_TABLE, "id = ? ", new String[]{String.valueOf(id)});
+
     }
 
     /**
@@ -471,6 +495,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return milestoneModelsList;
     }
 
@@ -498,6 +523,7 @@ public class DBHelper extends SQLiteOpenHelper {
         milestoneModel.setIsSelected(res.getInt(res.getColumnIndex(SQLConstants.IS_SELECTED)));
 
         res.close();
+
         return milestoneModel;
     }
 
@@ -528,6 +554,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return milestoneModelsList;
     }
 
@@ -564,6 +591,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put(SQLConstants.PLAN_TABLE_PLAN_DURATION, planDuration);
         }
         db.insert(SQLConstants.PLAN_TABLE, null, contentValues);
+
     }
 
     /**
@@ -602,6 +630,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.PLAN_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(planID)});
+
     }
 
     /**
@@ -617,6 +646,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(SQLConstants.PLAN_TABLE, contentValues,
                 SQLConstants.TABLE_ID + " = ? ",
                 new String[]{String.valueOf(planID)});
+
     }
 
     /**
@@ -627,6 +657,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deletePlan(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SQLConstants.PLAN_TABLE, "id = ? ", new String[]{String.valueOf(id)});
+
     }
 
     /**
@@ -660,6 +691,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return planModelsList;
     }
 
@@ -693,6 +725,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return planModelsList;
     }
 
@@ -726,6 +759,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return planModelsList;
     }
 
@@ -759,6 +793,7 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         res.close();
+
         return planModelsList;
     }
 
@@ -793,13 +828,48 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method will insert a record into the table
+     *
+     * @param password
+     */
+    public void insertIntoOTL(String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLConstants.TABLE_ID, 1);
+        contentValues.put(SQLConstants.OTL_TABLE_PASSWORD, password);
+        db.insert(SQLConstants.ONE_TIME_LOGIN_TABLE, null, contentValues);
+
+    }
+
+    /**
+     * This method will check if user has login before this application
+     *
+     * @return
+     */
+    public boolean hasUserLoginBefore() {
+        String password = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQLConstants.SELECT_ALL_FROM_OTL_TABLE, null);
+        res.moveToFirst();
+
+        if (!res.isAfterLast()) {
+            password = res.getString(res.getColumnIndex(SQLConstants.OTL_TABLE_PASSWORD));
+        }
+        res.close();
+
+        return password != null;
+    }
+
+    /**
      * This method to return number of rows in the table
      *
      * @return number of rows
      */
     public int numberOfRows(String tableName) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return (int) DatabaseUtils.queryNumEntries(db, tableName);
+        int numberOfRows = (int) DatabaseUtils.queryNumEntries(db, tableName);
+        return numberOfRows;
     }
 
     /**

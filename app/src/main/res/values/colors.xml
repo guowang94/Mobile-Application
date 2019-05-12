@@ -2,10 +2,10 @@
 <resources>
     <color name="colorPrimary">#7BE4A6</color>
     <color name="colorPrimaryDark">#193628</color>
-    <color name="colorAccent">#33D87A</color>
+    <color name="colorAccent">#00695C</color>
     <color name="incomeGraph">#55A8FE</color>
     <color name="expensesGraph">#7F55A8FE</color>
-    <color name="actionBar">#7BE4A6</color>
+    <color name="actionBar">#193628</color>
     <color name="summary_action_bar">#00FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

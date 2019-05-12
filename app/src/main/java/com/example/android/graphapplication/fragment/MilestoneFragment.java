@@ -122,6 +122,7 @@ public class MilestoneFragment extends Fragment {
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         }
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_MILESTONES);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final Context context = getActivity().getApplicationContext();
 

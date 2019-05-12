@@ -38,5 +38,3 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.2.1'
 
 }
-
-apply plugin: 'com.google.gms.google-services'

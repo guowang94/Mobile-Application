@@ -116,6 +116,7 @@ public class Validation {
                         case R.id.payout_age_input_layout:
                         case R.id.payout_amount_input_layout:
                         case R.id.payout_duration_input_layout:
+                        case R.id.login_text_input_layout:
                             textInputLayout.setError(ErrorMsgConstants.ERR_MSG_FIELD_CANNOT_BE_BLANK);
                             return true;
                         default:
@@ -146,6 +147,7 @@ public class Validation {
                         case R.id.payout_age_input_layout:
                         case R.id.payout_amount_input_layout:
                         case R.id.payout_duration_input_layout:
+                        case R.id.login_text_input_layout:
                             textInputLayout.setErrorEnabled(false);
                             return false;
                         default:

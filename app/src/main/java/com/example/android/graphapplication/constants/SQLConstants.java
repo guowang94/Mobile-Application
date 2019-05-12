@@ -7,6 +7,7 @@ public interface SQLConstants {
     String EVENT_TABLE = "event";
     String MILESTONE_TABLE = "milestone";
     String PLAN_TABLE = "plan";
+    String ONE_TIME_LOGIN_TABLE = "one_time_login";
     String IS_SELECTED = "is_selected";
     String TABLE_ID = "id";
 
@@ -57,6 +58,8 @@ public interface SQLConstants {
     String PLAN_TABLE_PAYOUT_AMOUNT = "payout_amount";
     String PLAN_TABLE_PAYOUT_DURATION = "payout_duration";
     String PLAN_TABLE_PLAN_STATUS = "plan_status";
+
+    String OTL_TABLE_PASSWORD = "password";
 
     //SQL Queries
     String CREATE_USER_TABLE = "CREATE TABLE "
@@ -122,16 +125,22 @@ public interface SQLConstants {
             + PLAN_TABLE_PLAN_STATUS + " TEXT NOT NULL, "
             + IS_SELECTED + " INTEGER DEFAULT 0);";
 
+    String CREATE_OTL_TABLE = "CREATE TABLE "
+            + ONE_TIME_LOGIN_TABLE + " ("
+            + TABLE_ID + " INTEGER PRIMARY KEY, "
+            + OTL_TABLE_PASSWORD + " TEXT NOT NULL)";
+
     //SQL Query
-    String DELETE_USER_TABLE = "DELETE FROM " + USER_TABLE;
-    String DELETE_EVENT_TABLE = "DELETE FROM " + EVENT_TABLE;
-    String DELETE_MILESTONE_TABLE = "DELETE FROM " + MILESTONE_TABLE;
-    String DELETE_PLAN_TABLE = "DELETE FROM " + PLAN_TABLE;
+    String DELETE_USER_TABLE = "DELETE FROM " + USER_TABLE + " WHERE EXISTS (SELECT * FROM " + USER_TABLE + ")";
+    String DELETE_EVENT_TABLE = "DELETE FROM " + EVENT_TABLE + " WHERE EXISTS (SELECT * FROM " + EVENT_TABLE + ")";
+    String DELETE_MILESTONE_TABLE = "DELETE FROM " + MILESTONE_TABLE + " WHERE EXISTS (SELECT * FROM " + MILESTONE_TABLE + ")";
+    String DELETE_PLAN_TABLE = "DELETE FROM " + PLAN_TABLE + " WHERE EXISTS (SELECT * FROM " + PLAN_TABLE + ")";
 
     String SELECT_ALL_FROM_USER_TABLE = "SELECT * FROM " + USER_TABLE;
     String SELECT_ALL_FROM_EVENT_TABLE = "SELECT * FROM " + EVENT_TABLE;
     String SELECT_ALL_FROM_MILESTONE_TABLE = "SELECT * FROM " + MILESTONE_TABLE;
     String SELECT_ALL_FROM_PLAN_TABLE = "SELECT * FROM " + PLAN_TABLE;
+    String SELECT_ALL_FROM_OTL_TABLE = "SELECT * FROM " + ONE_TIME_LOGIN_TABLE;
 
     String SELECT_ALL_IS_SELECTED_FROM_EVENT_TABLE = "SELECT * FROM " + EVENT_TABLE + " WHERE " + IS_SELECTED + " = 1";
     String SELECT_ALL_IS_SELECTED_FROM_MILESTONE_TABLE = "SELECT * FROM " + MILESTONE_TABLE + " WHERE " + IS_SELECTED + " = 1";

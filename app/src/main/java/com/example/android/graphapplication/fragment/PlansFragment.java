@@ -122,6 +122,7 @@ public class PlansFragment extends Fragment {
             ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         }
         mToolbarTitle.setText(ScreenConstants.TOOLBAR_TITLE_PLANS);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final Context context = getActivity().getApplicationContext();
 

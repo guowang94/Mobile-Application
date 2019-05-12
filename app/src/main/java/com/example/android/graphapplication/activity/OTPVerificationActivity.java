@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,12 +23,16 @@ import java.util.concurrent.TimeUnit;
 
 public class OTPVerificationActivity extends AppCompatActivity {
 
+    private static final String TAG = "OTPVerificationActivity";
+
     //    private final String phoneNumber = "+6596929180"; //danny
 //    private final String phoneNumber = "+6596879596"; //eric (danny's bro)
-//    private final String phoneNumber = "+6596812904";
-    private final String phoneNumber = "+6596812903"; //for emulator
+    private final String phoneNumber = "+6596812904";
+//    private final String phoneNumber = "+6592285193";
+//    private final String phoneNumber = "+6596812903"; //for emulator
 
     private String verificationId;
+    private PhoneAuthProvider.ForceResendingToken mForceResendingToken;
     private FirebaseAuth mAuth;
     private TextInputLayout mOTPInputLayout;
     public static final String KEY_OTP = "KEY_OTP";
@@ -36,22 +41,36 @@ public class OTPVerificationActivity extends AppCompatActivity {
 
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            Log.d(TAG, "onCodeSent: in");
             super.onCodeSent(s, forceResendingToken);
             verificationId = s;
+            mForceResendingToken = forceResendingToken;
+            Log.d(TAG, "onCodeSent: out");
         }
 
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            Log.d(TAG, "onVerificationCompleted: in");
             String code = phoneAuthCredential.getSmsCode();
             mOTPInputLayout.getEditText().setText(code);
             if (code != null) {
                 verifyCode(code);
             }
+            Log.d(TAG, "onVerificationCompleted: out, code: " + code);
         }
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
+            Log.d(TAG, "onVerificationFailed: in");
             Toast.makeText(OTPVerificationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "onVerificationFailed: out");
+        }
+
+        @Override
+        public void onCodeAutoRetrievalTimeOut(String s) {
+            Log.d(TAG, "onCodeAutoRetrievalTimeOut: in");
+            super.onCodeAutoRetrievalTimeOut(s);
+            Log.d(TAG, "onCodeAutoRetrievalTimeOut: out");
         }
     };
 
@@ -62,6 +81,9 @@ public class OTPVerificationActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+//        mAuth.getCurrentUser().delete();
+        mAuth.signOut();
+
         mOTPInputLayout = findViewById(R.id.otp_input_layout);
 
         findViewById(R.id.verify_button).setOnClickListener(new View.OnClickListener() {
@@ -69,7 +91,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String code = mOTPInputLayout.getEditText().getText().toString();
 
-                if (code.isEmpty() || code.length() < 6) {
+                if (code.equals("") || code.length() < 6) {
                     mOTPInputLayout.setError("Enter OTP code!");
                     mOTPInputLayout.requestFocus();
                     return;
@@ -78,6 +100,13 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 }
 
                 verifyCode(code);
+            }
+        });
+
+        findViewById(R.id.resend_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resendVerificationCode(phoneNumber, mForceResendingToken);
             }
         });
 
@@ -112,6 +141,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
      * @param phoneNumber admin phone number
      */
     private void sendVerificationCode(String phoneNumber) {
+        Toast.makeText(getApplicationContext(), "Sending OTP...", Toast.LENGTH_SHORT).show();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,
                 120,
@@ -119,6 +149,16 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 TaskExecutors.MAIN_THREAD,
                 mCallBack
         );
+    }
+
+    private void resendVerificationCode(String phoneNumber, PhoneAuthProvider.ForceResendingToken token) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber,        // Phone number to verify
+                120,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                this,               // Activity (for callback binding)
+                mCallBack,         // OnVerificationStateChangedCallbacks
+                token);             // ForceResendingToken from callbacks
     }
 
     private void verifyCode(String code) {
