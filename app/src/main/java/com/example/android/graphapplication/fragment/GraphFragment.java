@@ -410,8 +410,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         float assets = userModel.getInitialAssets();
         float firstYearIncome = userModel.getMonthlyIncome() * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
         float firstYearExpenses = userModel.getExpenses() * (12 - (Calendar.getInstance().get(Calendar.MONTH)));
-        float annualIncome = userModel.getMonthlyIncome() * 12;
-        float annualExpenses = userModel.getExpenses() * 12;
+        float subsequentAnnualIncome = userModel.getMonthlyIncome() * 12;
+        float subsequentAnnualExpenses = userModel.getExpenses() * 12;
+        float annualIncome = 0f;
+        float annualExpenses = 0f;
         float annualIncomeAfterDeductCPF = 0f;
         float balance = 0f;
         float cpfOrdinaryAccount = 0f;
@@ -433,17 +435,15 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 if (noIncomeAgeList.contains(currentAge)) {
                     annualIncomeAfterDeductCPF = 0f;
                 } else {
-                    // Income Increment Calculation
+                    // Income and Expenses Increment Calculation
                     if (currentAge == age) {
-//                    Log.i(TAG, "getGraphData: first year");
                         annualIncome = firstYearIncome;
                         annualExpenses = firstYearExpenses;
                         Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
                         Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                     } else if (currentAge == age + 1) {
-//                    Log.i(TAG, "getGraphData: subsequent");
-                        annualIncome = annualIncome * (100 + increment) / 100;
-                        annualExpenses = annualExpenses * (100 + inflation) / 100;
+                        annualIncome = subsequentAnnualIncome * (100 + increment) / 100;
+                        annualExpenses = subsequentAnnualExpenses * (100 + inflation) / 100;
                         Log.d(TAG, "getGraphData: income: " + annualIncome + " at " + currentAge);
                         Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
                     } else {
@@ -550,7 +550,17 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
                 graphData.put(currentAge, currentData);
 
             } else {
-                annualExpenses = annualExpenses * (100 + inflation) / 100;
+                // Expenses Increment Calculation
+                if (currentAge == age) {
+                    annualExpenses = firstYearExpenses;
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
+                } else if (currentAge == age + 1) {
+                    annualExpenses = subsequentAnnualExpenses * (100 + inflation) / 100;
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
+                } else {
+                    annualExpenses = annualExpenses * (100 + inflation) / 100;
+                    Log.d(TAG, "getGraphData: expenses: " + annualExpenses + " at " + currentAge);
+                }
                 float editedValue = selectedScenarioValuesList.get(currentAge);
                 float payoutValue = selectedPayoutValueList.get(currentAge);
 
