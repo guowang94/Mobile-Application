@@ -62,7 +62,7 @@ public interface SQLConstants {
     String OTL_TABLE_PASSWORD = "password";
 
     //SQL Queries
-    String CREATE_USER_TABLE = "CREATE TABLE "
+    String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS "
             + USER_TABLE + " ("
             + TABLE_ID + " INTEGER PRIMARY KEY, "
             + USER_TABLE_NAME + " TEXT NOT NULL, "
@@ -85,7 +85,7 @@ public interface SQLConstants {
             + USER_TABLE_SPECIAL_ACCOUNT + " FLOAT DEFAULT 0.0, "
             + USER_TABLE_MEDISAVE_ACCOUNT + " FLOAT DEFAULT 0.0);";
 
-    String CREATE_EVENT_TABLE = "CREATE TABLE "
+    String CREATE_EVENT_TABLE = "CREATE TABLE IF NOT EXISTS "
             + EVENT_TABLE + " ("
             + TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + EVENT_TABLE_EVENT_NAME + " TEXT NOT NULL, "
@@ -98,7 +98,7 @@ public interface SQLConstants {
             + EVENT_TABLE_NO_INCOME_STATUS + " INTEGER DEFAULT 0, "
             + IS_SELECTED + " INTEGER DEFAULT 0);";
 
-    String CREATE_MILESTONE_TABLE = "CREATE TABLE "
+    String CREATE_MILESTONE_TABLE = "CREATE TABLE IF NOT EXISTS "
             + MILESTONE_TABLE + " ("
             + TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + MILESTONE_TABLE_MILESTONE_NAME + " TEXT NOT NULL, "
@@ -110,7 +110,7 @@ public interface SQLConstants {
             + MILESTONE_TABLE_DURATION + " INTEGER DEFAULT 1, "
             + IS_SELECTED + " INTEGER DEFAULT 0);";
 
-    String CREATE_PLAN_TABLE = "CREATE TABLE "
+    String CREATE_PLAN_TABLE = "CREATE TABLE IF NOT EXISTS "
             + PLAN_TABLE + " ("
             + TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + PLAN_TABLE_PLAN_NAME + " TEXT NOT NULL, "
@@ -125,7 +125,7 @@ public interface SQLConstants {
             + PLAN_TABLE_PLAN_STATUS + " TEXT NOT NULL, "
             + IS_SELECTED + " INTEGER DEFAULT 0);";
 
-    String CREATE_OTL_TABLE = "CREATE TABLE "
+    String CREATE_OTL_TABLE = "CREATE TABLE IF NOT EXISTS "
             + ONE_TIME_LOGIN_TABLE + " ("
             + TABLE_ID + " INTEGER PRIMARY KEY, "
             + OTL_TABLE_PASSWORD + " TEXT NOT NULL)";
